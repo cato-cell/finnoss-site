@@ -477,6 +477,7 @@
       '<div class="fo-modal__card" role="dialog" aria-modal="true" aria-labelledby="foRegMTitle">' +
         '<button type="button" class="fo-modal__close" data-close aria-label="Lukk">\u00d7</button>' +
         '<div class="fo-modal__body">' +
+          '<div id="foRegViewM">' +
           '<div class="fo-kicker">GRATIS REGISTRERING</div>' +
           '<h2 class="fo-h2 fo-h2--post" id="foRegMTitle" style="margin:6px 0 10px;">Bli med i FinnOss</h2>' +
           '<p class="fo-muted" style="margin:0 0 18px;">Fyll inn telefon og e-post. Du f\u00e5r lokale tilbud, nyheter og informasjon fra Heggedal \u2013 normalt 1\u20134 utsendelser i m\u00e5neden. Du kan melde deg av n\u00e5r som helst.</p>' +
@@ -489,11 +490,16 @@
             '<p id="foRegMsgM" class="fo-reg-msg" role="status" aria-live="polite"></p>' +
             '<p class="fo-fineprint">Ved registrering deltar du i trekningen av et lokalt gavekort n\u00e5r FinnOss n\u00e5r 500 registrerte brukere. Det er gratis \u00e5 delta. Se <a href="/personvern/">personvernerkl\u00e6ringen</a>.</p>' +
           '</form>' +
+          '</div>' + /* slutt #foRegViewM */
           '<div id="foRegSuccessM" class="fo-modal__success" hidden>' +
-            '<div class="fo-kicker">TAKK FOR REGISTRERINGEN</div>' +
-            '<h2 class="fo-h2 fo-h2--post">Du er med! \ud83c\udf89</h2>' +
-            '<p class="fo-muted" style="margin:0 0 18px;">Du er n\u00e5 registrert hos FinnOss og med i trekningen. Vi sender deg lokale tilbud og nyheter fra Heggedal.</p>' +
-            '<button type="button" class="fo-btn fo-btn--gold" data-close>Lukk</button>' +
+            '<div class="fo-success__badge" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#06111d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>' +
+            '<h2 class="fo-h2 fo-h2--post" style="margin:0 0 10px;">Velkommen inn! \ud83c\udf89</h2>' +
+            '<p class="fo-muted" style="margin:0 0 10px;">Du er n\u00e5 registrert hos FinnOss og med i trekningen av et lokalt gavekort.</p>' +
+            '<p class="fo-muted" style="margin:0 0 22px;">Vi sender deg lokale tilbud og nyheter fra Heggedal \u2013 og snart kommer egne <strong style="color:var(--fo-gold1);">medlemsfordeler</strong> hos lokale akt\u00f8rer. Hold utkikk i innboksen.</p>' +
+            '<div class="fo-cta__actions" style="justify-content:center;">' +
+              '<a class="fo-btn fo-btn--gold" href="/heggedal/">Utforsk Heggedal</a>' +
+              '<button type="button" class="fo-btn fo-btn--ghost" data-close>Lukk</button>' +
+            '</div>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -554,7 +560,7 @@
     })
     .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
     .then(function (r) {
-      if (r.ok && r.data && r.data.ok) { form.hidden = true; success.hidden = false; }
+      if (r.ok && r.data && r.data.ok) { document.getElementById("foRegViewM").hidden = true; success.hidden = false; var c = modal.querySelector(".fo-modal__card"); if (c) c.scrollTop = 0; }
       else { msg.textContent = (r.data && r.data.error) || "Noe gikk galt. Pr\u00f8v igjen om litt."; msg.classList.add("is-error"); btn.disabled = false; btn.textContent = t; }
     })
     .catch(function () { msg.textContent = "Fikk ikke kontakt med serveren. Pr\u00f8v igjen."; msg.classList.add("is-error"); btn.disabled = false; btn.textContent = t; });

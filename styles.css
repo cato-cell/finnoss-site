@@ -2182,3 +2182,16 @@ body:has(#finnoss-medlem) h1.entry-title{
 .fo-modal__success{ text-align:center; }
 .fo-modal__success h2{ margin-top:0; }
 body.fo-modal-open{ overflow:hidden; }
+
+/* Takke-visning etter registrering – ikon-badge + spacing */
+.fo-success__badge{
+  width:78px; height:78px; border-radius:50%; margin:2px auto 18px;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(180deg, var(--fo-gold1), var(--fo-gold2));
+  box-shadow:0 12px 34px rgba(216,166,76,.35);
+  animation:foBadgePop .32s cubic-bezier(.2,.9,.3,1.3) both;
+}
+@keyframes foBadgePop{ from{ transform:scale(.5); opacity:0; } to{ transform:scale(1); opacity:1; } }
+@media (prefers-reduced-motion:reduce){ .fo-success__badge{ animation:none; } }
+.fo-modal__success p, #finnoss-medlem .fo-success p{ line-height:1.55; }
+.fo-modal__success .fo-cta__actions, #finnoss-medlem .fo-success .fo-cta__actions{ flex-wrap:wrap; gap:10px; }
