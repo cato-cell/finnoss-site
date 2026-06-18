@@ -95,6 +95,7 @@
           <div class="fo-post">
 
             <div class="fo-card fo-medlem-card">
+              <div id="foRegView">
               <div class="fo-kicker">GRATIS REGISTRERING</div>
               <h2 class="fo-h2 fo-h2--post" style="margin:6px 0 10px;">Bli med i FinnOss</h2>
               <p class="fo-muted" style="margin:0 0 18px;">
@@ -144,17 +145,25 @@
                   opplysningene dine i <a href="/personvern/">personvernerklæringen</a>.
                 </p>
               </form>
+              </div><!-- slutt #foRegView -->
 
               <!-- Vises etter vellykket registrering -->
               <div id="foRegSuccess" class="fo-success" hidden>
-                <div class="fo-kicker">TAKK FOR REGISTRERINGEN</div>
-                <h2 class="fo-h2 fo-h2--post">Du er med! 🎉</h2>
-                <p class="fo-muted" style="margin:0 0 18px;">
+                <div class="fo-success__badge" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#06111d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+                <h2 class="fo-h2 fo-h2--post" style="margin:0 0 10px;">Velkommen inn! 🎉</h2>
+                <p class="fo-muted" style="margin:0 0 10px;">
                   Du er nå registrert hos FinnOss og med i trekningen av et lokalt gavekort.
-                  Vi sender deg lokale tilbud og nyheter fra Heggedal.
+                </p>
+                <p class="fo-muted" style="margin:0 0 22px;">
+                  Vi sender deg lokale tilbud og nyheter fra Heggedal – og snart kommer egne
+                  <strong style="color:var(--fo-gold1);">medlemsfordeler</strong> hos lokale aktører.
+                  Hold utkikk i innboksen.
                 </p>
                 <div class="fo-cta__actions" style="justify-content:center;">
                   <a class="fo-btn fo-btn--gold" href="/heggedal/">Utforsk Heggedal</a>
+                  <a class="fo-btn fo-btn--ghost" href="/">Til forsiden</a>
                 </div>
               </div>
 
@@ -229,7 +238,7 @@
     })
     .then(function (r) {
       if (r.ok && r.data && r.data.ok) {
-        form.hidden = true;
+        document.getElementById("foRegView").hidden = true;
         successBox.hidden = false;
         successBox.scrollIntoView({ behavior: "smooth", block: "center" });
       } else {
