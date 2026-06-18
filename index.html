@@ -3,10 +3,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FinnOss – test</title>
+
+  <!-- SEO -->
+  <title>FinnOss – Lokale bedrifter, tilbud og fordeler i Heggedal</title>
+  <meta name="description" content="FinnOss løfter frem de lokale heltene i Heggedal – butikker, tjenester og opplevelser rett utenfor døren din. Finn lokale tilbud og medlemsfordeler på ett sted.">
+
+  <!-- Open Graph (deling på Facebook/sosiale medier) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FinnOss – Lokale bedrifter, tilbud og fordeler i Heggedal">
+  <meta property="og:description" content="Vi løfter frem de lokale heltene. Butikker, tjenester og opplevelser rett utenfor døren din.">
+  <meta property="og:locale" content="nb_NO">
+
+  <!-- Felles stilark for alle FinnOss-sider -->
+  <link rel="stylesheet" href="/styles.css">
 </head>
-<body style="font-family:sans-serif;text-align:center;padding:80px;">
-  <h1>FinnOss-site fungerer ✅</h1>
-  <p>Placeholder for testing av Cloudflare Pages.</p>
+
+<body>
+
+  <!-- ============================================================
+       FORSIDE – START (portert fra WordPress, design uendret)
+       ============================================================ -->
+  <div id="finnoss-home" class="fo">
+
+    <div class="fo-top">
+      <div class="fo-top__inner">
+        <a class="fo-logo" href="/" aria-label="FinnOss – til forsiden">FinnOss</a>
+
+        <nav class="fo-menu" aria-label="Meny">
+          <a class="fo-menu__link" href="#aktuelt">Aktuelt</a>
+          <a class="fo-menu__link" href="#niftyhr">Gratis HR</a>
+          <a class="fo-menu__link" href="#kontakt">Kontakt</a>
+          <a class="fo-menu__link" href="/om-oss/">Om oss</a>
+          <a class="fo-pill" href="/heggedal/" aria-label="Gå til Heggedal">Meny ▾</a>
+        </nav>
+      </div>
+    </div>
+
+    <main id="main" class="fo-main">
+
+      <header class="fo-hero" aria-label="Forside">
+        <div class="fo-wrap">
+          <div class="fo-hero__center">
+            <div class="fo-kicker">LOKALT SYNLIG</div>
+            <h1 class="fo-h1">Der hvor du bor</h1>
+            <p class="fo-sub">
+              <b>Finn oss.</b> Vi løfter frem de lokale heltene. Butikker, tjenester og opplevelser rett utenfor døren din.
+            </p>
+            <div class="fo-mt-18">
+              <a class="fo-btn fo-btn--gold" href="/heggedal/">Utforsk Heggedal</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="fo-section" id="aktuelt">
+        <div class="fo-wrap">
+          <h2 class="fo-h2">Aktuelt i nærheten</h2>
+          <p class="fo-lead fo-mb-24">
+            Hold deg oppdatert på hva som skjer i ditt nærmiljø.
+          </p>
+
+          <div class="fo-grid">
+            <div class="fo-card">
+              <h3>Lokale tilbud</h3>
+              <p>Finn eksklusive kampanjer fra butikkene i nabolaget ditt.</p>
+            </div>
+            <div class="fo-card">
+              <h3>Ekte nærhet</h3>
+              <p>Støtt lokalt næringsliv og bidra til et levende lokalmiljø.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="fo-section" id="niftyhr">
+        <div class="fo-wrap">
+          <div class="fo-card">
+            <div class="fo-kicker">BEDRIFT • HR</div>
+            <h2 class="fo-h2 fo-mt-8">Gratis HR-verktøy for lokale bedrifter</h2>
+            <p class="fo-lead fo-mb-24">
+              Enkel oversikt over ferie og fravær – helt kostnadsfritt for partnere i FinnOss.
+            </p>
+            <div class="fo-mt-18">
+              <!-- Rettet lenke: pekte tidligere på /heggedal/aktorer/niftyhr/ (404) -->
+              <a class="fo-btn fo-btn--ghost" href="/heggedal/niftyhr/">
+                Les mer om NiftyHR
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="fo-section" id="kontakt">
+        <div class="fo-wrap">
+
+          <h2 class="fo-h2">Kontakt oss</h2>
+          <p class="fo-lead fo-mb-24">
+            Klar for å bli synlig lokalt? Ta kontakt direkte.
+          </p>
+
+          <div class="fo-grid">
+
+            <a href="tel:41240024" class="fo-card" style="text-decoration:none;">
+              <div class="fo-kicker">DIREKTE KONTAKT</div>
+              <h3 class="fo-mt-8">+47 412 40 024</h3>
+              <p class="fo-mb-0">Ring oss nå</p>
+            </a>
+
+            <a href="mailto:cato@niftyhr.no" class="fo-card" style="text-decoration:none;">
+              <div class="fo-kicker">E-POST</div>
+              <h3 class="fo-mt-8">cato@niftyhr.no</h3>
+              <p class="fo-mb-0">Send en henvendelse</p>
+            </a>
+
+            <div class="fo-card">
+              <div class="fo-kicker">BESØK OSS</div>
+              <h3 class="fo-mt-8">Heggedal Torg 18</h3>
+              <p class="fo-mb-0">1389 Heggedal</p>
+            </div>
+
+            <div class="fo-card">
+              <div class="fo-kicker">BIDRA</div>
+              <h3 class="fo-mt-8">Foreslå en aktør</h3>
+              <p class="fo-mb-0">
+                Send oss en lenke og kategori,
+                så vurderer vi den fortløpende.
+              </p>
+            </div>
+
+          </div>
+
+          <div class="fo-actions-row fo-mt-34">
+            <a class="fo-action" href="/personvern/">Personvern</a>
+            <a class="fo-action" href="/vilkar/">Vilkår</a>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="fo-footer">
+      <div class="fo-wrap fo-footer__inner">
+        <div>© 2026 FinnOss</div>
+        <div class="fo-footer__links">
+          <a href="/heggedal/">Heggedal</a>
+          <a href="/om-oss/">Om oss</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+  <!-- ============================================================
+       FORSIDE – SLUTT
+       ============================================================ -->
+
+  <!-- Felles JavaScript for alle FinnOss-sider -->
+  <script src="/app.js" defer></script>
+
 </body>
 </html>
