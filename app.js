@@ -451,3 +451,135 @@
     initCookieBanner();
   }
 })();
+
+
+/* =========================================================
+   FinnOss – registrerings-popup (modal)
+   Åpnes når man klikker en CTA som peker til /bli-medlem/.
+   Bruker samme Cloudflare-funksjon (/api/registrer) som siden.
+   Faller tilbake til /bli-medlem/-siden hvis JS er av.
+   ========================================================= */
+(function () {
+  "use strict";
+
+  var TRIGGER_SEL = 'a[href="/bli-medlem/"], a[href="/bli-medlem"]';
+  var modal = null;
+  var lastFocus = null;
+
+  function buildModal() {
+    var el = document.createElement("div");
+    el.className = "fo-modal";
+    el.id = "foRegModal";
+    el.hidden = true;
+    el.setAttribute("aria-hidden", "true");
+    el.innerHTML =
+      '<div class="fo-modal__overlay" data-close></div>' +
+      '<div class="fo-modal__card" role="dialog" aria-modal="true" aria-labelledby="foRegMTitle">' +
+        '<button type="button" class="fo-modal__close" data-close aria-label="Lukk">\u00d7</button>' +
+        '<div class="fo-modal__body">' +
+          '<div class="fo-kicker">GRATIS REGISTRERING</div>' +
+          '<h2 class="fo-h2 fo-h2--post" id="foRegMTitle" style="margin:6px 0 10px;">Bli med i FinnOss</h2>' +
+          '<p class="fo-muted" style="margin:0 0 18px;">Fyll inn telefon og e-post. Du f\u00e5r lokale tilbud, nyheter og informasjon fra Heggedal \u2013 normalt 1\u20134 utsendelser i m\u00e5neden. Du kan melde deg av n\u00e5r som helst.</p>' +
+          '<form id="foRegFormM" novalidate>' +
+            '<label class="fo-field"><span class="fo-field__label">Telefonnummer</span><input class="fo-input" type="tel" name="phone" inputmode="tel" autocomplete="tel" placeholder="Ditt mobilnummer" required></label>' +
+            '<label class="fo-field"><span class="fo-field__label">E-post</span><input class="fo-input" type="email" name="email" autocomplete="email" placeholder="din@epost.no" required></label>' +
+            '<div class="fo-hp" aria-hidden="true"><label>Ikke fyll ut<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>' +
+            '<label class="fo-consent"><input type="checkbox" name="consent" value="yes" required><span class="fo-consent__text">Ja, jeg samtykker til at FinnOss.no kan sende meg lokale tilbud, nyheter og informasjon fra Heggedal p\u00e5 e-post og SMS. Jeg kan trekke samtykket tilbake n\u00e5r som helst via avmeldingslenke i e-post eller ved \u00e5 svare STOPP p\u00e5 SMS.</span></label>' +
+            '<button type="submit" class="fo-btn fo-btn--gold fo-btn--block">Registrer meg</button>' +
+            '<p id="foRegMsgM" class="fo-reg-msg" role="status" aria-live="polite"></p>' +
+            '<p class="fo-fineprint">Ved registrering deltar du i trekningen av et lokalt gavekort n\u00e5r FinnOss n\u00e5r 500 registrerte brukere. Det er gratis \u00e5 delta. Se <a href="/personvern/">personvernerkl\u00e6ringen</a>.</p>' +
+          '</form>' +
+          '<div id="foRegSuccessM" class="fo-modal__success" hidden>' +
+            '<div class="fo-kicker">TAKK FOR REGISTRERINGEN</div>' +
+            '<h2 class="fo-h2 fo-h2--post">Du er med! \ud83c\udf89</h2>' +
+            '<p class="fo-muted" style="margin:0 0 18px;">Du er n\u00e5 registrert hos FinnOss og med i trekningen. Vi sender deg lokale tilbud og nyheter fra Heggedal.</p>' +
+            '<button type="button" class="fo-btn fo-btn--gold" data-close>Lukk</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function openModal(trigger) {
+    if (!modal) return;
+    lastFocus = trigger || document.activeElement;
+    modal.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("fo-modal-open");
+    var first = modal.querySelector("input, button");
+    if (first) first.focus();
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("fo-modal-open");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  function trapTab(e) {
+    if (e.key !== "Tab") return;
+    var nodes = modal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])');
+    var vis = [];
+    for (var i = 0; i < nodes.length; i++) { if (nodes[i].offsetParent !== null) vis.push(nodes[i]); }
+    if (!vis.length) return;
+    var first = vis[0], last = vis[vis.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  function handleSubmit(form) {
+    var msg = document.getElementById("foRegMsgM");
+    var btn = form.querySelector('button[type="submit"]');
+    var success = document.getElementById("foRegSuccessM");
+    msg.textContent = ""; msg.classList.remove("is-error");
+
+    var phone = form.phone.value.trim();
+    var email = form.email.value.trim();
+    var consent = form.consent.checked;
+    var company = form.company.value.trim();
+
+    if (!phone) { msg.textContent = "Fyll inn telefonnummer."; msg.classList.add("is-error"); form.phone.focus(); return; }
+    if (!email || email.indexOf("@") === -1) { msg.textContent = "Fyll inn en gyldig e-post."; msg.classList.add("is-error"); form.email.focus(); return; }
+    if (!consent) { msg.textContent = "Du m\u00e5 huke av for samtykke for \u00e5 bli med."; msg.classList.add("is-error"); return; }
+
+    btn.disabled = true; var t = btn.textContent; btn.textContent = "Registrerer\u2026";
+
+    fetch("/api/registrer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone: phone, email: email, consent: consent, company: company })
+    })
+    .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
+    .then(function (r) {
+      if (r.ok && r.data && r.data.ok) { form.hidden = true; success.hidden = false; }
+      else { msg.textContent = (r.data && r.data.error) || "Noe gikk galt. Pr\u00f8v igjen om litt."; msg.classList.add("is-error"); btn.disabled = false; btn.textContent = t; }
+    })
+    .catch(function () { msg.textContent = "Fikk ikke kontakt med serveren. Pr\u00f8v igjen."; msg.classList.add("is-error"); btn.disabled = false; btn.textContent = t; });
+  }
+
+  function init() {
+    modal = buildModal();
+
+    document.addEventListener("click", function (e) {
+      if (!e.target || !e.target.closest) return;
+      var trigger = e.target.closest(TRIGGER_SEL);
+      if (trigger) { e.preventDefault(); openModal(trigger); return; }
+      if (!modal.hidden && e.target.closest("[data-close]")) { closeModal(); }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (modal.hidden) return;
+      if (e.key === "Escape") closeModal();
+      else trapTab(e);
+    });
+
+    var form = modal.querySelector("#foRegFormM");
+    form.addEventListener("submit", function (e) { e.preventDefault(); handleSubmit(form); });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();

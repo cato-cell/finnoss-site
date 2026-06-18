@@ -2139,3 +2139,46 @@ body:has(#finnoss-medlem) h1.entry-title{
     width:100% !important;
   }
 }
+
+/* =========================================================
+   FinnOss – registrerings-popup (modal)
+   Åpnes av app.js når man klikker en CTA til /bli-medlem/
+   ========================================================= */
+.fo-modal{ position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px; }
+.fo-modal[hidden]{ display:none; }
+.fo-modal__overlay{ position:absolute; inset:0; background:rgba(3,9,18,.72); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); }
+.fo-modal__card{
+  position:relative; width:100%; max-width:560px; max-height:calc(100vh - 40px); overflow:auto;
+  background:linear-gradient(180deg, var(--fo-bg1), var(--fo-bg0));
+  border:1px solid rgba(255,255,255,.12); border-radius:22px; padding:30px 26px;
+  box-shadow:0 30px 80px rgba(0,0,0,.5); color:var(--fo-ink);
+  animation:foModalIn .18s ease-out;
+}
+@keyframes foModalIn{ from{opacity:0; transform:translateY(8px) scale(.98);} to{opacity:1; transform:none;} }
+@media (prefers-reduced-motion:reduce){ .fo-modal__card{ animation:none; } }
+.fo-modal__close{
+  position:absolute; top:12px; right:14px; width:38px; height:38px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.05); color:var(--fo-ink);
+  font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.fo-modal__close:hover{ background:rgba(255,255,255,.12); }
+.fo-modal .fo-field{ display:block; margin:0 0 16px; }
+.fo-modal .fo-field__label{ display:block; font-size:14px; font-weight:600; margin:0 0 6px; opacity:.92; }
+.fo-modal .fo-input{
+  width:100%; box-sizing:border-box; padding:14px 16px; border-radius:14px;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.16);
+  color:var(--fo-ink); font-size:16px; outline:none; transition:border-color .15s ease, box-shadow .15s ease;
+}
+.fo-modal .fo-input::placeholder{ color:rgba(234,241,255,.4); }
+.fo-modal .fo-input:focus{ border-color:var(--fo-gold2); box-shadow:0 0 0 3px rgba(216,166,76,.25); }
+.fo-modal .fo-consent{ display:flex; gap:12px; align-items:flex-start; margin:4px 0 18px; cursor:pointer; }
+.fo-modal .fo-consent input{ width:22px; height:22px; margin-top:2px; flex:0 0 auto; accent-color:var(--fo-gold2); cursor:pointer; }
+.fo-modal .fo-consent__text{ font-size:13.5px; line-height:1.5; }
+.fo-modal .fo-btn--block{ width:100%; justify-content:center; }
+.fo-modal .fo-fineprint{ font-size:12.5px; line-height:1.5; color:#9fb2c9; margin:8px 0 0; }
+.fo-modal .fo-reg-msg{ margin:12px 0 0; font-size:14px; min-height:1.2em; }
+.fo-modal .fo-reg-msg.is-error{ color:#ffb4a8; }
+.fo-modal .fo-hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+.fo-modal__success{ text-align:center; }
+.fo-modal__success h2{ margin-top:0; }
+body.fo-modal-open{ overflow:hidden; }
