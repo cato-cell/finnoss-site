@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bli med gratis i FinnOss | Lokale tilbud i Heggedal</title>
+  <meta name="description" content="Registrer deg gratis i FinnOss og bli med i trekningen av et lokalt gavekort. Få lokale tilbud, nyheter og informasjon fra Heggedal på e-post og SMS.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Bli med gratis i FinnOss">
+  <meta property="og:description" content="Registrer deg gratis og bli med i trekningen av et lokalt gavekort når FinnOss når 500 registrerte brukere.">
+  <meta property="og:locale" content="nb_NO">
+  <meta property="og:image" content="/images/dsc01942.jpg">
+  <link rel="stylesheet" href="/styles.css">
+
+  <!-- ===== START: stiler kun for medlemssiden (scoped under #finnoss-medlem) ===== -->
+  <style>
+    #finnoss-medlem .fo-medlem-card{ max-width:560px; margin:0 auto; }
+    #finnoss-medlem .fo-field{ display:block; margin:0 0 16px; }
+    #finnoss-medlem .fo-field__label{
+      display:block; font-size:14px; font-weight:600;
+      color:var(--fo-ink); margin:0 0 6px; opacity:.92;
+    }
+    #finnoss-medlem .fo-input{
+      width:100%; box-sizing:border-box;
+      padding:14px 16px; border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.16);
+      color:var(--fo-ink); font-size:16px; /* 16px hindrer zoom på iPhone */
+      outline:none; transition:border-color .15s ease, box-shadow .15s ease;
+    }
+    #finnoss-medlem .fo-input::placeholder{ color:rgba(234,241,255,.4); }
+    #finnoss-medlem .fo-input:focus{
+      border-color:var(--fo-gold2);
+      box-shadow:0 0 0 3px rgba(216,166,76,.25);
+    }
+    #finnoss-medlem .fo-consent{
+      display:flex; gap:12px; align-items:flex-start;
+      margin:4px 0 18px; cursor:pointer;
+    }
+    #finnoss-medlem .fo-consent input{
+      width:22px; height:22px; margin-top:2px; flex:0 0 auto;
+      accent-color:var(--fo-gold2); cursor:pointer;
+    }
+    #finnoss-medlem .fo-consent__text{ font-size:14px; line-height:1.5; color:var(--fo-ink); }
+    #finnoss-medlem .fo-fineprint{ font-size:12.5px; line-height:1.5; color:var(--fo-muted,#9fb2c9); margin:6px 0 0; }
+    #finnoss-medlem .fo-btn--block{ width:100%; justify-content:center; }
+    #finnoss-medlem .fo-reg-msg{ margin:12px 0 0; font-size:14px; min-height:1.2em; }
+    #finnoss-medlem .fo-reg-msg.is-error{ color:#ffb4a8; }
+    /* honeypot – skjult for mennesker, fanger bots */
+    #finnoss-medlem .fo-hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+    #finnoss-medlem .fo-success{ text-align:center; }
+    #finnoss-medlem .fo-success h2{ margin-top:0; }
+  </style>
+  <!-- ===== SLUTT: stiler for medlemssiden ===== -->
+</head>
+
+<body>
+
+<div id="finnoss-medlem">
+  <div class="fo">
+
+    <!-- TOPP -->
+    <div class="fo-top">
+      <div class="fo-wrap fo-top__inner">
+        <a class="fo-logo" href="/" aria-label="FinnOss – til forsiden">FINNOSS</a>
+        <nav class="fo-menu" aria-label="Meny">
+          <a class="fo-menu__link" href="/">Forside</a>
+          <a class="fo-menu__link" href="/heggedal/">Heggedal</a>
+          <a class="fo-menu__link" href="/heggedal/#kategorier">Kategorier</a>
+          <a class="fo-menu__link" href="/heggedal/#kontakt">Kontakt</a>
+          <a class="fo-pill" href="/heggedal/" aria-label="Tilbake til Heggedal">Utforsk ▾</a>
+        </nav>
+      </div>
+    </div>
+
+    <main id="main" class="fo-main">
+
+      <!-- HERO -->
+      <header class="fo-hero fo-hero--post" aria-label="Bli medlem">
+        <div class="fo-wrap">
+          <div class="fo-post">
+            <div class="fo-kicker">FOR DEG SOM BRUKER HEGGEDAL</div>
+            <h1 class="fo-h1">Bli med gratis</h1>
+            <p class="fo-sub">
+              Registrer deg gratis og bli med i trekningen av et lokalt gavekort
+              når FinnOss når <b>500</b> registrerte brukere.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <!-- SKJEMA -->
+      <section class="fo-section fo-section--tight" aria-label="Registrering">
+        <div class="fo-wrap">
+          <div class="fo-post">
+
+            <div class="fo-card fo-medlem-card">
+              <div class="fo-kicker">GRATIS REGISTRERING</div>
+              <h2 class="fo-h2 fo-h2--post" style="margin:6px 0 10px;">Bli med i FinnOss</h2>
+              <p class="fo-muted" style="margin:0 0 18px;">
+                Fyll inn telefon og e-post. Du får lokale tilbud, nyheter og informasjon
+                fra Heggedal – normalt 1–4 utsendelser i måneden. Du kan melde deg av når som helst.
+              </p>
+
+              <!-- Selve skjemaet -->
+              <form id="foRegForm" novalidate>
+                <label class="fo-field">
+                  <span class="fo-field__label">Telefonnummer</span>
+                  <input class="fo-input" type="tel" name="phone" inputmode="tel"
+                         autocomplete="tel" placeholder="Ditt mobilnummer" required>
+                </label>
+
+                <label class="fo-field">
+                  <span class="fo-field__label">E-post</span>
+                  <input class="fo-input" type="email" name="email"
+                         autocomplete="email" placeholder="din@epost.no" required>
+                </label>
+
+                <!-- honeypot: skal stå tom -->
+                <div class="fo-hp" aria-hidden="true">
+                  <label>Ikke fyll ut dette feltet
+                    <input type="text" name="company" tabindex="-1" autocomplete="off">
+                  </label>
+                </div>
+
+                <label class="fo-consent">
+                  <input type="checkbox" name="consent" value="yes" required>
+                  <span class="fo-consent__text">
+                    Ja, jeg samtykker til at FinnOss.no kan sende meg lokale tilbud, nyheter og
+                    informasjon fra Heggedal på e-post og SMS. Jeg kan trekke samtykket tilbake
+                    når som helst via avmeldingslenke i e-post eller ved å svare STOPP på SMS.
+                  </span>
+                </label>
+
+                <button type="submit" class="fo-btn fo-btn--gold fo-btn--block">
+                  Registrer meg
+                </button>
+
+                <p id="foRegMsg" class="fo-reg-msg" role="status" aria-live="polite"></p>
+
+                <p class="fo-fineprint">
+                  Ved registrering deltar du i trekningen av et lokalt gavekort når FinnOss når
+                  500 registrerte brukere. Det er gratis å delta. Se hvordan vi behandler
+                  opplysningene dine i <a href="/personvern/">personvernerklæringen</a>.
+                </p>
+              </form>
+
+              <!-- Vises etter vellykket registrering -->
+              <div id="foRegSuccess" class="fo-success" hidden>
+                <div class="fo-kicker">TAKK FOR REGISTRERINGEN</div>
+                <h2 class="fo-h2 fo-h2--post">Du er med! 🎉</h2>
+                <p class="fo-muted" style="margin:0 0 18px;">
+                  Du er nå registrert hos FinnOss og med i trekningen av et lokalt gavekort.
+                  Vi sender deg lokale tilbud og nyheter fra Heggedal.
+                </p>
+                <div class="fo-cta__actions" style="justify-content:center;">
+                  <a class="fo-btn fo-btn--gold" href="/heggedal/">Utforsk Heggedal</a>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="fo-cta__back" style="margin-top:20px;">
+              <a class="fo-back-home" href="/" aria-label="Til forsiden">← Til forsiden</a>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="fo-footer">
+      <div class="fo-wrap fo-footer__inner">
+        <div>© FinnOss</div>
+        <div class="fo-footer__links">
+          <a href="/heggedal/">Heggedal</a>
+          <a href="/personvern/">Personvern</a>
+          <a href="/vilkar/">Vilkår</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<!-- ===== START: skjema-logikk (vanilla JS, sender til Cloudflare-funksjon) ===== -->
+<script>
+(function () {
+  var form = document.getElementById("foRegForm");
+  if (!form) return;
+  var msg = document.getElementById("foRegMsg");
+  var btn = form.querySelector('button[type="submit"]');
+  var successBox = document.getElementById("foRegSuccess");
+
+  function showError(text) {
+    msg.textContent = text;
+    msg.classList.add("is-error");
+  }
+  function clearMsg() {
+    msg.textContent = "";
+    msg.classList.remove("is-error");
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    clearMsg();
+
+    var phone   = form.phone.value.trim();
+    var email   = form.email.value.trim();
+    var consent = form.consent.checked;
+    var company = form.company.value.trim(); // honeypot
+
+    if (!phone)   { showError("Fyll inn telefonnummer."); form.phone.focus(); return; }
+    if (!email || email.indexOf("@") === -1) { showError("Fyll inn en gyldig e-post."); form.email.focus(); return; }
+    if (!consent) { showError("Du må huke av for samtykke for å bli med."); return; }
+
+    btn.disabled = true;
+    var originalText = btn.textContent;
+    btn.textContent = "Registrerer…";
+
+    fetch("/api/registrer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone: phone, email: email, consent: consent, company: company })
+    })
+    .then(function (res) {
+      return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+    })
+    .then(function (r) {
+      if (r.ok && r.data && r.data.ok) {
+        form.hidden = true;
+        successBox.hidden = false;
+        successBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        showError((r.data && r.data.error) || "Noe gikk galt. Prøv igjen om litt.");
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    })
+    .catch(function () {
+      showError("Fikk ikke kontakt med serveren. Sjekk nett og prøv igjen.");
+      btn.disabled = false;
+      btn.textContent = originalText;
+    });
+  });
+})();
+</script>
+<!-- ===== SLUTT: skjema-logikk ===== -->
+
+  <script src="/app.js" defer></script>
+
+</body>
+</html>
