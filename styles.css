@@ -798,7 +798,8 @@ body.admin-bar .fo-hero{
   min-height:auto !important;
   height:auto !important;
   align-items:flex-start !important;
-  padding-top:clamp(14px, 3vh, 36px) !important;
+  /* Fiks: legg header-høyden inn så fast toppmeny ikke dekker H1 */
+  padding-top:calc(var(--fo-header-h) + clamp(14px, 3vh, 36px)) !important;
   padding-bottom:clamp(16px, 3vh, 34px) !important;
 }
 
