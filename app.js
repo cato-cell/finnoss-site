@@ -589,3 +589,42 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
+
+
+/* =========================================================
+   FinnOss – fremdriftslinje for aktørkaruseller (additiv)
+   Rører ikke pil-logikken; legger bare til en gull-linje per karusell.
+   ========================================================= */
+(function () {
+  "use strict";
+  function initProgress() {
+    var wraps = document.querySelectorAll(".fo-carousel-wrap");
+    wraps.forEach(function (wrap) {
+      var car = wrap.querySelector(".fo-carousel");
+      if (!car || wrap.querySelector(".fo-car-track")) return;
+      var track = document.createElement("div");
+      track.className = "fo-car-track";
+      track.setAttribute("aria-hidden", "true");
+      var thumb = document.createElement("div");
+      thumb.className = "fo-car-thumb";
+      track.appendChild(thumb);
+      wrap.appendChild(track);
+
+      function update() {
+        var max = car.scrollWidth - car.clientWidth;
+        var visible = car.scrollWidth > 0 ? car.clientWidth / car.scrollWidth : 1;
+        var w = Math.max(visible * 100, 14);
+        var ratio = max > 0 ? car.scrollLeft / max : 0;
+        thumb.style.width = w + "%";
+        thumb.style.left = (ratio * (100 - w)) + "%";
+        track.style.display = visible >= 0.999 ? "none" : "block";
+      }
+      car.addEventListener("scroll", update, { passive: true });
+      window.addEventListener("resize", update);
+      if ("ResizeObserver" in window) { new ResizeObserver(update).observe(car); }
+      update();
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initProgress);
+  else initProgress();
+})();
