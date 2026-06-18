@@ -1,0 +1,5 @@
+# Cloudflare Pages – omdirigeringer
+# Midlertidig (per nå): send forsiden til Heggedal-siden.
+# 302 = midlertidig, så den ikke caches permanent og er lett å fjerne senere.
+# Gjelder KUN forsiden "/" – alle andre sider er upåvirket.
+/    /heggedal/    302
