@@ -1918,6 +1918,48 @@ body.admin-bar #finnoss-heggedal .fo-hero--heggedal{
   font-weight:900;
 }
 
+/* Fremdriftslinje mot 500 påmeldte */
+#finnoss-heggedal .fo-progress{
+  margin:2px 0 22px;
+  max-width:430px;
+}
+#finnoss-heggedal .fo-progress__head{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:12px;
+  margin-bottom:8px;
+  font-size:.95rem;
+}
+#finnoss-heggedal .fo-progress__count{
+  color:var(--fo-ink);
+  font-weight:700;
+}
+#finnoss-heggedal .fo-progress__count strong{ font-weight:950; }
+#finnoss-heggedal .fo-progress__pct{
+  color:var(--fo-gold1);
+  font-weight:900;
+}
+#finnoss-heggedal .fo-progress__track{
+  height:12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
+  overflow:hidden;
+}
+#finnoss-heggedal .fo-progress__fill{
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg, var(--fo-gold2), var(--fo-gold1));
+  box-shadow:0 0 18px rgba(246,225,176,.45);
+  transition:width .6s ease;
+}
+#finnoss-heggedal .fo-progress__hint{
+  margin:10px 0 0;
+  font-size:.85rem;
+  color:var(--fo-muted);
+}
+
 /* Premium «gavekort»-visuelt (erstatter det gamle runde merket) */
 #finnoss-heggedal .fo-giftcard{
   position:relative;
