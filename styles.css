@@ -21,7 +21,7 @@
   --fo-radius:18px;
   --fo-shadow:0 18px 60px rgba(0,0,0,.45);
   --fo-header-h:76px;
-  --fo-logo-image:url("https://www.finnoss.no/wp-content/uploads/Finnoss-logo-3.png");
+  --fo-logo-image:url("/images/finnoss-logo-3.png");
   --fo-logo-filter:none;
   --fo-logo-w:clamp(280px, 24vw, 420px);
   --fo-logo-h:clamp(64px, 5.4vw, 92px);
@@ -1340,7 +1340,7 @@ body.admin-bar #finnoss-heggedal .fo-hero--heggedal{
   position:absolute;
   inset:0;
   z-index:-3;
-  background-image:url('https://www.finnoss.no/wp-content/uploads/DSC01942.jpg');
+  background-image:url('/images/dsc01942.jpg');
   background-size:cover;
   background-repeat:no-repeat;
   background-position:center 36% !important;
