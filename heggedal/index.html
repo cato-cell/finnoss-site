@@ -621,5 +621,30 @@
 
   <script src="/app.js" defer></script>
 
+  <!-- Live oppdatering av fremdriftslinja (henter antall fra /api/teller).
+       Statisk verdi i markupen vises som fallback hvis kallet feiler. -->
+  <script>
+  (function () {
+    var box = document.querySelector('.fo-progress');
+    if (!box) return;
+    fetch('/api/teller', { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.ok || typeof d.count !== 'number') return;
+        var goal = d.goal || 500;
+        var count = Math.max(0, d.count);
+        var pct = Math.max(0, Math.min(100, Math.round(count / goal * 100)));
+        var strong = box.querySelector('.fo-progress__count strong');
+        var pctEl = box.querySelector('.fo-progress__pct');
+        var fill = box.querySelector('.fo-progress__fill');
+        if (strong) strong.textContent = count;
+        if (pctEl) pctEl.innerHTML = pct + '&nbsp;%';
+        if (fill) fill.style.width = pct + '%';
+        box.setAttribute('aria-label', count + ' av ' + goal + ' påmeldte');
+      })
+      .catch(function () { /* behold statisk fallback */ });
+  })();
+  </script>
+
 </body>
 </html>
