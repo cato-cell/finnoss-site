@@ -1,4 +1,9 @@
 # Cloudflare Pages – omdirigeringer
+
+# Kanonisk domene: send www til uten-www (permanent).
+# Plassert først så www normaliseres før øvrige regler.
+https://www.finnoss.no/*    https://finnoss.no/:splat    301
+
 # Midlertidig (per nå): send forsiden til Heggedal-siden.
 # 302 = midlertidig, så den ikke caches permanent og er lett å fjerne senere.
 # Gjelder KUN forsiden "/" – alle andre sider er upåvirket.
