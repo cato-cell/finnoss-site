@@ -191,9 +191,10 @@ body.admin-bar{ --fo-adminbar-h:32px; }
     width:calc(100% - 28px);
   }
 
-  /* Venstrejuster logoen så den ligger inntil kanten, ikke sentrert med tomrom */
+  /* Logo-PNG-en har ~10% gjennomsiktig luft til venstre. Skyv bildet ~8px
+     til venstre så selve merket flukter med seksjonenes venstremarg (14px). */
   .fo-logo::before{
-    background-position:left center;
+    background-position:-8px center;
   }
 
   /* Toppfeltet skal ha samme innrykk som seksjonene (.fo-wrap = 14px),
