@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bli medlem – FinnOss</title>
+<meta name="theme-color" content="#06111d">
+<link rel="manifest" href="/app/manifest.json">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#06111d;color:#f0ece4;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.5rem}
+.logo{font-size:.9rem;font-weight:700;letter-spacing:.15em;color:#d8a64c;text-transform:uppercase;margin-bottom:2rem;text-decoration:none}
+.card{background:#0d1f30;border:1px solid rgba(216,166,76,.15);border-radius:16px;padding:2rem 1.75rem;width:100%;max-width:360px}
+.kicker{font-size:.75rem;letter-spacing:.12em;color:#d8a64c;text-transform:uppercase;margin-bottom:.5rem}
+h1{font-size:1.6rem;font-weight:800;margin-bottom:.4rem}
+.sub{font-size:.9rem;color:#8a9bb0;margin-bottom:1.75rem}
+.field{margin-bottom:1rem}
+label{display:block;font-size:.8rem;color:#8a9bb0;margin-bottom:.4rem;letter-spacing:.05em;text-transform:uppercase}
+input[type=text],input[type=email],input[type=tel],input[type=password]{width:100%;background:#06111d;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.85rem 1rem;color:#f0ece4;font-size:1rem;outline:none;transition:border-color .2s}
+input:focus{border-color:#d8a64c}
+.consent{display:flex;gap:.75rem;align-items:flex-start;margin:1rem 0;font-size:.85rem;color:#8a9bb0;line-height:1.5}
+.consent input[type=checkbox]{width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:#d8a64c}
+.btn{width:100%;background:#d8a64c;color:#06111d;border:none;border-radius:10px;padding:.95rem;font-size:1rem;font-weight:700;cursor:pointer;margin-top:.5rem;transition:background .2s}
+.btn:hover{background:#f6e1b0}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.msg{margin-top:1rem;font-size:.9rem;text-align:center;min-height:1.2rem}
+.msg.error{color:#e07070}
+.msg.success{color:#70c070}
+.terms{font-size:.78rem;color:#4a5a6a;text-align:center;margin-top:1rem;line-height:1.5}
+.link{display:block;text-align:center;margin-top:1.5rem;font-size:.9rem;color:#8a9bb0}
+.link a{color:#d8a64c;text-decoration:none}
+</style>
+</head>
+<body>
+<a class="logo" href="/app/">FinnOss</a>
+<div class="card">
+<div class="kicker">Gratis medlemskap</div>
+<h1>Bli med i FinnOss</h1>
+<p class="sub">Få lokale tilbud og fordeler fra Heggedal</p>
+<div class="field"><label for="name">Navn</label><input type="text" id="name" placeholder="Ola Nordmann" autocomplete="name"></div>
+<div class="field"><label for="email">E-post</label><input type="email" id="email" placeholder="deg@epost.no" autocomplete="email"></div>
+<div class="field"><label for="phone">Telefon</label><input type="tel" id="phone" placeholder="900 00 000" autocomplete="tel"></div>
+<div class="field"><label for="password">Velg passord</label><input type="password" id="password" placeholder="Minst 8 tegn" autocomplete="new-password"></div>
+<label class="consent"><input type="checkbox" id="consent"><span>Ja, jeg samtykker til at FinnOss kan sende meg lokale tilbud og nyheter fra Heggedal på e-post og SMS.</span></label>
+<button class="btn" id="btn">Registrer meg gratis</button>
+<p class="msg" id="msg"></p>
+<p class="terms">Ved registrering deltar du i trekningen av lokalt gavekort når FinnOss når 500 medlemmer.</p>
+<p class="link">Allerede medlem? <a href="/app/login/">Logg inn →</a></p>
+</div>
+<script>
+document.getElementById('btn').addEventListener('click',async()=>{
+const name=document.getElementById('name').value.trim();
+const email=document.getElementById('email').value.trim();
+const phone=document.getElementById('phone').value.trim();
+const password=document.getElementById('password').value;
+const consent=document.getElementById('consent').checked;
+const msg=document.getElementById('msg');
+const btn=document.getElementById('btn');
+if(!name||!email||!password){msg.className='msg error';msg.textContent='Fyll inn navn, e-post og passord.';return;}
+if(password.length<8){msg.className='msg error';msg.textContent='Passordet må være minst 8 tegn.';return;}
+btn.disabled=true;msg.className='msg';msg.textContent='Registrerer…';
+try{
+const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,phone,password,consent})});
+const data=await res.json();
+if(res.ok){msg.className='msg success';msg.textContent='✓ Velkommen! Sender deg til appen…';localStorage.setItem('fo_token',data.token);localStorage.setItem('fo_user',JSON.stringify(data.user));setTimeout(()=>window.location.href='/app/home/',1200);}
+else{msg.className='msg error';msg.textContent=data.error||'Noe gikk galt. Prøv igjen.';btn.disabled=false;}
+}catch{msg.className='msg error';msg.textContent='Noe gikk galt. Prøv igjen.';btn.disabled=false;}
+});
+</script>
+</body>
+</html>
