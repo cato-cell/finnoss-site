@@ -1514,9 +1514,11 @@ body.admin-bar #finnoss-heggedal .fo-hero--heggedal{
   .fo-mobile-menu a:hover{ background:rgba(255,255,255,.07); }
 
   #finnoss-heggedal .fo-hero--heggedal{
-    min-height:78svh !important;
-    min-height:78dvh !important;
-    min-height:78vh !important;
+    /* Fyll hele den synlige mobilskjermen, så neste seksjon ikke titter inn
+       (svh = synlig høyde med adresselinjen vist). Rekkefølge: svh vinner. */
+    min-height:100vh !important;
+    min-height:100dvh !important;
+    min-height:100svh !important;
     padding-top:calc(var(--fo-header-h) - 10px) !important;
     padding-bottom:48px !important;
   }
