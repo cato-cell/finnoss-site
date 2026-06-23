@@ -190,6 +190,11 @@ body.admin-bar{ --fo-adminbar-h:32px; }
   .fo-wrap{
     width:calc(100% - 28px);
   }
+
+  /* Venstrejuster logoen så den ligger inntil kanten, ikke sentrert med tomrom */
+  .fo-logo::before{
+    background-position:left center;
+  }
 }
 
 /* 5) Topbar / logo / meny */
