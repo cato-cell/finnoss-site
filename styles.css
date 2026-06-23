@@ -183,18 +183,19 @@ body.admin-bar{ --fo-adminbar-h:32px; }
 @media (max-width:640px){
   :root{
     --fo-header-h:64px;
-    --fo-logo-w:210px;
-    --fo-logo-h:54px;
+    /* Beskåret logo (ingen gjennomsiktig luft) – flukter presist på mobil */
+    --fo-logo-image:url("/images/finnoss-logo-3-trim.png");
+    --fo-logo-w:120px;
+    --fo-logo-h:18px;
   }
 
   .fo-wrap{
     width:calc(100% - 28px);
   }
 
-  /* Logo-PNG-en har ~10% gjennomsiktig luft til venstre. Skyv bildet ~8px
-     til venstre så selve merket flukter med seksjonenes venstremarg (14px). */
+  /* Beskåret logo har ingen luft, så ren venstrejustering = flush med margen */
   .fo-logo::before{
-    background-position:-8px center;
+    background-position:left center;
   }
 
   /* Toppfeltet skal ha samme innrykk som seksjonene (.fo-wrap = 14px),
