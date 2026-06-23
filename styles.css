@@ -319,6 +319,29 @@ body.admin-bar .fo-top{
   }
 }
 
+/* iPad/desktop (>640px): beskåret logo + toppfelt linjert med seksjonene.
+   Bruker samme container som .fo-wrap, så logo (venstre) og meny (høyre)
+   flukter med kortene/innholdet under. */
+@media (min-width:641px){
+  :root{
+    --fo-logo-image:url("/images/finnoss-logo-3-trim.png");
+    --fo-logo-w:200px;
+    --fo-logo-h:clamp(24px, 2.4vw, 30px);
+  }
+
+  .fo-logo::before{
+    background-position:left center;
+  }
+
+  .fo-top__inner{
+    width:min(1120px, calc(100% - 48px));
+    margin-left:auto;
+    margin-right:auto;
+    padding-left:0;
+    padding-right:0;
+  }
+}
+
 :target{
   scroll-margin-top:calc(var(--fo-header-h) + 16px);
 }
