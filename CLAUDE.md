@@ -41,13 +41,39 @@ Retningslinjer for Claude Code i dette repoet. Les dette før du gjør endringer
 - `heggedal/index.html` – hovedhub (hero, «Bli med gratis», kategorier, aktør- og blogg-karusell, kontakt).
 - `heggedal/<aktør>/` – ~30 aktør-/tjenestesider.
 - `om-oss/`, `bli-medlem/`, `personvern/`, `vilkar/`, `posten/`, `asker-golf-lounge/`.
-- `styles.css` (all CSS), `app.js` (karusell-logikk).
+- `styles.css` (all CSS for det offentlige nettstedet), `app.js` (karusell + diverse frontend-logikk).
 - `functions/api/registrer.js` – påmelding → Brevo.
 - `functions/api/teller.js` – henter antall påmeldte fra Brevo (fremdriftslinja).
-- `_redirects`, `_headers`, `images/`.
+- `_redirects`, `_headers`, `robots.txt`, `sitemap.xml`, `images/`.
+- **PWA/medlemsapp:** `app/` (frontend) og `functions/api/` (backend) – se egen seksjon under.
+
+## PWA / medlemsapp (`/app/` + `/admin/`)
+Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages Functions + D1. **Står utenom det statiske nettstedet** – egen, enklere inline-CSS (ikke `styles.css`), men samme fargepalett (`#06111d` bunn, `#d8a64c` gull).
+
+**Frontend (`app/`):**
+- `app/index.html` – install-/landingsside (PWA-prompt, iOS-instruks). `app/manifest.json`, `app/sw.js` (service worker: cache + push).
+- `app/login/`, `app/register/` – auth-skjemaer. Token + bruker lagres i `localStorage` (`fo_token`, `fo_user`).
+- `app/home/` – innlogget hjem: tilbud fra `/api/offers` (med hardkodet fallback), engangstilbud med innløsnings-overlay, push-banner.
+- `admin/index.html` – admin-panel (oversikt, tilbud, push, brukere). **Passordsjekk er kun frontend** (`ADMIN_PASSWORD`-konstant) – beskytter ikke API-et reelt.
+
+**Backend (Cloudflare Pages Functions, `functions/api/`):**
+- `auth/migrate.js` – oppretter D1-tabeller. Kjøres manuelt: `GET /api/auth/migrate?secret=…`. Idempotent.
+- `auth/register.js`, `auth/login.js` – auth (SHA-256-hash – **ikke** produksjonssterkt, se under).
+- `offers.js` (offentlig GET, filtrerer brukte engangstilbud), `offers/redeem.js` (innløsning), `admin/offers.js`, `admin/offers/[id].js`, `admin/stats.js`, `admin/users.js` – admin beskyttes av header `x-admin-key`.
+- `push/vapid-key.js`, `push/subscribe.js`, `admin/push.js` – Web Push (VAPID + RFC 8291 aes128gcm).
+
+**D1-skjema (`migrate.js`):** `users`, `sessions`, `offers` (`once`=engangstilbud), `push_subscriptions`, `redemptions` (unik `(user_id, offer_id)`).
+
+**Viktige forbehold (utestående – krever brukerens godkjenning før lansering):**
+- `/admin/` og admin-API er **ikke reelt sikret** (passord/nøkkel ligger i klartekst i klientkoden; `/api/admin/users` eksponerer persondata). Anbefalt: Cloudflare Access foran `/admin/*` + nøkkel som server-side secret.
+- Passord-hashing bruker rå SHA-256 med felles salt – bør byttes til bcrypt/PBKDF2/Argon2.
+- `/app/` og `/admin/` er satt `noindex` + `Disallow` i robots.txt (skjult fra Google fram til lansering).
+- iOS: Web Push virker **kun** når appen er lagt til hjemskjermen (standalone).
 
 ## Integrasjoner
 - **Brevo (e-post):** påmeldinger lagres i **liste-ID 3**. API-nøkkel som env-var **`BREVO_API_KEY`** i Cloudflare – **aldri hardkod nøkler**. `/api/teller` cacher antallet ~5 min.
+- **Cloudflare D1:** databasen må bindes som **`DB`** på Pages-prosjektet, ellers feiler alle `/api/auth/*` og `/api/admin/*`. Etter binding: kjør migreringen (over). Bindinger/env-vars slår inn **ved neste deploy**.
+- **Web Push (VAPID):** env-vars **`VAPID_PUBLIC`**, **`VAPID_PRIVATE`**, **`VAPID_SUBJECT`** (`mailto:…`). Genereres med `npx web-push generate-vapid-keys`.
 - **`_redirects`:** `/` → `/heggedal/` (302, midlertidig); `www.finnoss.no` → uten www (301, kanonisk).
 
 ## Omfang
