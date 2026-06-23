@@ -195,6 +195,13 @@ body.admin-bar{ --fo-adminbar-h:32px; }
   .fo-logo::before{
     background-position:left center;
   }
+
+  /* Toppfeltet skal ha samme innrykk som seksjonene (.fo-wrap = 14px),
+     så logoen og hamburgeren linjeres med innholdet under. */
+  .fo-top__inner{
+    padding-left:calc(14px + env(safe-area-inset-left));
+    padding-right:calc(14px + env(safe-area-inset-right));
+  }
 }
 
 /* 5) Topbar / logo / meny */
