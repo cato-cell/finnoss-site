@@ -155,6 +155,7 @@ input:focus,textarea:focus{border-color:#d8a64c}
        <div class="form-row">
          <div class="field"><label>Badge</label><input type="text" id="new-badge" placeholder="f.eks. Medlemstilbud"></div>
        </div>
+       <label class="consent" style="margin:.5rem 0"><input type="checkbox" id="new-once"><span>Engangstilbud – forsvinner når brukeren har brukt det én gang</span></label>
        <button class="btn" id="add-offer-btn" style="margin-top:.5rem">Legg til tilbud</button>
        <p class="msg" id="offer-msg"></p>
      </div>
@@ -300,7 +301,7 @@ document.getElementById('add-offer-btn').addEventListener('click', async () => {
    const res = await fetch('/api/admin/offers', {
      method: 'POST',
      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_PASSWORD },
-     body: JSON.stringify({ actor, title, description, badge })
+     body: JSON.stringify({ actor, title, description, badge, once: document.getElementById('new-once').checked })
    });
    if (res.ok) {
      msg.className = 'msg success'; msg.textContent = '✓ Tilbud lagt til!';
@@ -308,6 +309,7 @@ document.getElementById('add-offer-btn').addEventListener('click', async () => {
      document.getElementById('new-title').value = '';
      document.getElementById('new-desc').value = '';
      document.getElementById('new-badge').value = '';
+     document.getElementById('new-once').checked = false;
      loadOffers();
    } else { msg.className = 'msg error'; msg.textContent = 'Noe gikk galt.'; }
  } catch { msg.className = 'msg error'; msg.textContent = 'Noe gikk galt.'; }

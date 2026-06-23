@@ -60,6 +60,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* Loader */
 .loader{text-align:center;padding:2rem;color:#8a9bb0;font-size:.9rem}
+
+/* Engangstilbud-knapp */
+.offer-use-btn{display:inline-block;margin-top:.6rem;background:#d8a64c;color:#06111d;border:none;border-radius:8px;padding:.5rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer}
+.offer-once-badge{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .5rem;border-radius:20px;margin-top:.4rem;margin-left:.4rem;background:rgba(80,180,100,.15);color:#70c080}
+
+/* Innløsnings-overlay */
+.redeem-overlay{position:fixed;inset:0;background:rgba(6,17,29,.95);z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
+.redeem-overlay.show{display:flex}
+.redeem-confirm{background:#0d1f30;border:1px solid rgba(216,166,76,.25);border-radius:16px;padding:1.75rem;max-width:340px;width:100%}
+.redeem-confirm h2{font-size:1.3rem;font-weight:800;margin-bottom:.5rem;color:#f0ece4}
+.redeem-confirm p{font-size:.88rem;color:#8a9bb0;line-height:1.5;margin-bottom:1.5rem}
+.redeem-confirm .warn{color:#f6e1b0;font-weight:600}
+.redeem-btn-row{display:flex;gap:.6rem}
+.redeem-btn{flex:1;border:none;border-radius:10px;padding:.85rem;font-size:.92rem;font-weight:700;cursor:pointer}
+.redeem-btn.cancel{background:transparent;border:1px solid rgba(255,255,255,.15);color:#8a9bb0}
+.redeem-btn.confirm{background:#d8a64c;color:#06111d}
+.redeem-success{display:none;flex-direction:column;align-items:center;animation:pop .4s}
+.redeem-success.show{display:flex}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.redeem-check{width:90px;height:90px;border-radius:50%;background:#70c080;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:1.25rem;box-shadow:0 0 40px rgba(112,192,128,.4)}
+.redeem-success h2{font-size:1.6rem;font-weight:800;color:#f0ece4;margin-bottom:.5rem}
+.redeem-success .actor-name{color:#d8a64c;font-size:1.1rem;font-weight:700;margin-bottom:.75rem}
+.redeem-success p{font-size:.95rem;color:#8a9bb0;line-height:1.5;max-width:280px}
+.redeem-success .show-staff{margin-top:1.5rem;background:rgba(216,166,76,.12);border:1px solid #d8a64c;border-radius:12px;padding:.9rem 1.25rem;font-size:.9rem;color:#f6e1b0;font-weight:600}
+.redeem-close{margin-top:2rem;background:none;border:1px solid rgba(255,255,255,.2);color:#8a9bb0;border-radius:10px;padding:.7rem 2rem;font-size:.9rem;cursor:pointer}
 </style>
 </head>
 <body>
@@ -105,6 +130,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <span class="nav-icon">👤</span>Logg ut
   </a>
 </nav>
+
+<div class="redeem-overlay" id="redeem-overlay">
+  <div class="redeem-confirm" id="redeem-confirm">
+    <h2 id="redeem-title">Bruk tilbud?</h2>
+    <p>Dette tilbudet kan kun brukes <span class="warn">én gang</span>. Trykk «Bruk nå» når du står hos aktøren og er klar til å vise det til betjeningen.</p>
+    <div class="redeem-btn-row">
+      <button class="redeem-btn cancel" id="redeem-cancel">Avbryt</button>
+      <button class="redeem-btn confirm" id="redeem-confirm-btn">Bruk nå</button>
+    </div>
+  </div>
+  <div class="redeem-success" id="redeem-success">
+    <div class="redeem-check">✓</div>
+    <h2>Tilbud brukt!</h2>
+    <div class="actor-name" id="redeem-success-actor"></div>
+    <p id="redeem-success-desc"></p>
+    <div class="show-staff">📲 Vis denne skjermen til betjeningen</div>
+    <button class="redeem-close" id="redeem-close">Ferdig</button>
+  </div>
+</div>
 
 <script>
 // Sjekk innlogging
@@ -202,48 +246,83 @@ setupPush();
 async function loadOffers() {
   const container = document.getElementById('offers-container');
   try {
-    const res = await fetch('/api/offers');
+    const uid = user ? user.id : '';
+    const res = await fetch('/api/offers?userId=' + encodeURIComponent(uid));
     const data = await res.json();
     const offers = data.offers || [];
+    if (offers.length === 0) { container.innerHTML = renderFallbackOffers(); return; }
 
-    if (offers.length === 0) {
-      // Vis hardkodede tilbud som fallback mens admin-panel bygges
-      container.innerHTML = renderFallbackOffers();
-      return;
-    }
-
-    // Første tilbud som hero
     let html = '';
-    if (offers.length > 0) {
-      const hero = offers[0];
-      html += `<div class="hero-offer">
-        <span class="hero-badge">${hero.badge || 'Medlemstilbud'}</span>
-        <div class="hero-actor">${hero.actor}</div>
-        <div class="hero-title">${hero.title}</div>
-        <div class="hero-desc">${hero.description}</div>
-      </div>`;
-    }
+    const hero = offers[0];
+    const heroOnce = hero.once ? `<span class="offer-once-badge">Engangstilbud</span>` : '';
+    const heroBtn = hero.once ? `<br><button class="offer-use-btn" onclick="openRedeem('${hero.id}','${escapeAttr(hero.actor)}','${escapeAttr(hero.title)}')">Bruk tilbud</button>` : '';
+    html += `<div class="hero-offer">
+      <span class="hero-badge">${hero.badge || 'Medlemstilbud'}</span>${heroOnce}
+      <div class="hero-actor">${hero.actor}</div>
+      <div class="hero-title">${hero.title}</div>
+      <div class="hero-desc">${hero.description}</div>${heroBtn}
+    </div>`;
 
-    // Resten som kort
     html += '<div class="offers-grid">';
-    offers.slice(1).forEach(offer => {
+    offers.slice(1).forEach(o => {
+      const onceBadge = o.once ? `<span class="offer-once-badge">Engangstilbud</span>` : '';
+      const useBtn = o.once ? `<br><button class="offer-use-btn" onclick="openRedeem('${o.id}','${escapeAttr(o.actor)}','${escapeAttr(o.title)}')">Bruk tilbud</button>` : '';
       html += `<div class="offer-card">
         <div class="offer-icon">🏷️</div>
         <div class="offer-content">
-          <div class="offer-actor">${offer.actor}</div>
-          <div class="offer-title">${offer.title}</div>
-          <div class="offer-desc">${offer.description}</div>
-          <span class="offer-badge gold">${offer.badge || 'Tilbud'}</span>
+          <div class="offer-actor">${o.actor}</div>
+          <div class="offer-title">${o.title}</div>
+          <div class="offer-desc">${o.description}</div>
+          <span class="offer-badge gold">${o.badge || 'Tilbud'}</span>${onceBadge}${useBtn}
         </div>
       </div>`;
     });
     html += '</div>';
     container.innerHTML = html;
-
   } catch {
     container.innerHTML = renderFallbackOffers();
   }
 }
+
+function escapeAttr(s){return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+
+let currentRedeem = null;
+function openRedeem(offerId, actor, title) {
+  currentRedeem = { offerId, actor, title };
+  document.getElementById('redeem-title').textContent = 'Bruk: ' + title;
+  document.getElementById('redeem-confirm').style.display = 'block';
+  document.getElementById('redeem-success').classList.remove('show');
+  document.getElementById('redeem-overlay').classList.add('show');
+}
+document.getElementById('redeem-cancel').addEventListener('click', () => {
+  document.getElementById('redeem-overlay').classList.remove('show');
+});
+document.getElementById('redeem-close').addEventListener('click', () => {
+  document.getElementById('redeem-overlay').classList.remove('show');
+  loadOffers();
+});
+document.getElementById('redeem-confirm-btn').addEventListener('click', async () => {
+  if (!currentRedeem) return;
+  try {
+    const res = await fetch('/api/offers/redeem', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ offerId: currentRedeem.offerId, userId: user.id })
+    });
+    if (res.ok) {
+      document.getElementById('redeem-confirm').style.display = 'none';
+      document.getElementById('redeem-success-actor').textContent = currentRedeem.actor;
+      document.getElementById('redeem-success-desc').textContent = currentRedeem.title;
+      document.getElementById('redeem-success').classList.add('show');
+    } else {
+      const d = await res.json();
+      alert(d.error || 'Noe gikk galt.');
+      document.getElementById('redeem-overlay').classList.remove('show');
+    }
+  } catch {
+    alert('Noe gikk galt. Prøv igjen.');
+  }
+});
 
 function renderFallbackOffers() {
   return `
@@ -287,5 +366,6 @@ function renderFallbackOffers() {
 
 loadOffers();
 </script>
+
 </body>
 </html>
