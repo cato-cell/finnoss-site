@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinnOss – Heggedal</title>
+<meta name="theme-color" content="#06111d">
+<link rel="manifest" href="/app/manifest.json">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#06111d;color:#f0ece4;min-height:100vh;padding-bottom:80px}
+
+/* Header */
+.app-header{background:#0d1f30;border-bottom:1px solid rgba(216,166,76,.15);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.app-logo{font-size:.9rem;font-weight:700;letter-spacing:.15em;color:#d8a64c;text-transform:uppercase}
+.app-user{font-size:.8rem;color:#8a9bb0;cursor:pointer}
+
+/* Seksjoner */
+.section{padding:1.5rem 1.25rem}
+.kicker{font-size:.7rem;letter-spacing:.12em;color:#d8a64c;text-transform:uppercase;margin-bottom:.5rem}
+.section-title{font-size:1.3rem;font-weight:800;margin-bottom:1rem}
+
+/* Hero-tilbud */
+.hero-offer{background:linear-gradient(135deg,#0d1f30 0%,#162940 100%);border:1px solid rgba(216,166,76,.25);border-radius:16px;padding:1.5rem;margin-bottom:1rem;position:relative;overflow:hidden}
+.hero-offer::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(216,166,76,.15) 0%,transparent 70%)}
+.hero-badge{display:inline-block;background:#d8a64c;color:#06111d;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .6rem;border-radius:20px;margin-bottom:.75rem}
+.hero-actor{font-size:.8rem;color:#8a9bb0;margin-bottom:.3rem}
+.hero-title{font-size:1.2rem;font-weight:800;margin-bottom:.5rem;line-height:1.3}
+.hero-desc{font-size:.9rem;color:#a0b0c0;line-height:1.5;margin-bottom:1rem}
+.hero-cta{display:inline-block;background:#d8a64c;color:#06111d;font-size:.9rem;font-weight:700;padding:.6rem 1.2rem;border-radius:10px;text-decoration:none}
+
+/* Tilbudskort */
+.offers-grid{display:flex;flex-direction:column;gap:.75rem}
+.offer-card{background:#0d1f30;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.1rem 1.25rem;display:flex;align-items:flex-start;gap:1rem}
+.offer-icon{width:44px;height:44px;border-radius:10px;background:rgba(216,166,76,.12);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.offer-content{flex:1}
+.offer-actor{font-size:.75rem;color:#8a9bb0;margin-bottom:.2rem}
+.offer-title{font-size:.95rem;font-weight:700;margin-bottom:.25rem;line-height:1.3}
+.offer-desc{font-size:.82rem;color:#8a9bb0;line-height:1.4}
+.offer-badge{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .5rem;border-radius:20px;margin-top:.4rem}
+.offer-badge.gold{background:rgba(216,166,76,.15);color:#d8a64c}
+.offer-badge.green{background:rgba(80,180,100,.15);color:#70c080}
+
+/* Aktør-snarveier */
+.actors-scroll{display:flex;gap:.75rem;overflow-x:auto;padding-bottom:.5rem;scrollbar-width:none}
+.actors-scroll::-webkit-scrollbar{display:none}
+.actor-chip{background:#0d1f30;border:1px solid rgba(255,255,255,.07);border-radius:50px;padding:.5rem 1rem;font-size:.82rem;color:#f0ece4;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.actor-chip:hover{border-color:#d8a64c;color:#d8a64c}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0d1f30;border-top:1px solid rgba(216,166,76,.15);display:flex;z-index:10}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:.75rem .5rem;font-size:.65rem;color:#8a9bb0;text-decoration:none;gap:.2rem;transition:color .2s}
+.nav-item.active,.nav-item:hover{color:#d8a64c}
+.nav-icon{font-size:1.3rem}
+
+/* Tom tilstand */
+.empty{text-align:center;padding:3rem 1rem;color:#4a5a6a}
+.empty p{margin-top:.5rem;font-size:.9rem}
+
+/* Loader */
+.loader{text-align:center;padding:2rem;color:#8a9bb0;font-size:.9rem}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="app-header">
+  <span class="app-logo">FinnOss</span>
+  <span class="app-user" id="user-name">Laster…</span>
+</header>
+
+<!-- Tilbud -->
+<section class="section" id="offers-section">
+  <div class="kicker">Aktive tilbud</div>
+  <div class="section-title">Dine fordeler</div>
+  <div id="offers-container"><div class="loader">Henter tilbud…</div></div>
+</section>
+
+<!-- Aktører -->
+<section class="section">
+  <div class="kicker">Lokale aktører</div>
+  <div class="section-title">I Heggedal</div>
+  <div class="actors-scroll">
+    <a class="actor-chip" href="https://finnoss.no/heggedal/martas-cafe/">☕ Marta's Café</a>
+    <a class="actor-chip" href="https://finnoss.no/heggedal/bakkal-heggedal/">🫒 Bakkal</a>
+    <a class="actor-chip" href="https://finnoss.no/heggedal/feelgood/">💪 Feelgood</a>
+    <a class="actor-chip" href="https://finnoss.no/asker-golf-lounge/">⛳ Golf Lounge</a>
+    <a class="actor-chip" href="https://finnoss.no/heggedal/">Se alle →</a>
+  </div>
+</section>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a class="nav-item active" href="/app/home/">
+    <span class="nav-icon">🏠</span>Hjem
+  </a>
+  <a class="nav-item" href="https://finnoss.no/heggedal/">
+    <span class="nav-icon">🗺️</span>Heggedal
+  </a>
+  <a class="nav-item" href="https://finnoss.no/bli-medlem/">
+    <span class="nav-icon">⭐</span>Fordeler
+  </a>
+  <a class="nav-item" id="logout-btn" href="#">
+    <span class="nav-icon">👤</span>Logg ut
+  </a>
+</nav>
+
+<script>
+// Sjekk innlogging
+const token = localStorage.getItem('fo_token');
+const user = JSON.parse(localStorage.getItem('fo_user') || 'null');
+
+if (!token || !user) {
+  window.location.href = '/app/login/';
+}
+
+// Vis brukernavn
+document.getElementById('user-name').textContent = user ? user.name.split(' ')[0] : '';
+
+// Logg ut
+document.getElementById('logout-btn').addEventListener('click', e => {
+  e.preventDefault();
+  localStorage.removeItem('fo_token');
+  localStorage.removeItem('fo_user');
+  window.location.href = '/app/login/';
+});
+
+// Hent tilbud fra API
+async function loadOffers() {
+  const container = document.getElementById('offers-container');
+  try {
+    const res = await fetch('/api/offers');
+    const data = await res.json();
+    const offers = data.offers || [];
+
+    if (offers.length === 0) {
+      // Vis hardkodede tilbud som fallback mens admin-panel bygges
+      container.innerHTML = renderFallbackOffers();
+      return;
+    }
+
+    // Første tilbud som hero
+    let html = '';
+    if (offers.length > 0) {
+      const hero = offers[0];
+      html += `<div class="hero-offer">
+        <span class="hero-badge">${hero.badge || 'Medlemstilbud'}</span>
+        <div class="hero-actor">${hero.actor}</div>
+        <div class="hero-title">${hero.title}</div>
+        <div class="hero-desc">${hero.description}</div>
+      </div>`;
+    }
+
+    // Resten som kort
+    html += '<div class="offers-grid">';
+    offers.slice(1).forEach(offer => {
+      html += `<div class="offer-card">
+        <div class="offer-icon">🏷️</div>
+        <div class="offer-content">
+          <div class="offer-actor">${offer.actor}</div>
+          <div class="offer-title">${offer.title}</div>
+          <div class="offer-desc">${offer.description}</div>
+          <span class="offer-badge gold">${offer.badge || 'Tilbud'}</span>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+
+  } catch {
+    container.innerHTML = renderFallbackOffers();
+  }
+}
+
+function renderFallbackOffers() {
+  return `
+  <div class="hero-offer">
+    <span class="hero-badge">Hovedtilbud</span>
+    <div class="hero-actor">Asker Golf Lounge</div>
+    <div class="hero-title">50% rabatt på booking</div>
+    <div class="hero-desc">Gjelder frem til 1. september. Kun én gang per medlem. Vis at du er registrert FinnOss-medlem.</div>
+    <a class="hero-cta" href="https://finnoss.no/asker-golf-lounge/">Book nå →</a>
+  </div>
+  <div class="offers-grid">
+    <div class="offer-card">
+      <div class="offer-icon">☕</div>
+      <div class="offer-content">
+        <div class="offer-actor">Marta's Café</div>
+        <div class="offer-title">Gratis filterkaffe</div>
+        <div class="offer-desc">Ved kjøp av valgfritt påsmurt eller kake.</div>
+        <span class="offer-badge gold">Medlemstilbud</span>
+      </div>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">💪</div>
+      <div class="offer-content">
+        <div class="offer-actor">Feelgood</div>
+        <div class="offer-title">Gratis prøvetime</div>
+        <div class="offer-desc">Uforpliktende prøvetime med personlig veileder.</div>
+        <span class="offer-badge green">Prøv gratis</span>
+      </div>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">🫒</div>
+      <div class="offer-content">
+        <div class="offer-actor">Bakkal</div>
+        <div class="offer-title">20% på Dardanos olivenolje</div>
+        <div class="offer-desc">Vis at du er FinnOss-medlem i butikken.</div>
+        <span class="offer-badge gold">-20%</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+loadOffers();
+</script>
+</body>
+</html>
