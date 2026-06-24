@@ -93,15 +93,19 @@
           <li>Med i gavekort-trekningen</li>
         </ul>
 
-        <!-- Fremdrift mot 500. Oppdater de tre verdiene under når antallet endrer seg:
-             tallet i <strong>, prosenten i __pct, og width i __fill (prosent = brukere/500*100). -->
-        <div class="fo-progress" role="group" aria-label="100 av 500 påmeldte">
+        <!-- Verdiorientert teaser. Vises til vi passerer 60 %; da avslører
+             JS-en (i bunnen) fremdriftslinja under og skjuler denne. -->
+        <p class="fo-progress-teaser">Bli en av de første 500 — vinn et lokalt gavekort</p>
+
+        <!-- Fremdrift mot 500. Skjult til ≥60 %. JS oppdaterer de tre verdiene
+             (tall i <strong>, prosent i __pct, bredde i __fill) og viser boksen. -->
+        <div class="fo-progress" role="group" aria-label="Påmeldte mot 500" hidden>
           <div class="fo-progress__head">
-            <span class="fo-progress__count"><strong>100</strong> av 500 påmeldte</span>
-            <span class="fo-progress__pct">20&nbsp;%</span>
+            <span class="fo-progress__count"><strong>0</strong> av 500 påmeldte</span>
+            <span class="fo-progress__pct">0&nbsp;%</span>
           </div>
           <div class="fo-progress__track">
-            <div class="fo-progress__fill" style="width:20%;"></div>
+            <div class="fo-progress__fill" style="width:0%;"></div>
           </div>
           <p class="fo-progress__hint">Vi nærmer oss – bli med så vi når 500 og trekker en heldig vinner av et lokalt gavekort.</p>
         </div>
@@ -117,7 +121,7 @@
         </div>
 
         <p class="fo-member-cta__legal">
-          Samtykke til lokale tilbud på e-post og SMS er frivillig og ikke nødvendig for å delta i trekningen. På registreringssiden kan du frivillig samtykke til at FinnOss.no sender deg lokale tilbud, nyheter og informasjon fra Heggedal. Du kan trekke samtykket tilbake når som helst.
+          Samtykke til e-post/SMS er frivillig. <a href="/bli-medlem/">Les mer</a>
         </p>
       </div>
 
@@ -686,6 +690,12 @@
         if (pctEl) pctEl.innerHTML = pct + '&nbsp;%';
         if (fill) fill.style.width = pct + '%';
         box.setAttribute('aria-label', count + ' av ' + goal + ' påmeldte');
+        // Vis fremdriftslinja (og skjul teaseren) først når vi passerer 60 %.
+        if (pct >= 60) {
+          box.hidden = false;
+          var teaser = document.querySelector('.fo-progress-teaser');
+          if (teaser) teaser.hidden = true;
+        }
       })
       .catch(function () { /* behold statisk fallback */ });
   })();
