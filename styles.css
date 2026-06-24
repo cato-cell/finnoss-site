@@ -1782,7 +1782,7 @@ body.admin-bar #finnoss-heggedal .fo-hero--heggedal{
   #finnoss-heggedal .fo-member-cta{
     grid-template-columns:1fr;
     gap:20px;
-    padding:22px;
+    padding:22px 26px;
   }
 
   #finnoss-heggedal .fo-member-cta__aside{
@@ -2195,6 +2195,18 @@ body.admin-bar #finnoss-heggedal .fo-hero--heggedal{
   #finnoss-heggedal .fo-progress-teaser{
     font-size:.9rem;
     padding:9px 14px;
+  }
+}
+
+/* Mobil <480: gavekortet fyller bredden og sentreres, så det ikke står
+   alene nederst til venstre med tomrom til høyre. */
+@media (max-width:480px){
+  #finnoss-heggedal .fo-member-cta__aside{
+    justify-content:stretch;
+  }
+  #finnoss-heggedal .fo-giftcard{
+    width:100%;
+    max-width:100%;
   }
 }
 
