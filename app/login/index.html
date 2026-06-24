@@ -35,6 +35,10 @@ input:focus{border-color:#d8a64c}
 <p class="sub">Tilgang til dine lokale fordeler</p>
 <div class="field"><label for="email">E-post</label><input type="email" id="email" placeholder="deg@epost.no" autocomplete="email"></div>
 <div class="field"><label for="password">Passord</label><input type="password" id="password" placeholder="••••••••" autocomplete="current-password"></div>
+<label style="display:flex;align-items:center;gap:.6rem;font-size:.85rem;color:#8a9bb0;margin:.25rem 0 1rem;cursor:pointer">
+  <input type="checkbox" id="remember" checked style="width:18px;height:18px;accent-color:#d8a64c">
+  <span>Forbli innlogget</span>
+</label>
 <button class="btn" id="btn">Logg inn</button>
 <p class="msg" id="msg"></p>
 <p class="link">Ikke medlem? <a href="/app/register/">Registrer deg gratis →</a></p>
@@ -50,7 +54,7 @@ btn.disabled=true;msg.className='msg';msg.textContent='Logger inn…';
 try{
 const res=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
 const data=await res.json();
-if(res.ok&&data.token){localStorage.setItem('fo_token',data.token);localStorage.setItem('fo_user',JSON.stringify(data.user));window.location.href='/app/home/';}
+if(res.ok&&data.token){const remember=document.getElementById('remember').checked;const store=remember?localStorage:sessionStorage;store.setItem('fo_token',data.token);store.setItem('fo_user',JSON.stringify(data.user));window.location.href='/app/home/';}
 else{msg.className='msg error';msg.textContent=data.error||'Feil e-post eller passord.';btn.disabled=false;}
 }catch{msg.className='msg error';msg.textContent='Noe gikk galt. Prøv igjen.';btn.disabled=false;}
 });

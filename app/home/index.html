@@ -154,9 +154,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <a class="nav-item" href="https://finnoss.no/heggedal/">
     <span class="nav-icon">🗺️</span>Heggedal
   </a>
-  <a class="nav-item" href="https://finnoss.no/bli-medlem/">
+  <span class="nav-item" style="opacity:.5;cursor:default">
     <span class="nav-icon">⭐</span>Fordeler
-  </a>
+  </span>
   <a class="nav-item" id="logout-btn" href="#">
     <span class="nav-icon">👤</span>Logg ut
   </a>
@@ -183,8 +183,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <script>
 // Sjekk innlogging
-const token = localStorage.getItem('fo_token');
-const user = JSON.parse(localStorage.getItem('fo_user') || 'null');
+const token = localStorage.getItem('fo_token') || sessionStorage.getItem('fo_token');
+const user = JSON.parse(localStorage.getItem('fo_user') || sessionStorage.getItem('fo_user') || 'null');
 
 if (!token || !user) {
   window.location.href = '/app/login/';
@@ -196,8 +196,8 @@ document.getElementById('user-name').textContent = user ? user.name.split(' ')[0
 // Logg ut
 document.getElementById('logout-btn').addEventListener('click', e => {
   e.preventDefault();
-  localStorage.removeItem('fo_token');
-  localStorage.removeItem('fo_user');
+  localStorage.removeItem('fo_token'); sessionStorage.removeItem('fo_token');
+  localStorage.removeItem('fo_user'); sessionStorage.removeItem('fo_user');
   window.location.href = '/app/login/';
 });
 
