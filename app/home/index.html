@@ -326,40 +326,27 @@ document.getElementById('redeem-confirm-btn').addEventListener('click', async ()
 
 function renderFallbackOffers() {
   return `
-  <div class="hero-offer">
-    <span class="hero-badge">Hovedtilbud</span>
-    <div class="hero-actor">Asker Golf Lounge</div>
-    <div class="hero-title">50% rabatt på booking</div>
-    <div class="hero-desc">Gjelder frem til 1. september. Kun én gang per medlem. Vis at du er registrert FinnOss-medlem.</div>
-    <a class="hero-cta" href="https://finnoss.no/asker-golf-lounge/">Book nå →</a>
+  <div class="hero-offer" style="text-align:center">
+    <span class="hero-badge">Du er tidlig ute</span>
+    <div class="hero-title" style="margin-top:.5rem">Velkommen til FinnOss 🎉</div>
+    <div class="hero-desc" style="margin-bottom:0">
+      Du er blant de aller første medlemmene i Heggedal. Lokale tilbud og fordeler legges ut <strong style="color:#f6e1b0">fortløpende</strong> – rett her i appen.
+      <br><br>
+      Slå på varsler, så er du først ute når aktørene slipper noe nytt. Følg med! 👀
+    </div>
   </div>
-  <div class="offers-grid">
-    <div class="offer-card">
-      <div class="offer-icon">☕</div>
-      <div class="offer-content">
-        <div class="offer-actor">Marta's Café</div>
-        <div class="offer-title">Gratis filterkaffe</div>
-        <div class="offer-desc">Ved kjøp av valgfritt påsmurt eller kake.</div>
-        <span class="offer-badge gold">Medlemstilbud</span>
-      </div>
+  <div class="offer-card" style="border-color:rgba(216,166,76,.25)">
+    <div class="offer-icon">🔔</div>
+    <div class="offer-content">
+      <div class="offer-title">Gå aldri glipp av et tilbud</div>
+      <div class="offer-desc">Vi varsler deg straks det kommer noe nytt fra dine lokale favoritter.</div>
     </div>
-    <div class="offer-card">
-      <div class="offer-icon">💪</div>
-      <div class="offer-content">
-        <div class="offer-actor">Feelgood</div>
-        <div class="offer-title">Gratis prøvetime</div>
-        <div class="offer-desc">Uforpliktende prøvetime med personlig veileder.</div>
-        <span class="offer-badge green">Prøv gratis</span>
-      </div>
-    </div>
-    <div class="offer-card">
-      <div class="offer-icon">🫒</div>
-      <div class="offer-content">
-        <div class="offer-actor">Bakkal</div>
-        <div class="offer-title">20% på Dardanos olivenolje</div>
-        <div class="offer-desc">Vis at du er FinnOss-medlem i butikken.</div>
-        <span class="offer-badge gold">-20%</span>
-      </div>
+  </div>
+  <div class="offer-card">
+    <div class="offer-icon">🗺️</div>
+    <div class="offer-content">
+      <div class="offer-title">Utforsk Heggedal</div>
+      <div class="offer-desc">Se hvilke lokale aktører som er med – trykk «Heggedal» nederst.</div>
     </div>
   </div>`;
 }
