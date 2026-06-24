@@ -53,6 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:.75rem .5rem;font-size:.65rem;color:#8a9bb0;text-decoration:none;gap:.2rem;transition:color .2s}
 .nav-item.active,.nav-item:hover{color:#d8a64c}
 .nav-icon{font-size:1.3rem}
+.nav-svg{width:24px;height:24px;display:block;margin-bottom:.1rem}
 
 /* Tom tilstand */
 .empty{text-align:center;padding:3rem 1rem;color:#4a5a6a}
@@ -149,16 +150,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- Bottom nav -->
 <nav class="bottom-nav">
   <a class="nav-item active" href="/app/home/">
-    <span class="nav-icon">🏠</span>Hjem
+    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/></svg>
+    Hjem
   </a>
   <a class="nav-item" href="https://finnoss.no/heggedal/">
-    <span class="nav-icon">🗺️</span>Heggedal
+    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 3 5.5v15L9 18l6 3 6-2.5v-15L15 6 9 3z"/><path d="M9 3v15M15 6v15"/></svg>
+    Heggedal
   </a>
-  <span class="nav-item" style="opacity:.5;cursor:default">
-    <span class="nav-icon">⭐</span>Fordeler
+  <span class="nav-item" style="opacity:.45;cursor:default">
+    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 17.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9L12 3.5z"/></svg>
+    Fordeler
   </span>
   <a class="nav-item" id="logout-btn" href="#">
-    <span class="nav-icon">👤</span>Logg ut
+    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+    Logg ut
   </a>
 </nav>
 
@@ -435,6 +440,23 @@ if (origGuideBtn) {
     // Hvis ingen prompt (iPhone/Safari) -> den vanlige veiledningen apnes som for
   }, true);
 }
+
+// Skjult admin-inngang: trykk logoen 5 ganger raskt
+(function(){
+  const logo = document.querySelector('.app-header img') || document.querySelector('.app-logo');
+  if(!logo) return;
+  let taps = 0, timer = null;
+  logo.style.cursor = 'pointer';
+  logo.addEventListener('click', () => {
+    taps++;
+    clearTimeout(timer);
+    timer = setTimeout(() => { taps = 0; }, 1200);
+    if (taps >= 5) {
+      taps = 0;
+      window.location.href = '/admin/';
+    }
+  });
+})();
 </script>
 
 <div class="guide-overlay" id="guide-overlay">
