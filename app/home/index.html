@@ -52,12 +52,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .pc-fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-light));border-radius:10px;width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
 .pc-hint{font-size:.74rem;color:var(--muted);margin-top:.6rem;position:relative;line-height:1.4}
 
-/* Stat-rad */
-.stat-row{display:flex;gap:.6rem;margin-bottom:.4rem}
-.stat-pill{flex:1;background:var(--navy2);border:1px solid rgba(255,255,255,.06);border-radius:15px;padding:.85rem .4rem;text-align:center}
-.stat-pill .num{font-size:1.3rem;font-weight:800;color:var(--gold-light);line-height:1}
-.stat-pill .lbl{font-size:.62rem;color:var(--muted);margin-top:.3rem}
-
 /* Kategorier (rettferdig navigasjon) */
 .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.7rem}
 .cat{display:flex;align-items:center;gap:.6rem;background:var(--navy2);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:.9rem;font-size:.85rem;font-weight:600;color:var(--text);text-decoration:none;transition:border-color .2s,transform .1s}
@@ -193,13 +187,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div class="pc-bar"><div class="pc-fill" id="pc-fill"></div></div>
     <div class="pc-hint">Bli med og hjelp Heggedal å nå målet – da trekkes en vinner av et lokalt gavekort.</div>
-  </div>
-
-  <!-- Stat-rad -->
-  <div class="stat-row anim d2">
-    <div class="stat-pill"><div class="num" id="stat-actors">27</div><div class="lbl">Aktører</div></div>
-    <div class="stat-pill"><div class="num" id="stat-offers">–</div><div class="lbl">Tilbud på vei</div></div>
-    <div class="stat-pill"><div class="num">0 kr</div><div class="lbl">Medlemskap</div></div>
   </div>
 </section>
 
@@ -444,9 +431,6 @@ async function loadOffers() {
     const data = await res.json();
     const offers = data.offers || [];
 
-    // Oppdater statrad-tall
-    document.getElementById('stat-offers').textContent = offers.length;
-
     if (offers.length === 0) {
       container.innerHTML = renderWelcome();
       wireWelcomeBell();
@@ -479,7 +463,6 @@ async function loadOffers() {
     html += '</div>';
     container.innerHTML = html;
   } catch {
-    document.getElementById('stat-offers').textContent = '0';
     container.innerHTML = renderWelcome();
     wireWelcomeBell();
   }
