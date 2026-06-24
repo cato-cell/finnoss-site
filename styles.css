@@ -2198,6 +2198,46 @@ body.admin-bar #finnoss-heggedal .fo-hero--heggedal{
   }
 }
 
+/* NiftyHR-skjermdump: rammet inn og tonet mot den mørke siden.
+   Overlay fader kraftigst langs topp/bunn/kanter, nesten klar i midten
+   der logo + kalender ligger, så innholdet er fortsatt lesbart. */
+#finnoss-heggedal .fo-niftyshot{
+  position:relative;
+  margin:0;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid var(--fo-line);
+  background:rgba(255,255,255,.02);
+  box-shadow:
+    0 14px 36px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.05);
+}
+#finnoss-heggedal .fo-niftyshot img{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:inherit;
+  /* Demp lysstyrken ~12 % uten å gjøre bildet grått/grumsete */
+  filter:brightness(.88) contrast(1.03);
+}
+#finnoss-heggedal .fo-niftyshot::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:inherit;
+  background:
+    radial-gradient(120% 92% at 50% 50%,
+      rgba(6,17,29,0) 40%,
+      rgba(6,17,29,.18) 66%,
+      rgba(6,17,29,.60) 100%),
+    linear-gradient(180deg,
+      rgba(6,17,29,.55) 0%,
+      rgba(6,17,29,0) 24%,
+      rgba(6,17,29,0) 76%,
+      rgba(6,17,29,.58) 100%);
+}
+
 /* =========================================
    FINNOSS – COOKIE BANNER v1.0
    ========================================= */
