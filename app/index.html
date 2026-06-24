@@ -1,196 +1,227 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
-  <title>FinnOss – Lokale fordeler i Heggedal</title>
-  <meta name="description" content="Få lokale tilbud og fordeler fra aktørene i Heggedal. Last ned FinnOss-appen gratis.">
-  <meta name="theme-color" content="#06111d">
-  <link rel="manifest" href="/app/manifest.json">
-  <link rel="apple-touch-icon" href="/images/pwa-icon-192.png">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>FinnOss – Heggedal i lomma di</title>
+<meta name="theme-color" content="#06121f">
+<link rel="manifest" href="/app/manifest.json">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#06121f;--navy2:#0c1f33;--navy3:#13304b;
+  --gold:#e0ad52;--gold-light:#f6dca0;--gold-deep:#c08f3a;
+  --text:#f2efe8;--muted:#8ea2b8;--green:#6fc28a;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--navy);color:var(--text);min-height:100vh}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #06111d;
-      color: #f0ece4;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1.5rem;
-      text-align: center;
-    }
+.anim{opacity:0;transform:translateY(16px);animation:rise .55s forwards}
+.anim.d1{animation-delay:.05s}.anim.d2{animation-delay:.15s}.anim.d3{animation-delay:.25s}.anim.d4{animation-delay:.35s}.anim.d5{animation-delay:.45s}
+@keyframes rise{to{opacity:1;transform:translateY(0)}}
 
-    .pwa-logo {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      color: #d8a64c;
-      text-transform: uppercase;
-      margin-bottom: 2.5rem;
-    }
+/* === HERO med Heggedal-silhuett === */
+.hero{position:relative;overflow:hidden;padding:2.4rem 1.5rem 3rem;text-align:center;background:linear-gradient(180deg,#0c2138 0%,#0a1a2c 70%,#091725 100%)}
+.hero .silhouette{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:46px;z-index:0;opacity:.5}
+.hero-content{position:relative;z-index:2}
+.hero-brand{font-size:.82rem;font-weight:700;letter-spacing:.22em;color:var(--gold-light);text-transform:uppercase;margin-bottom:1.6rem}
+.hero h1{font-size:2.1rem;font-weight:800;line-height:1.1;letter-spacing:-.02em;margin-bottom:1rem}
+.hero h1 .gold{color:var(--gold-light);display:block}
+.hero-sub{font-size:.98rem;color:var(--muted);line-height:1.55;max-width:330px;margin:0 auto}
 
-    .pwa-headline {
-      font-size: clamp(2rem, 8vw, 3rem);
-      font-weight: 800;
-      line-height: 1.1;
-      color: #f0ece4;
-      margin-bottom: 1rem;
-    }
+/* === Progresjon (sosialt bevis) === */
+.social{padding:0 1.5rem;margin-top:-.5rem;position:relative;z-index:3}
+.progress-card{background:linear-gradient(150deg,#16395a,#0c2138);border:1px solid rgba(224,173,82,.3);border-radius:20px;padding:1.3rem;box-shadow:0 18px 48px rgba(0,0,0,.45);position:relative;overflow:hidden}
+.progress-card::before{content:'';position:absolute;top:-50px;right:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(224,173,82,.25),transparent 65%)}
+.pc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.7rem;position:relative}
+.pc-count{font-size:1.05rem;font-weight:800}
+.pc-count b{color:var(--gold-light)}
+.pc-pct{font-size:.82rem;font-weight:700;color:var(--gold)}
+.pc-bar{height:9px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
+.pc-fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-light));border-radius:10px;width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.pc-hint{font-size:.76rem;color:var(--muted);margin-top:.6rem;position:relative;line-height:1.4}
 
-    .pwa-headline span {
-      color: #d8a64c;
-    }
+/* === Primær CTA: registrering === */
+.cta-block{padding:1.5rem 1.5rem 0}
+.btn-primary{display:block;width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--navy);border:none;border-radius:14px;padding:1.05rem;font-size:1.05rem;font-weight:800;text-align:center;text-decoration:none;box-shadow:0 12px 30px rgba(224,173,82,.3);transition:transform .1s}
+.btn-primary:active{transform:scale(.98)}
+.login-row{text-align:center;margin-top:1.1rem;font-size:.95rem;color:var(--muted)}
+.login-row a{color:var(--gold);font-weight:700;text-decoration:none}
 
-    .pwa-sub {
-      font-size: 1.05rem;
-      color: #8a9bb0;
-      line-height: 1.6;
-      max-width: 320px;
-      margin: 0 auto 2.5rem;
-    }
+/* === Fordeler (gull-SVG, ikke emoji) === */
+.benefits{padding:2rem 1.5rem 0;display:flex;flex-direction:column;gap:1.1rem}
+.benefit{display:flex;gap:1rem;align-items:flex-start}
+.benefit-ic{width:42px;height:42px;border-radius:11px;background:rgba(224,173,82,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gold)}
+.benefit-ic svg{width:22px;height:22px}
+.benefit-txt h3{font-size:.98rem;font-weight:700;margin-bottom:.2rem}
+.benefit-txt p{font-size:.85rem;color:var(--muted);line-height:1.45}
 
-    /* Installér-knapp – vises automatisk via JS */
-    #pwa-install-btn {
-      display: none;
-      background: #d8a64c;
-      color: #06111d;
-      border: none;
-      border-radius: 12px;
-      padding: 1rem 2rem;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      max-width: 320px;
-      margin-bottom: 1rem;
-      transition: background 0.2s;
-    }
+/* === Install-kort (sekundær) === */
+.install-wrap{padding:2.2rem 1.5rem 2.5rem}
+.install-card{background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid rgba(224,173,82,.22);border-radius:18px;padding:1.4rem;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.install-card .ic-ic{color:var(--gold);margin-bottom:.5rem}
+.install-card .ic-ic svg{width:30px;height:30px}
+.install-card h3{font-size:1.05rem;font-weight:800;margin-bottom:.4rem}
+.install-card p{font-size:.86rem;color:var(--muted);line-height:1.5;margin-bottom:1rem}
+.ic-btn{background:rgba(224,173,82,.12);border:1px solid rgba(224,173,82,.35);color:var(--gold-light);border-radius:11px;padding:.85rem 1.5rem;font-size:.92rem;font-weight:700;cursor:pointer;width:100%}
 
-    #pwa-install-btn:hover { background: #f6e1b0; }
-
-    .pwa-login-link {
-      display: block;
-      color: #d8a64c;
-      text-decoration: none;
-      font-size: 0.95rem;
-      margin-top: 1rem;
-      opacity: 0.8;
-    }
-
-    .pwa-login-link:hover { opacity: 1; }
-
-    /* iOS-instruksjon (vises kun på Safari/iOS) */
-    #ios-install-hint {
-      display: none;
-      background: rgba(216,166,76,0.1);
-      border: 1px solid rgba(216,166,76,0.3);
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-      font-size: 0.9rem;
-      color: #f6e1b0;
-      line-height: 1.6;
-      max-width: 320px;
-      margin-top: 1rem;
-    }
-
-    .pwa-features {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-top: 3rem;
-      width: 100%;
-      max-width: 320px;
-    }
-
-    .pwa-feature {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      text-align: left;
-      font-size: 0.9rem;
-      color: #8a9bb0;
-    }
-
-    .pwa-feature-icon {
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-  </style>
+/* === Install-veiledning overlay === */
+.guide-overlay{position:fixed;inset:0;background:rgba(6,18,31,.98);z-index:120;display:none;flex-direction:column;padding:1.75rem 1.5rem;overflow-y:auto}
+.guide-overlay.show{display:flex}
+.guide-close-x{align-self:flex-end;background:rgba(255,255,255,.06);border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;line-height:1;margin-bottom:.6rem;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.guide-overlay h2{font-size:1.35rem;font-weight:800;text-align:center;margin-bottom:.35rem}
+.guide-sub{font-size:.86rem;color:var(--muted);text-align:center;margin-bottom:1.2rem;line-height:1.45}
+.guide-tabs{display:flex;gap:.5rem;margin-bottom:1.2rem}
+.guide-tab{flex:1;padding:.65rem;border-radius:10px;font-size:.88rem;font-weight:700;text-align:center;cursor:pointer;background:var(--navy2);color:var(--muted);border:1px solid rgba(255,255,255,.08)}
+.guide-tab.active{background:rgba(224,173,82,.15);color:var(--gold);border-color:var(--gold)}
+.guide-steps{display:none}.guide-steps.active{display:block}
+.guide-step{display:flex;gap:.9rem;align-items:flex-start;background:var(--navy2);border-radius:12px;padding:.9rem 1rem;margin-bottom:.6rem}
+.guide-step-num{width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.95rem}
+.guide-step-text{font-size:.92rem;line-height:1.4;padding-top:.25rem}
+.guide-step-text b{color:var(--gold-light)}
+.guide-share-ic{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#0a84ff;border-radius:6px;color:#fff;font-size:.85rem;vertical-align:middle;margin:0 3px}
+.guide-done{background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:.85rem;font-size:.95rem;font-weight:700;cursor:pointer;width:100%;margin-top:.6rem}
+</style>
 </head>
 <body>
 
-  <p class="pwa-logo">FinnOss</p>
-
-  <h1 class="pwa-headline">Heggedal<br><span>i lomma di</span></h1>
-
-  <p class="pwa-sub">
-    Få lokale tilbud, fordeler og nyheter fra aktørene i Heggedal – direkte på telefonen.
-  </p>
-
-  <!-- Android/Desktop: automatisk installér-knapp -->
-  <button id="pwa-install-btn">📲 Legg til på hjemskjermen</button>
-
-  <!-- iOS Safari: manuell instruksjon -->
-  <div id="ios-install-hint">
-    Trykk på <strong>Del-ikonet</strong> (□↑) nederst i Safari,<br>
-    deretter <strong>«Legg til på Hjem-skjerm»</strong>.
+<!-- HERO -->
+<section class="hero">
+  <svg class="silhouette" viewBox="0 0 390 46" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <path d="M0 46 L0 34 L22 34 L22 22 L40 8 L58 22 L58 34 L98 34 L98 18 L114 18 L114 30 L150 30 L150 34 L206 34 L206 20 L226 6 L246 20 L246 34 L286 34 L286 16 L302 16 L302 28 L340 28 L340 34 L366 34 L366 22 L382 22 L382 34 L390 34 L390 46 Z" fill="#081726"/>
+  </svg>
+  <div class="hero-content">
+    <div class="hero-brand anim d1">FinnOss</div>
+    <h1 class="anim d2">Heggedal<span class="gold">i lomma di</span></h1>
+    <p class="hero-sub anim d3">Få lokale tilbud, fordeler og nyheter fra aktørene i Heggedal – direkte på telefonen.</p>
   </div>
+</section>
 
-  <a class="pwa-login-link" href="/app/login/">Allerede medlem? Logg inn →</a>
-
-  <div class="pwa-features">
-    <div class="pwa-feature">
-      <span class="pwa-feature-icon">🏷️</span>
-      <span>Eksklusive tilbud fra lokale aktører</span>
+<!-- SOSIALT BEVIS -->
+<section class="social">
+  <div class="progress-card anim d3" id="progress-card" style="display:none">
+    <div class="pc-head">
+      <span class="pc-count"><b id="pc-count">–</b> av <span id="pc-goal">500</span> medlemmer</span>
+      <span class="pc-pct" id="pc-pct">–</span>
     </div>
-    <div class="pwa-feature">
-      <span class="pwa-feature-icon">🔔</span>
-      <span>Push-varsler om nye tilbud og eventer</span>
-    </div>
-    <div class="pwa-feature">
-      <span class="pwa-feature-icon">❤️</span>
-      <span>Støtt lokalt næringsliv i Heggedal</span>
-    </div>
+    <div class="pc-bar"><div class="pc-fill" id="pc-fill"></div></div>
+    <div class="pc-hint">Bli med og hjelp Heggedal å nå målet – da trekkes en vinner av et lokalt gavekort.</div>
   </div>
+</section>
 
-  <script>
-    // Registrer service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/app/sw.js').catch(console.error);
-    }
+<!-- PRIMÆR CTA -->
+<section class="cta-block">
+  <a class="btn-primary anim d4" href="/app/register/">Registrer deg gratis</a>
+  <div class="login-row anim d4">Allerede medlem? <a href="/app/login/">Logg inn →</a></div>
+</section>
 
-    // Android/Desktop: fang opp beforeinstallprompt og vis knapp
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', e => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('pwa-install-btn').style.display = 'block';
-    });
+<!-- FORDELER -->
+<section class="benefits">
+  <div class="benefit anim d4">
+    <div class="benefit-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 11 3.8a2 2 0 0 0-1.4-.6H4a1 1 0 0 0-1 1v5.6a2 2 0 0 0 .6 1.4l9.6 9.6a2 2 0 0 0 2.8 0l4.6-4.6a2 2 0 0 0 0-2.8z"/><circle cx="7.5" cy="7.5" r="1"/></svg></div>
+    <div class="benefit-txt"><h3>Eksklusive tilbud</h3><p>Medlemsfordeler fra lokale aktører – kun for deg.</p></div>
+  </div>
+  <div class="benefit anim d5">
+    <div class="benefit-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+    <div class="benefit-txt"><h3>Push-varsler</h3><p>Vær først ute når nye tilbud og eventer slippes.</p></div>
+  </div>
+  <div class="benefit anim d5">
+    <div class="benefit-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.5 4.04 3 5.5l7 7Z"/></svg></div>
+    <div class="benefit-txt"><h3>Støtt lokalt</h3><p>Du er med på å løfte næringslivet i Heggedal.</p></div>
+  </div>
+</section>
 
-    document.getElementById('pwa-install-btn').addEventListener('click', () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
-    });
+<!-- INSTALL (sekundær) -->
+<section class="install-wrap">
+  <div class="install-card anim d5">
+    <div class="ic-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+    <h3>Få FinnOss på hjemskjermen</h3>
+    <p>Legg appen på hjemskjermen – akkurat som en vanlig app. 20 sekunder.</p>
+    <button class="ic-btn" id="open-guide-btn">Vis meg hvordan</button>
+  </div>
+</section>
 
-    // iOS Safari: vis manuell instruksjon
-    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const isSafari = /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent);
-    const isStandalone = window.navigator.standalone === true;
-    if (isIOS && isSafari && !isStandalone) {
-      document.getElementById('ios-install-hint').style.display = 'block';
-    }
+<!-- INSTALL-VEILEDNING -->
+<div class="guide-overlay" id="guide-overlay">
+  <button class="guide-close-x" id="guide-close-x">×</button>
+  <h2>Legg FinnOss på hjemskjermen</h2>
+  <p class="guide-sub">Velg telefonen din nedenfor og følg de enkle stegene.</p>
+  <div class="guide-tabs">
+    <div class="guide-tab active" data-os="ios">iPhone</div>
+    <div class="guide-tab" data-os="android">Android</div>
+  </div>
+  <div class="guide-steps active" id="steps-ios">
+    <div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-text">Trykk på <b>Del-knappen</b> <span class="guide-share-ic">⎙</span> nederst på skjermen i Safari.</div></div>
+    <div class="guide-step"><div class="guide-step-num">2</div><div class="guide-step-text">Bla nedover og trykk på <b>«Legg til på Hjem-skjerm»</b>.</div></div>
+    <div class="guide-step"><div class="guide-step-num">3</div><div class="guide-step-text">Trykk <b>«Legg til»</b> øverst til høyre. Ferdig! 🎉</div></div>
+  </div>
+  <div class="guide-steps" id="steps-android">
+    <div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-text">Trykk på <b>menyen</b> (tre prikker ⋮) øverst til høyre i Chrome.</div></div>
+    <div class="guide-step"><div class="guide-step-num">2</div><div class="guide-step-text">Trykk på <b>«Legg til på startskjerm»</b> eller <b>«Installer app»</b>.</div></div>
+    <div class="guide-step"><div class="guide-step-num">3</div><div class="guide-step-text">Bekreft med <b>«Legg til»</b>. Ferdig! 🎉</div></div>
+  </div>
+  <button class="guide-done" id="guide-done">Lukk veiledningen</button>
+</div>
 
-    // Hvis appen allerede er installert (standalone), send til login
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-      window.location.href = '/app/login/';
-    }
-  </script>
+<script>
+// === Medlemstall fra /api/teller (sosialt bevis) ===
+(async function loadCounter(){
+  try{
+    const res = await fetch('/api/teller');
+    const data = await res.json();
+    if(!data || !data.ok || typeof data.count !== 'number') return;
+    const count = data.count, goal = data.goal || 500;
+    const pct = Math.min(100, Math.round((count/goal)*100));
+    document.getElementById('pc-count').textContent = count;
+    document.getElementById('pc-goal').textContent = goal;
+    document.getElementById('pc-pct').textContent = pct + ' %';
+    document.getElementById('progress-card').style.display = 'block';
+    requestAnimationFrame(()=>setTimeout(()=>{document.getElementById('pc-fill').style.width = pct + '%';},100));
+  }catch{}
+})();
+
+// === Install-veiledning ===
+const guideOverlay = document.getElementById('guide-overlay');
+const openGuide = () => {
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  document.querySelectorAll('.guide-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.guide-steps').forEach(s=>s.classList.remove('active'));
+  const os = isIOS ? 'ios' : 'android';
+  document.querySelector('.guide-tab[data-os="'+os+'"]').classList.add('active');
+  document.getElementById('steps-'+os).classList.add('active');
+  guideOverlay.classList.add('show');
+};
+document.getElementById('open-guide-btn').addEventListener('click', openGuide);
+document.querySelectorAll('.guide-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.guide-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.guide-steps').forEach(s=>s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('steps-'+tab.dataset.os).classList.add('active');
+  });
+});
+document.getElementById('guide-close-x').addEventListener('click', ()=>guideOverlay.classList.remove('show'));
+document.getElementById('guide-done').addEventListener('click', ()=>guideOverlay.classList.remove('show'));
+
+// Android: ekte install-prompt hvis tilgjengelig
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); deferredInstallPrompt = e; });
+document.getElementById('open-guide-btn').addEventListener('click', async (ev)=>{
+  if(deferredInstallPrompt){
+    ev.stopImmediatePropagation();
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+  }
+}, true);
+
+// Hvis allerede installert/innlogget – send rett til hjem
+(function(){
+  const token = localStorage.getItem('fo_token') || sessionStorage.getItem('fo_token');
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if(token && standalone){ window.location.href = '/app/home/'; }
+})();
+</script>
 
 </body>
 </html>
