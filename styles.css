@@ -1357,9 +1357,13 @@ body.admin-bar #finnoss-aktor .fo-sticky-cta{
   overflow:hidden;
   isolation:isolate;
   background:#08111b;
-  min-height:84svh !important;
-  min-height:84dvh !important;
-  min-height:84vh !important;
+  /* Fyll nær hele viewporten, men la ~72px av neste seksjon titte frem som
+     bevisst scroll-hint – aldri en halvkuttet "Bli med gratis"-tittel.
+     ("Bli med gratis"-h2 ligger ~100px ned i seksjonen, så 72px viser bare
+      kortets øverste kant.) */
+  min-height:calc(100svh - 72px) !important;
+  min-height:calc(100dvh - 72px) !important;
+  min-height:calc(100vh - 72px) !important;
   padding-top:calc(var(--fo-header-h) - 22px) !important;
   padding-bottom:72px !important;
   border:none !important;
