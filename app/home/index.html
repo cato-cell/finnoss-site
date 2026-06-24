@@ -125,7 +125,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- Header -->
 <header class="app-header">
-  <img src="https://www.finnoss.no/wp-content/uploads/Finnoss-logo-3.png" alt="FinnOss" style="height:44px;width:auto;display:block">
+  <img src="/images/finnoss-logo.png" alt="FinnOss" style="height:44px;width:auto;display:block">
   <span class="app-user" id="user-name">Laster…</span>
 </header>
 
@@ -409,6 +409,31 @@ document.getElementById('guide-done').addEventListener('click', () => guideOverl
 if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
   const sec = document.getElementById('install-section');
   if (sec) sec.style.display = 'none';
+}
+
+// Android: fang Chrome sin install-prompt og gjor "Vis meg hvordan"-knappen til ekte installasjon
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
+
+// Hvis Android-installasjon er tilgjengelig, la hovedknappen installere direkte
+const origGuideBtn = document.getElementById('open-guide-btn');
+if (origGuideBtn) {
+  origGuideBtn.addEventListener('click', async (ev) => {
+    if (deferredInstallPrompt) {
+      ev.stopImmediatePropagation();
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      if (outcome === 'accepted') {
+        const sec = document.getElementById('install-section');
+        if (sec) sec.style.display = 'none';
+      }
+    }
+    // Hvis ingen prompt (iPhone/Safari) -> den vanlige veiledningen apnes som for
+  }, true);
 }
 </script>
 
