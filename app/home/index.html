@@ -85,6 +85,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .offer-badge{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .5rem;border-radius:20px;margin-top:.4rem}
 .offer-badge.gold{background:rgba(224,173,82,.15);color:var(--gold)}
 .offer-once-badge{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .5rem;border-radius:20px;margin-top:.4rem;margin-left:.4rem;background:rgba(111,194,138,.15);color:var(--green)}
+.offer-multi-badge{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .5rem;border-radius:20px;margin-top:.4rem;margin-left:.4rem;background:rgba(224,173,82,.15);color:var(--gold-light);border:1px solid rgba(224,173,82,.35)}
 .offer-use-btn{display:inline-block;margin-top:.6rem;background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:.5rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer}
 
 /* Loader */
@@ -255,7 +256,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="redeem-overlay" id="redeem-overlay">
   <div class="redeem-confirm" id="redeem-confirm">
     <h2 id="redeem-title">Bruk tilbud?</h2>
-    <p>Dette tilbudet kan kun brukes <span class="warn">én gang</span>. Trykk «Bruk nå» når du står hos aktøren og er klar til å vise det til betjeningen.</p>
+    <p id="redeem-explain">Dette tilbudet kan kun brukes <span class="warn">én gang</span>. Trykk «Bruk nå» når du står hos aktøren og er klar til å vise det til betjeningen.</p>
     <div class="redeem-btn-row">
       <button class="redeem-btn cancel" id="redeem-cancel">Avbryt</button>
       <button class="redeem-btn confirm" id="redeem-confirm-btn">Bruk nå</button>
@@ -454,26 +455,24 @@ async function loadOffers() {
 
     let html = '';
     const hero = offers[0];
-    const heroOnce = hero.once ? `<span class="offer-once-badge">Engangstilbud</span>` : '';
-    const heroBtn = hero.once ? `<br><button class="offer-use-btn" onclick="openRedeem('${hero.id}','${escapeAttr(hero.actor)}','${escapeAttr(hero.title)}')">Bruk tilbud</button>` : '';
     html += `<div class="hero-offer">
-      <span class="hero-badge">${hero.badge || 'Medlemstilbud'}</span>${heroOnce}
+      <span class="hero-badge">${hero.badge || 'Medlemstilbud'}</span>${usesBadge(hero)}
       <div class="hero-actor">${hero.actor}</div>
       <div class="hero-title">${hero.title}</div>
-      <div class="hero-desc">${hero.description}</div>${heroBtn}
+      <div class="hero-desc">${hero.description || ''}</div>
+      ${useButton(hero)}
     </div>`;
 
     html += '<div class="offers-grid">';
     offers.slice(1).forEach(o => {
-      const onceBadge = o.once ? `<span class="offer-once-badge">Engangstilbud</span>` : '';
-      const useBtn = o.once ? `<br><button class="offer-use-btn" onclick="openRedeem('${o.id}','${escapeAttr(o.actor)}','${escapeAttr(o.title)}')">Bruk tilbud</button>` : '';
       html += `<div class="offer-card">
         <div class="offer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 11 3.8a2 2 0 0 0-1.4-.6H4a1 1 0 0 0-1 1v5.6a2 2 0 0 0 .6 1.4l9.6 9.6a2 2 0 0 0 2.8 0l4.6-4.6a2 2 0 0 0 0-2.8z"/><circle cx="7.5" cy="7.5" r="1"/></svg></div>
         <div class="offer-content">
           <div class="offer-actor">${o.actor}</div>
           <div class="offer-title">${o.title}</div>
-          <div class="offer-desc">${o.description}</div>
-          <span class="offer-badge gold">${o.badge || 'Tilbud'}</span>${onceBadge}${useBtn}
+          <div class="offer-desc">${o.description || ''}</div>
+          <span class="offer-badge gold">${o.badge || 'Tilbud'}</span>${usesBadge(o)}
+          ${useButton(o)}
         </div>
       </div>`;
     });
@@ -486,12 +485,37 @@ async function loadOffers() {
   }
 }
 
+// Merke som viser type/gjenstående bruk
+function usesBadge(o) {
+  if (o.multi) {
+    // Flergangstilbud (f.eks. Marta's 5 kaffe) – vis nedtelling
+    return `<span class="offer-multi-badge">${o.usesLeft} av ${o.maxUses} igjen</span>`;
+  }
+  if (o.once) {
+    return `<span class="offer-once-badge">Engangstilbud</span>`;
+  }
+  return '';
+}
+
+// "Bruk tilbud"-knapp – vises for alle tilbud som krever innløsning (once ELLER flergangs)
+function useButton(o) {
+  if (!o.once && !o.multi) return ''; // vanlig info-tilbud uten innløsning
+  return `<br><button class="offer-use-btn" onclick="openRedeem('${o.id}','${escapeAttr(o.actor)}','${escapeAttr(o.title)}',${o.usesLeft},${o.maxUses},${o.multi?1:0})">Bruk tilbud</button>`;
+}
+
 function escapeAttr(s){return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
 
 let currentRedeem = null;
-function openRedeem(offerId, actor, title) {
-  currentRedeem = { offerId, actor, title };
+function openRedeem(offerId, actor, title, usesLeft, maxUses, multi) {
+  currentRedeem = { offerId, actor, title, usesLeft, maxUses, multi };
   document.getElementById('redeem-title').textContent = 'Bruk: ' + title;
+  // Tilpass forklaringsteksten til type tilbud
+  const p = document.getElementById('redeem-explain');
+  if (multi) {
+    p.innerHTML = `Du har <span class="warn">${usesLeft} av ${maxUses}</span> bruk igjen. Trykk «Bruk nå» når du står hos aktøren og er klar til å vise det til betjeningen.`;
+  } else {
+    p.innerHTML = `Dette tilbudet kan kun brukes <span class="warn">én gang</span>. Trykk «Bruk nå» når du står hos aktøren og er klar til å vise det til betjeningen.`;
+  }
   document.getElementById('redeem-confirm').style.display = 'block';
   document.getElementById('redeem-success').classList.remove('show');
   document.getElementById('redeem-overlay').classList.add('show');
@@ -512,9 +536,17 @@ document.getElementById('redeem-confirm-btn').addEventListener('click', async ()
       body: JSON.stringify({ offerId: currentRedeem.offerId, userId: user.id })
     });
     if (res.ok) {
+      const d = await res.json();
       document.getElementById('redeem-confirm').style.display = 'none';
       document.getElementById('redeem-success-actor').textContent = currentRedeem.actor;
-      document.getElementById('redeem-success-desc').textContent = currentRedeem.title;
+      // Vis gjenstående bruk for flergangstilbud
+      let desc = currentRedeem.title;
+      if (currentRedeem.multi && typeof d.usesLeft === 'number') {
+        desc += d.usesLeft > 0
+          ? ` — du har ${d.usesLeft} bruk igjen`
+          : ' — dette var siste gang';
+      }
+      document.getElementById('redeem-success-desc').textContent = desc;
       document.getElementById('redeem-success').classList.add('show');
     } else {
       const d = await res.json();

@@ -156,6 +156,8 @@ input:focus,textarea:focus{border-color:#d8a64c}
          <div class="field"><label>Badge</label><input type="text" id="new-badge" placeholder="f.eks. Medlemstilbud"></div>
        </div>
        <label class="consent" style="margin:.5rem 0"><input type="checkbox" id="new-once"><span>Engangstilbud – forsvinner når brukeren har brukt det én gang</span></label>
+       <label>Antall bruk per medlem (1 = vanlig/engangs, f.eks. 5 for Marta's kaffe)</label>
+       <input type="number" id="offer-max-uses" min="1" value="1">
        <button class="btn" id="add-offer-btn" style="margin-top:.5rem">Legg til tilbud</button>
        <p class="msg" id="offer-msg"></p>
      </div>
@@ -301,7 +303,7 @@ document.getElementById('add-offer-btn').addEventListener('click', async () => {
    const res = await fetch('/api/admin/offers', {
      method: 'POST',
      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_PASSWORD },
-     body: JSON.stringify({ actor, title, description, badge, once: document.getElementById('new-once').checked })
+     body: JSON.stringify({ actor, title, description, badge, once: document.getElementById('new-once').checked, maxUses: parseInt(document.getElementById('offer-max-uses').value, 10) || 1 })
    });
    if (res.ok) {
      msg.className = 'msg success'; msg.textContent = '✓ Tilbud lagt til!';
