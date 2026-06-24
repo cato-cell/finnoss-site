@@ -1413,20 +1413,21 @@ body.admin-bar #finnoss-heggedal .fo-hero--heggedal{
   border:none !important;
   outline:none !important;
   box-shadow:none !important;
+  /* Venstretung mørk overlay: holder hvit tekst over WCAG AA (kontrast ≥ 4.5:1)
+     der teksten ligger (venstre ~600px), uten å skjule bildet til høyre. */
   background:
+    linear-gradient(
+      90deg,
+      rgba(6,17,29,.82) 0%,
+      rgba(6,17,29,.74) 28%,
+      rgba(6,17,29,.50) 60%,
+      rgba(6,17,29,.24) 100%
+    ),
     linear-gradient(
       180deg,
       rgba(6,17,29,.34) 0%,
-      rgba(6,17,29,.18) 16%,
-      rgba(6,17,29,.20) 58%,
-      rgba(6,17,29,.28) 100%
-    ),
-    linear-gradient(
-      90deg,
-      rgba(6,17,29,.10) 0%,
-      rgba(6,17,29,.06) 35%,
-      rgba(6,17,29,.06) 65%,
-      rgba(6,17,29,.10) 100%
+      rgba(6,17,29,.22) 45%,
+      rgba(6,17,29,.40) 100%
     ) !important;
 }
 
@@ -1450,6 +1451,82 @@ body.admin-bar #finnoss-heggedal .fo-hero--heggedal{
 
 #finnoss-heggedal .fo-hero--heggedal .fo-sub{
   color:rgba(255,255,255,.92);
+  max-width:600px;
+  margin:0 0 clamp(22px, 3vw, 30px);
+}
+
+/* Ny CTA-fokusert hero: venstrejustert tekstkolonne, maks ~600px */
+#finnoss-heggedal .fo-hero--heggedal .fo-hero__center{
+  text-align:left !important;
+  max-width:600px;
+  margin:0 !important;
+}
+
+/* Handlingsrad: primær (hvit, fylt) + sekundær (understreket tekstlenke) */
+#finnoss-heggedal .fo-hero--heggedal .fo-hero__actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:14px 22px;
+}
+
+#finnoss-heggedal .fo-hero--heggedal .fo-hero__cta{
+  background:#fff;
+  color:#06111d !important;
+  font-weight:950;
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.30),
+    0 0 0 1px rgba(255,255,255,.55) inset;
+}
+
+#finnoss-heggedal .fo-hero--heggedal .fo-hero__cta:hover{
+  transform:translateY(-1px);
+  filter:brightness(.97);
+}
+
+#finnoss-heggedal .fo-hero--heggedal .fo-hero__link{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+  padding:6px 2px;
+  color:#fff;
+  font-weight:800;
+  text-decoration:underline;
+  text-underline-offset:4px;
+  text-decoration-thickness:1.5px;
+  text-shadow:0 2px 18px rgba(0,0,0,.30);
+}
+
+#finnoss-heggedal .fo-hero--heggedal .fo-hero__link:hover{
+  text-decoration-color:var(--fo-gold1);
+}
+
+#finnoss-heggedal .fo-hero--heggedal .fo-hero__cta:focus-visible,
+#finnoss-heggedal .fo-hero--heggedal .fo-hero__link:focus-visible{
+  outline:3px solid var(--fo-gold1);
+  outline-offset:3px;
+  border-radius:10px;
+}
+
+/* Mobil: knappene stables; primær full bredde under 480px */
+@media (max-width:640px){
+  #finnoss-heggedal .fo-hero--heggedal .fo-hero__actions{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:12px;
+  }
+}
+
+@media (max-width:480px){
+  #finnoss-heggedal .fo-hero--heggedal .fo-hero__actions{
+    align-items:stretch;
+  }
+  #finnoss-heggedal .fo-hero--heggedal .fo-hero__cta{
+    width:100%;
+  }
+  #finnoss-heggedal .fo-hero--heggedal .fo-hero__link{
+    justify-content:center;
+  }
 }
 
 #finnoss-heggedal .fo-hero--heggedal .fo-back-home{
@@ -1574,11 +1651,22 @@ body.admin-bar #finnoss-heggedal .fo-hero--heggedal{
   }
 
   #finnoss-heggedal .fo-hero--heggedal .fo-sub{
-    max-width:28ch !important;
+    max-width:100% !important;
     font-size:15px !important;
     line-height:1.42 !important;
-    margin:0 auto 18px !important;
-    text-align:center !important;
+    margin:0 0 16px !important;
+    text-align:left !important;
+  }
+
+  /* Mobil: teksten spenner full bredde, så overlay må være jevn og mørk nok
+     overalt for at hvit tekst består WCAG AA. */
+  #finnoss-heggedal .fo-hero--heggedal .fo-hero__overlay{
+    background:linear-gradient(
+      180deg,
+      rgba(6,17,29,.68) 0%,
+      rgba(6,17,29,.60) 50%,
+      rgba(6,17,29,.72) 100%
+    ) !important;
   }
 
   #finnoss-heggedal .fo-hero--heggedal .fo-back-home{
