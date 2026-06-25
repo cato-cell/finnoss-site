@@ -204,12 +204,13 @@ input:focus,textarea:focus{border-color:#d8a64c}
 </div>
 
 <script>
-const ADMIN_PASSWORD = 'finnoss-admin-2026';
+const ADMIN_PASSWORD = 'finnoss-admin-2026'; // API-nøkkel (x-admin-key mot backend) – uendret
+const ADMIN_LOGIN = '4455';                  // innloggingspassord (frontend-gate)
 
 // Login
 document.getElementById('admin-login-btn').addEventListener('click', () => {
  const pw = document.getElementById('admin-pw').value;
- if (pw === ADMIN_PASSWORD) {
+ if (pw === ADMIN_LOGIN) {
    sessionStorage.setItem('fo_admin', '1');
    showAdmin();
  } else {
