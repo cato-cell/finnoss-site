@@ -15,7 +15,7 @@ h2{font-size:1.4rem;font-weight:800;margin-bottom:.3rem}
 .sub{font-size:.85rem;color:#8a9bb0;margin-bottom:1.5rem}
 .field{margin-bottom:1rem}
 label{display:block;font-size:.75rem;color:#8a9bb0;margin-bottom:.35rem;letter-spacing:.05em;text-transform:uppercase}
-input[type=password],input[type=text],input[type=email],textarea{width:100%;background:#06111d;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.8rem 1rem;color:#f0ece4;font-size:.95rem;outline:none;transition:border-color .2s;resize:vertical}
+input[type=password],input[type=text],input[type=email],input[type=number],textarea{width:100%;background:#06111d;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.8rem 1rem;color:#f0ece4;font-size:.95rem;outline:none;transition:border-color .2s;resize:vertical}
 input:focus,textarea:focus{border-color:#d8a64c}
 .btn{width:100%;background:#d8a64c;color:#06111d;border:none;border-radius:10px;padding:.9rem;font-size:.95rem;font-weight:700;cursor:pointer;transition:background .2s}
 .btn:hover{background:#f6e1b0}
@@ -36,7 +36,8 @@ input:focus,textarea:focus{border-color:#d8a64c}
 .admin-logout:hover{color:#f0ece4}
 
 .admin-nav{display:flex;background:#0a1929;border-bottom:1px solid rgba(255,255,255,.06);overflow-x:auto}
-.nav-tab{padding:.85rem 1.25rem;font-size:.82rem;font-weight:600;color:#8a9bb0;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.nav-tab{padding:.85rem 1.1rem;font-size:.82rem;font-weight:600;color:#8a9bb0;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:.45rem}
+.nav-tab svg{width:17px;height:17px;stroke-width:1.7}
 .nav-tab.active{color:#d8a64c;border-bottom-color:#d8a64c}
 
 .admin-content{padding:1.5rem;max-width:760px;margin:0 auto}
@@ -49,20 +50,28 @@ input:focus,textarea:focus{border-color:#d8a64c}
 
 /* Stats */
 .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.5rem}
-.stat-card{background:#0d1f30;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1.1rem}
+.stat-card{background:#0d1f30;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1.1rem;text-align:left}
+.stat-card.clickable{cursor:pointer;transition:border-color .2s,transform .1s}
+.stat-card.clickable:hover{border-color:rgba(216,166,76,.4)}
+.stat-card.clickable:active{transform:scale(.98)}
 .stat-num{font-size:2rem;font-weight:800;color:#d8a64c;line-height:1}
 .stat-label{font-size:.78rem;color:#8a9bb0;margin-top:.3rem}
 
 /* Tilbud */
 .offer-list{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.25rem}
 .offer-row{background:#0d1f30;border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem}
-.offer-row-info{flex:1}
+.offer-row-info{flex:1;min-width:0}
 .offer-row-actor{font-size:.72rem;color:#8a9bb0}
 .offer-row-title{font-size:.9rem;font-weight:600}
+.offer-row-meta{margin-top:.35rem;display:flex;gap:.4rem;flex-wrap:wrap}
+.type-badge{display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.15rem .5rem;border-radius:20px}
+.type-badge.once{background:rgba(112,192,128,.15);color:#70c080}
+.type-badge.multi{background:rgba(216,166,76,.15);color:#f6e1b0;border:1px solid rgba(216,166,76,.35)}
+.type-badge.inactive{background:rgba(120,120,120,.15);color:#8a9bb0}
 .offer-row-active{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .offer-row-active.on{background:#70c080}
 .offer-row-active.off{background:#555}
-.offer-actions{display:flex;gap:.5rem}
+.offer-actions{display:flex;gap:.5rem;flex-shrink:0}
 .btn-sm{padding:.35rem .75rem;font-size:.78rem;border-radius:8px;border:none;cursor:pointer;font-weight:600}
 .btn-sm.toggle{background:rgba(216,166,76,.15);color:#d8a64c}
 .btn-sm.delete{background:rgba(192,57,43,.15);color:#e07070}
@@ -72,22 +81,33 @@ input:focus,textarea:focus{border-color:#d8a64c}
 .form-card h4{font-size:.95rem;font-weight:700;margin-bottom:1rem;color:#f6e1b0}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
 
+/* Engangs/antall-kobling */
+.once-check{display:flex;align-items:flex-start;gap:.6rem;margin:.75rem 0;cursor:pointer}
+.once-check input{margin-top:.15rem;flex-shrink:0;width:18px;height:18px;accent-color:#d8a64c}
+.once-check span{font-size:.82rem;color:#c8d2dc;line-height:1.4}
+.maxuses-wrap{transition:opacity .2s}
+.maxuses-wrap.locked{opacity:.45;pointer-events:none}
+.maxuses-hint{font-size:.72rem;color:#8a9bb0;margin-top:.3rem}
+
 /* Push */
 .push-preview{background:#162940;border:1px solid rgba(216,166,76,.15);border-radius:12px;padding:1rem;margin-bottom:1rem}
 .push-preview-label{font-size:.7rem;color:#8a9bb0;margin-bottom:.5rem;letter-spacing:.08em;text-transform:uppercase}
 .push-phone{background:#06111d;border-radius:10px;padding:.75rem 1rem;display:flex;gap:.75rem;align-items:flex-start}
-.push-icon-preview{width:36px;height:36px;background:#d8a64c;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.push-icon-preview{width:36px;height:36px;background:#d8a64c;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#06111d}
+.push-icon-preview svg{width:20px;height:20px}
 .push-text-preview .push-title-preview{font-size:.88rem;font-weight:700}
 .push-text-preview .push-body-preview{font-size:.78rem;color:#8a9bb0;margin-top:.2rem}
 
-/* Brukerliste */
-.user-table{width:100%;border-collapse:collapse;font-size:.82rem}
-.user-table th{text-align:left;padding:.6rem .75rem;color:#8a9bb0;font-weight:600;border-bottom:1px solid rgba(255,255,255,.07);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
-.user-table td{padding:.65rem .75rem;border-bottom:1px solid rgba(255,255,255,.04);color:#f0ece4}
-.user-table tr:last-child td{border-bottom:none}
-.consent-badge{display:inline-block;font-size:.65rem;padding:.15rem .45rem;border-radius:20px;font-weight:600}
+/* Brukerliste – kort i stedet for bred tabell (mobilvennlig) */
+.user-card{background:#0d1f30;border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.85rem 1rem;margin-bottom:.6rem}
+.user-card-top{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.3rem}
+.user-card-name{font-size:.92rem;font-weight:700;color:#f0ece4}
+.user-card-email{font-size:.8rem;color:#8a9bb0;word-break:break-all}
+.user-card-meta{display:flex;align-items:center;gap:.6rem;margin-top:.5rem}
+.consent-badge{display:inline-block;font-size:.65rem;padding:.15rem .5rem;border-radius:20px;font-weight:600}
 .consent-badge.yes{background:rgba(80,180,100,.15);color:#70c080}
 .consent-badge.no{background:rgba(100,100,100,.15);color:#8a9bb0}
+.user-card-date{font-size:.72rem;color:#8a9bb0}
 </style>
 </head>
 <body>
@@ -116,10 +136,10 @@ input:focus,textarea:focus{border-color:#d8a64c}
  </header>
 
  <nav class="admin-nav">
-   <div class="nav-tab active" data-panel="dashboard">📊 Oversikt</div>
-   <div class="nav-tab" data-panel="offers">🏷️ Tilbud</div>
-   <div class="nav-tab" data-panel="push">🔔 Push</div>
-   <div class="nav-tab" data-panel="users">👥 Brukere</div>
+   <div class="nav-tab active" data-panel="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="6"/><rect x="12" y="7" width="3" height="10"/><rect x="17" y="13" width="3" height="4"/></svg>Oversikt</div>
+   <div class="nav-tab" data-panel="offers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 11 3.8a2 2 0 0 0-1.4-.6H4a1 1 0 0 0-1 1v5.6a2 2 0 0 0 .6 1.4l9.6 9.6a2 2 0 0 0 2.8 0l4.6-4.6a2 2 0 0 0 0-2.8z"/><circle cx="7.5" cy="7.5" r="1"/></svg>Tilbud</div>
+   <div class="nav-tab" data-panel="push"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>Push</div>
+   <div class="nav-tab" data-panel="users"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Brukere</div>
  </nav>
 
  <div class="admin-content">
@@ -131,10 +151,10 @@ input:focus,textarea:focus{border-color:#d8a64c}
        <h3>FinnOss status</h3>
      </div>
      <div class="stats-grid">
-       <div class="stat-card"><div class="stat-num" id="stat-users">–</div><div class="stat-label">Registrerte brukere</div></div>
-       <div class="stat-card"><div class="stat-num" id="stat-consent">–</div><div class="stat-label">Med samtykke</div></div>
-       <div class="stat-card"><div class="stat-num" id="stat-offers">–</div><div class="stat-label">Aktive tilbud</div></div>
-       <div class="stat-card"><div class="stat-num" id="stat-push">–</div><div class="stat-label">Push-abonnenter</div></div>
+       <div class="stat-card clickable" data-goto="users"><div class="stat-num" id="stat-users">–</div><div class="stat-label">Registrerte brukere</div></div>
+       <div class="stat-card clickable" data-goto="users"><div class="stat-num" id="stat-consent">–</div><div class="stat-label">Med samtykke</div></div>
+       <div class="stat-card clickable" data-goto="offers"><div class="stat-num" id="stat-offers">–</div><div class="stat-label">Aktive tilbud</div></div>
+       <div class="stat-card clickable" data-goto="push"><div class="stat-num" id="stat-push">–</div><div class="stat-label">Push-abonnenter</div></div>
      </div>
    </div>
 
@@ -148,16 +168,19 @@ input:focus,textarea:focus{border-color:#d8a64c}
      <div id="offer-list" class="offer-list"><div style="color:#8a9bb0;font-size:.85rem">Laster…</div></div>
 
      <div class="form-card">
-       <h4>➕ Legg til nytt tilbud</h4>
+       <h4 style="display:flex;align-items:center;gap:.5rem"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#d8a64c" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Legg til nytt tilbud</h4>
        <div class="field"><label>Aktør</label><input type="text" id="new-actor" placeholder="f.eks. Marta's Café"></div>
        <div class="field"><label>Tittel</label><input type="text" id="new-title" placeholder="f.eks. Gratis filterkaffe"></div>
        <div class="field"><label>Beskrivelse</label><textarea id="new-desc" rows="2" placeholder="Kort beskrivelse av tilbudet"></textarea></div>
        <div class="form-row">
          <div class="field"><label>Badge</label><input type="text" id="new-badge" placeholder="f.eks. Medlemstilbud"></div>
        </div>
-       <label class="consent" style="margin:.5rem 0"><input type="checkbox" id="new-once"><span>Engangstilbud – forsvinner når brukeren har brukt det én gang</span></label>
-       <label>Antall bruk per medlem (1 = vanlig/engangs, f.eks. 5 for Marta's kaffe)</label>
-       <input type="number" id="offer-max-uses" min="1" value="1">
+       <label class="once-check"><input type="checkbox" id="new-once"><span>Engangstilbud – forsvinner når brukeren har brukt det én gang</span></label>
+       <div class="field maxuses-wrap" id="maxuses-wrap">
+         <label>Antall bruk per medlem</label>
+         <input type="number" id="offer-max-uses" min="1" value="1">
+         <div class="maxuses-hint">1 = vanlig tilbud. Sett f.eks. 5 for Marta's kaffekort. (Låses til 1 hvis engangstilbud er valgt.)</div>
+       </div>
        <button class="btn" id="add-offer-btn" style="margin-top:.5rem">Legg til tilbud</button>
        <p class="msg" id="offer-msg"></p>
      </div>
@@ -173,7 +196,7 @@ input:focus,textarea:focus{border-color:#d8a64c}
      <div class="push-preview">
        <div class="push-preview-label">Forhåndsvisning</div>
        <div class="push-phone">
-         <div class="push-icon-preview">🏷️</div>
+         <div class="push-icon-preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 11 3.8a2 2 0 0 0-1.4-.6H4a1 1 0 0 0-1 1v5.6a2 2 0 0 0 .6 1.4l9.6 9.6a2 2 0 0 0 2.8 0l4.6-4.6a2 2 0 0 0 0-2.8z"/><circle cx="7.5" cy="7.5" r="1"/></svg></div>
          <div class="push-text-preview">
            <div class="push-title-preview" id="push-title-preview">FinnOss Heggedal</div>
            <div class="push-body-preview" id="push-body-preview">Din melding vises her…</div>
@@ -207,6 +230,12 @@ input:focus,textarea:focus{border-color:#d8a64c}
 const ADMIN_PASSWORD = 'finnoss-admin-2026'; // API-nøkkel (x-admin-key mot backend) – uendret
 const ADMIN_LOGIN = '4455';                  // innloggingspassord (frontend-gate)
 
+// Hjelper: kapitaliser første bokstav i hvert navneledd (cato -> Cato)
+function capitalizeName(name){
+  return (name || '').split(' ').map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : w).join(' ');
+}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
 // Login
 document.getElementById('admin-login-btn').addEventListener('click', () => {
  const pw = document.getElementById('admin-pw').value;
@@ -236,17 +265,22 @@ document.getElementById('admin-logout').addEventListener('click', () => {
 });
 
 // Tabs
+function activateTab(name){
+ document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.panel === name));
+ document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+ const panel = document.getElementById('panel-' + name);
+ if (panel) panel.classList.add('active');
+ if (name === 'dashboard') loadDashboard();
+ if (name === 'offers') loadOffers();
+ if (name === 'users') loadUsers();
+}
 document.querySelectorAll('.nav-tab').forEach(tab => {
- tab.addEventListener('click', () => {
-   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-   tab.classList.add('active');
-   const panel = document.getElementById('panel-' + tab.dataset.panel);
-   if (panel) panel.classList.add('active');
-   if (tab.dataset.panel === 'dashboard') loadDashboard();
-   if (tab.dataset.panel === 'offers') loadOffers();
-   if (tab.dataset.panel === 'users') loadUsers();
- });
+ tab.addEventListener('click', () => activateTab(tab.dataset.panel));
+});
+
+// Klikkbare oversikt-kort hopper til riktig fane
+document.querySelectorAll('.stat-card.clickable').forEach(card => {
+ card.addEventListener('click', () => activateTab(card.dataset.goto));
 });
 
 // Push preview
@@ -256,6 +290,20 @@ document.getElementById('push-title').addEventListener('input', e => {
 document.getElementById('push-body').addEventListener('input', e => {
  document.getElementById('push-body-preview').textContent = e.target.value || 'Din melding vises her…';
 });
+
+// Engangs-checkbox låser antall-feltet til 1
+const onceCheck = document.getElementById('new-once');
+const maxUsesInput = document.getElementById('offer-max-uses');
+const maxUsesWrap = document.getElementById('maxuses-wrap');
+function syncMaxUsesLock(){
+ if (onceCheck.checked){
+   maxUsesInput.value = 1;
+   maxUsesWrap.classList.add('locked');
+ } else {
+   maxUsesWrap.classList.remove('locked');
+ }
+}
+onceCheck.addEventListener('change', syncMaxUsesLock);
 
 // Dashboard stats
 async function loadDashboard() {
@@ -277,18 +325,30 @@ async function loadOffers() {
    const d = await res.json();
    const offers = d.offers || [];
    if (!offers.length) { list.innerHTML = '<div style="color:#8a9bb0;font-size:.85rem;padding:.5rem 0">Ingen tilbud ennå.</div>'; return; }
-   list.innerHTML = offers.map(o => `
+   list.innerHTML = offers.map(o => {
+     // Type-merke: engangs, flergangs (X bruk), eller vanlig
+     let typeBadge = '';
+     const maxU = o.maxUses || o.max_uses || 1;
+     if (o.once) {
+       typeBadge = '<span class="type-badge once">Engangs</span>';
+     } else if (maxU > 1) {
+       typeBadge = `<span class="type-badge multi">${maxU} bruk</span>`;
+     }
+     const inactiveBadge = o.active ? '' : '<span class="type-badge inactive">Skjult</span>';
+     return `
      <div class="offer-row">
        <div class="offer-row-active ${o.active ? 'on' : 'off'}"></div>
        <div class="offer-row-info">
-         <div class="offer-row-actor">${o.actor}</div>
-         <div class="offer-row-title">${o.title}</div>
+         <div class="offer-row-actor">${esc(o.actor)}</div>
+         <div class="offer-row-title">${esc(o.title)}</div>
+         <div class="offer-row-meta">${typeBadge}${inactiveBadge}</div>
        </div>
        <div class="offer-actions">
          <button class="btn-sm toggle" onclick="toggleOffer('${o.id}',${o.active})">${o.active ? 'Skjul' : 'Vis'}</button>
          <button class="btn-sm delete" onclick="deleteOffer('${o.id}')">Slett</button>
        </div>
-     </div>`).join('');
+     </div>`;
+   }).join('');
  } catch { list.innerHTML = '<div style="color:#e07070;font-size:.85rem">Feil ved lasting.</div>'; }
 }
 
@@ -297,6 +357,9 @@ document.getElementById('add-offer-btn').addEventListener('click', async () => {
  const title = document.getElementById('new-title').value.trim();
  const description = document.getElementById('new-desc').value.trim();
  const badge = document.getElementById('new-badge').value.trim();
+ const once = onceCheck.checked;
+ let maxUses = parseInt(maxUsesInput.value, 10) || 1;
+ if (once) maxUses = 1;
  const msg = document.getElementById('offer-msg');
  if (!actor || !title) { msg.className = 'msg error'; msg.textContent = 'Aktør og tittel er påkrevd.'; return; }
  msg.className = 'msg'; msg.textContent = 'Lagrer…';
@@ -304,7 +367,7 @@ document.getElementById('add-offer-btn').addEventListener('click', async () => {
    const res = await fetch('/api/admin/offers', {
      method: 'POST',
      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_PASSWORD },
-     body: JSON.stringify({ actor, title, description, badge, once: document.getElementById('new-once').checked, maxUses: parseInt(document.getElementById('offer-max-uses').value, 10) || 1 })
+     body: JSON.stringify({ actor, title, description, badge, once, maxUses })
    });
    if (res.ok) {
      msg.className = 'msg success'; msg.textContent = '✓ Tilbud lagt til!';
@@ -312,7 +375,9 @@ document.getElementById('add-offer-btn').addEventListener('click', async () => {
      document.getElementById('new-title').value = '';
      document.getElementById('new-desc').value = '';
      document.getElementById('new-badge').value = '';
-     document.getElementById('new-once').checked = false;
+     onceCheck.checked = false;
+     maxUsesInput.value = 1;
+     syncMaxUsesLock();
      loadOffers();
    } else { msg.className = 'msg error'; msg.textContent = 'Noe gikk galt.'; }
  } catch { msg.className = 'msg error'; msg.textContent = 'Noe gikk galt.'; }
@@ -353,7 +418,7 @@ document.getElementById('send-push-btn').addEventListener('click', async () => {
  } catch { msg.className = 'msg error'; msg.textContent = 'Noe gikk galt.'; }
 });
 
-// Brukere
+// Brukere – kortbasert, ikke avkuttet tabell
 async function loadUsers() {
  const list = document.getElementById('user-list');
  try {
@@ -361,17 +426,20 @@ async function loadUsers() {
    const d = await res.json();
    const users = d.users || [];
    if (!users.length) { list.innerHTML = '<div style="color:#8a9bb0;font-size:.85rem">Ingen brukere ennå.</div>'; return; }
-   list.innerHTML = `<table class="user-table">
-     <thead><tr><th>Navn</th><th>E-post</th><th>Samtykke</th><th>Registrert</th></tr></thead>
-     <tbody>${users.map(u => `<tr>
-       <td>${u.name}</td>
-       <td style="color:#8a9bb0">${u.email}</td>
-       <td><span class="consent-badge ${u.consent ? 'yes' : 'no'}">${u.consent ? 'Ja' : 'Nei'}</span></td>
-       <td style="color:#8a9bb0">${u.registered_at ? u.registered_at.slice(0,10) : '–'}</td>
-     </tr>`).join('')}</tbody>
-   </table>`;
+   list.innerHTML = users.map(u => `
+     <div class="user-card">
+       <div class="user-card-top">
+         <span class="user-card-name">${esc(capitalizeName(u.name))}</span>
+         <span class="consent-badge ${u.consent ? 'yes' : 'no'}">${u.consent ? 'Samtykke' : 'Nei'}</span>
+       </div>
+       <div class="user-card-email">${esc(u.email)}</div>
+       <div class="user-card-meta">
+         <span class="user-card-date">Registrert ${u.registered_at ? u.registered_at.slice(0,10) : '–'}</span>
+       </div>
+     </div>`).join('');
  } catch { list.innerHTML = '<div style="color:#e07070;font-size:.85rem">Feil ved lasting.</div>'; }
 }
 </script>
+
 </body>
 </html>
