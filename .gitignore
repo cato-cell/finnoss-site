@@ -1,0 +1,17 @@
+# Hemmeligheter – ALDRI commit
+.env
+.env.*
+.dev.vars
+*.secret
+
+# Cloudflare / Wrangler
+.wrangler/
+dist/
+
+# Avhengigheter / build
+node_modules/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
