@@ -389,6 +389,15 @@
 
   const STORAGE_KEY = "finnoss_cookie_consent_v1";
 
+  /* === Analyse-konfigurasjon =============================================
+     Legg inn måle-ID her når dere vil skru PÅ analyse, f.eks. Google
+     Analytics "G-XXXXXXXXXX". Står den tom, lastes INGEN analyse i det hele
+     tatt. Analyse lastes uansett bare når brukeren har trykket «Godta alle».
+     Vil dere bruke et annet verktøy (Meta Pixel, Plausible, Matomo), bytt ut
+     innholdet i loadAnalytics() – funksjonen kalles kun etter samtykke.
+     ===================================================================== */
+  const ANALYTICS_ID = "";
+
   function getConsent() {
     try {
       return localStorage.getItem(STORAGE_KEY);
@@ -403,6 +412,24 @@
     } catch (e) {}
   }
 
+  let analyticsLoaded = false;
+  function loadAnalytics() {
+    if (analyticsLoaded || !ANALYTICS_ID) return;
+    analyticsLoaded = true;
+
+    // --- Google Analytics (gtag) – lastes kun etter samtykke ---
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + ANALYTICS_ID;
+    document.head.appendChild(s);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag("js", new Date());
+    gtag("config", ANALYTICS_ID, { anonymize_ip: true });
+  }
+
   function hideBanner(banner) {
     if (!banner) return;
     banner.classList.remove("is-visible");
@@ -413,8 +440,33 @@
     banner.classList.add("is-visible");
   }
 
+  // Bygg banneret dynamisk på sider som ikke har det statisk i HTML,
+  // slik at det vises på HELE nettstedet (ikke bare forsiden/hub-en).
+  function buildBanner() {
+    var b = document.createElement("div");
+    b.className = "fo-cookie";
+    b.id = "foCookieBanner";
+    b.setAttribute("role", "dialog");
+    b.setAttribute("aria-live", "polite");
+    b.setAttribute("aria-label", "Informasjon om informasjonskapsler");
+    b.innerHTML =
+      '<div class="fo-cookie__inner">' +
+        '<div class="fo-cookie__text">' +
+          '<strong>Vi bruker informasjonskapsler</strong>' +
+          '<p>FinnOss bruker nødvendige informasjonskapsler for at siden skal fungere. ' +
+          'Med ditt samtykke kan vi også bruke analyse for å forbedre innhold og brukeropplevelse.</p>' +
+        '</div>' +
+        '<div class="fo-cookie__actions">' +
+          '<button class="fo-cookie__btn fo-cookie__btn--ghost" id="foCookieReject">Kun nødvendige</button>' +
+          '<button class="fo-cookie__btn fo-cookie__btn--primary" id="foCookieAccept">Godta alle</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(b);
+    return b;
+  }
+
   function initCookieBanner() {
-    const banner = document.getElementById("foCookieBanner");
+    var banner = document.getElementById("foCookieBanner") || buildBanner();
     const acceptBtn = document.getElementById("foCookieAccept");
     const rejectBtn = document.getElementById("foCookieReject");
 
@@ -422,25 +474,24 @@
 
     const existingConsent = getConsent();
 
-    if (!existingConsent) {
+    if (existingConsent === "all") {
+      // Brukeren har samtykket tidligere – last analyse, ikke vis banner.
+      loadAnalytics();
+    } else if (!existingConsent) {
+      // Ingen valg tatt ennå – vis banneret.
       showBanner(banner);
     }
 
     acceptBtn.addEventListener("click", function () {
       setConsent("all");
       hideBanner(banner);
-
-      /*
-        Her kan analyseverktøy aktiveres senere.
-        Eksempel: Google Analytics / Meta Pixel skal kun lastes etter "all".
-      */
+      loadAnalytics();
       window.dispatchEvent(new CustomEvent("finnoss:cookiesAccepted"));
     });
 
     rejectBtn.addEventListener("click", function () {
       setConsent("necessary");
       hideBanner(banner);
-
       window.dispatchEvent(new CustomEvent("finnoss:cookiesRejected"));
     });
   }
