@@ -1,6 +1,8 @@
 // functions/api/offers/redeem.js
-// POST /api/offers/redeem  body: { offerId, userId }
-// Løser inn ett tilbud. Tillater inntil max_uses innløsninger per bruker.
+// POST /api/offers/redeem  body: { offerId }
+// Krever Authorization: Bearer <token>. Brukeren utledes fra økten – ikke
+// fra forespørselen – slik at ingen kan løse inn på en annens vegne.
+// Tillater inntil max_uses innløsninger per bruker.
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -9,13 +11,27 @@ export async function onRequest(context) {
     return json({ error: 'Kun POST' }, 405);
   }
 
+  // Hent bruker fra session-token (ikke fra body)
+  const auth = request.headers.get('Authorization') || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
+  if (!token) {
+    return json({ error: 'Ikke innlogget' }, 401);
+  }
+  const session = await env.DB.prepare(
+    'SELECT user_id FROM sessions WHERE token = ?'
+  ).bind(token).first();
+  if (!session || !session.user_id) {
+    return json({ error: 'Ugyldig økt. Logg inn på nytt.' }, 401);
+  }
+  const userId = session.user_id;
+
   let body;
   try { body = await request.json(); }
   catch { return json({ error: 'Ugyldig forespørsel' }, 400); }
 
-  const { offerId, userId } = body || {};
-  if (!offerId || !userId) {
-    return json({ error: 'Mangler offerId eller userId' }, 400);
+  const { offerId } = body || {};
+  if (!offerId) {
+    return json({ error: 'Mangler offerId' }, 400);
   }
 
   try {
