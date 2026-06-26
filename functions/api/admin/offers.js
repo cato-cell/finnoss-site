@@ -3,14 +3,12 @@
 // POST /api/admin/offers      -> opprett tilbud (krever x-admin-key)
 //   body: { actor, title, description, badge, once, maxUses }
 
-const ADMIN_KEY = 'finnoss-admin-2026';
-
 export async function onRequest(context) {
   const { request, env } = context;
 
-  // Enkel admin-autorisering (samme som resten av admin-API-et)
+  // Admin-autorisering: nøkkel ligger som server-side secret (env.ADMIN_KEY)
   const key = request.headers.get('x-admin-key');
-  if (key !== ADMIN_KEY) {
+  if (!env.ADMIN_KEY || key !== env.ADMIN_KEY) {
     return json({ error: 'Ikke autorisert' }, 401);
   }
 

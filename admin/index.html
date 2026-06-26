@@ -119,8 +119,8 @@ input:focus,textarea:focus{border-color:#d8a64c}
    <h2>Admin</h2>
    <p class="sub">Kun for administratorer</p>
    <div class="field">
-     <label>Passord</label>
-     <input type="password" id="admin-pw" placeholder="••••••••">
+     <label>Admin-nøkkel</label>
+     <input type="password" id="admin-pw" placeholder="Lim inn admin-nøkkelen" autocomplete="off">
    </div>
    <button class="btn" id="admin-login-btn">Logg inn</button>
    <p class="msg error" id="admin-msg"></p>
@@ -227,8 +227,9 @@ input:focus,textarea:focus{border-color:#d8a64c}
 </div>
 
 <script>
-const ADMIN_PASSWORD = 'finnoss-admin-2026'; // API-nøkkel (x-admin-key mot backend) – uendret
-const ADMIN_LOGIN = '4455';                  // innloggingspassord (frontend-gate)
+// Admin-nøkkelen ligger IKKE i koden. Den skrives inn ved innlogging og
+// valideres mot serveren (env.ADMIN_KEY). Lagres kun i sessionStorage.
+let adminKey = sessionStorage.getItem('fo_admin_key') || '';
 
 // Hjelper: kapitaliser første bokstav i hvert navneledd (cato -> Cato)
 function capitalizeName(name){
@@ -236,22 +237,32 @@ function capitalizeName(name){
 }
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-// Login
+// Login: valider nøkkelen mot serveren (et ekte API-kall), ikke en frontend-gate
+async function tryLogin(key, silent) {
+ if (!key) return false;
+ if (!silent) document.getElementById('admin-msg').textContent = 'Sjekker…';
+ try {
+   const res = await fetch('/api/admin/stats', { headers: { 'x-admin-key': key } });
+   if (res.ok) {
+     adminKey = key;
+     sessionStorage.setItem('fo_admin_key', key);
+     document.getElementById('admin-msg').textContent = '';
+     showAdmin();
+     return true;
+   }
+ } catch (e) {}
+ if (!silent) document.getElementById('admin-msg').textContent = 'Feil nøkkel.';
+ return false;
+}
 document.getElementById('admin-login-btn').addEventListener('click', () => {
- const pw = document.getElementById('admin-pw').value;
- if (pw === ADMIN_LOGIN) {
-   sessionStorage.setItem('fo_admin', '1');
-   showAdmin();
- } else {
-   document.getElementById('admin-msg').textContent = 'Feil passord.';
- }
+ tryLogin(document.getElementById('admin-pw').value.trim(), false);
 });
 document.getElementById('admin-pw').addEventListener('keydown', e => {
  if (e.key === 'Enter') document.getElementById('admin-login-btn').click();
 });
 
-// Auto-login hvis session finnes
-if (sessionStorage.getItem('fo_admin') === '1') showAdmin();
+// Auto-login hvis nøkkel finnes i session (stille validering)
+if (adminKey) tryLogin(adminKey, true);
 
 function showAdmin() {
  document.getElementById('login-wrap').style.display = 'none';
@@ -260,7 +271,8 @@ function showAdmin() {
 }
 
 document.getElementById('admin-logout').addEventListener('click', () => {
- sessionStorage.removeItem('fo_admin');
+ sessionStorage.removeItem('fo_admin_key');
+ adminKey = '';
  location.reload();
 });
 
@@ -308,7 +320,7 @@ onceCheck.addEventListener('change', syncMaxUsesLock);
 // Dashboard stats
 async function loadDashboard() {
  try {
-   const res = await fetch('/api/admin/stats', { headers: { 'x-admin-key': ADMIN_PASSWORD } });
+   const res = await fetch('/api/admin/stats', { headers: { 'x-admin-key': adminKey } });
    const d = await res.json();
    document.getElementById('stat-users').textContent = d.users ?? '–';
    document.getElementById('stat-consent').textContent = d.consent ?? '–';
@@ -366,7 +378,7 @@ document.getElementById('add-offer-btn').addEventListener('click', async () => {
  try {
    const res = await fetch('/api/admin/offers', {
      method: 'POST',
-     headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_PASSWORD },
+     headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
      body: JSON.stringify({ actor, title, description, badge, once, maxUses })
    });
    if (res.ok) {
@@ -386,7 +398,7 @@ document.getElementById('add-offer-btn').addEventListener('click', async () => {
 async function toggleOffer(id, active) {
  await fetch(`/api/admin/offers/${id}`, {
    method: 'PATCH',
-   headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_PASSWORD },
+   headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
    body: JSON.stringify({ active: active ? 0 : 1 })
  });
  loadOffers();
@@ -394,7 +406,7 @@ async function toggleOffer(id, active) {
 
 async function deleteOffer(id) {
  if (!confirm('Slette dette tilbudet?')) return;
- await fetch(`/api/admin/offers/${id}`, { method: 'DELETE', headers: { 'x-admin-key': ADMIN_PASSWORD } });
+ await fetch(`/api/admin/offers/${id}`, { method: 'DELETE', headers: { 'x-admin-key': adminKey } });
  loadOffers();
 }
 
@@ -409,7 +421,7 @@ document.getElementById('send-push-btn').addEventListener('click', async () => {
  try {
    const res = await fetch('/api/admin/push', {
      method: 'POST',
-     headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_PASSWORD },
+     headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
      body: JSON.stringify({ title, body, url: url || '/app/home/' })
    });
    const d = await res.json();
@@ -422,7 +434,7 @@ document.getElementById('send-push-btn').addEventListener('click', async () => {
 async function loadUsers() {
  const list = document.getElementById('user-list');
  try {
-   const res = await fetch('/api/admin/users', { headers: { 'x-admin-key': ADMIN_PASSWORD } });
+   const res = await fetch('/api/admin/users', { headers: { 'x-admin-key': adminKey } });
    const d = await res.json();
    const users = d.users || [];
    if (!users.length) { list.innerHTML = '<div style="color:#8a9bb0;font-size:.85rem">Ingen brukere ennå.</div>'; return; }

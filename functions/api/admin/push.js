@@ -1,7 +1,7 @@
 // FinnOss – Send Web Push til alle abonnenter (ekte VAPID-signering)
 
 export async function onRequestPost({ request, env }) {
-  if (request.headers.get('x-admin-key') !== 'finnoss-admin-2026') {
+  if (!env.ADMIN_KEY || request.headers.get('x-admin-key') !== env.ADMIN_KEY) {
     return json({ error: 'Ikke tillatt' }, 403);
   }
   const { title, body, url } = await request.json();
