@@ -1,3 +1,5 @@
+import { hashPassword } from './_hash.js';
+
 export async function onRequestPost({ request, env }) {
   try {
     const { name, email, phone, password, consent } = await request.json();
@@ -23,11 +25,6 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-async function hashPassword(p) {
-  const d = new TextEncoder().encode(p + 'finnoss-salt-2026');
-  const h = await crypto.subtle.digest('SHA-256', d);
-  return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
 async function generateToken(id) {
   const d = new TextEncoder().encode(id + ':' + Date.now());
   const h = await crypto.subtle.digest('SHA-256', d);

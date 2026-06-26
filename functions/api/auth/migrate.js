@@ -59,6 +59,15 @@ export async function onRequest(context) {
   //  - vanlige tilbud (once=0) -> max_uses=1 (kan endres i admin)
   await tryRun('offers.max_uses backfill', `UPDATE offers SET max_uses=1 WHERE max_uses IS NULL`);
 
+  // === login_attempts (rate-limiting på innlogging) ===
+  await tryRun('login_attempts', `CREATE TABLE IF NOT EXISTS login_attempts(
+    id TEXT PRIMARY KEY,
+    ip TEXT,
+    email TEXT,
+    ts TEXT
+  )`);
+  await tryRun('login_attempts.idx', `CREATE INDEX IF NOT EXISTS idx_login_attempts_ip_ts ON login_attempts(ip, ts)`);
+
   // === push_subscriptions ===
   await tryRun('push_subscriptions', `CREATE TABLE IF NOT EXISTS push_subscriptions(
     id TEXT PRIMARY KEY,
