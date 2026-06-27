@@ -9,6 +9,7 @@
 <link rel="manifest" href="/app/manifest.json">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
 :root{
   --navy:#06121f;--navy2:#0c1f33;--navy3:#13304b;
   --gold:#e0ad52;--gold-light:#f6dca0;--gold-deep:#c08f3a;
@@ -24,8 +25,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .brandrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
 .brand{display:flex;align-items:center;gap:.6rem}
 .brand img{height:46px;width:auto;display:block;cursor:pointer;filter:brightness(0) invert(1) drop-shadow(0 1px 3px rgba(0,0,0,.4))}
-.user-chip{display:flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.08);padding:.3rem .75rem .3rem .35rem;border-radius:30px;font-size:.82rem;color:var(--text);cursor:pointer}
-.user-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--navy)}
+.user-chip{display:flex;align-items:center;background:transparent;padding:0;border-radius:50%;cursor:default}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .greeting .hi{font-size:.82rem;color:var(--muted);margin-bottom:.2rem}
 .greeting .place{font-size:1.05rem;font-weight:600;color:var(--muted);letter-spacing:.01em;line-height:1.15}
 .greeting .place .big{display:block;font-size:1.9rem;font-weight:800;color:var(--gold-light);letter-spacing:-.02em;margin-top:.05rem}
@@ -161,7 +162,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <div class="user-chip" id="user-chip">
         <span class="user-avatar" id="user-avatar">·</span>
-        <span id="user-name">Laster…</span>
       </div>
     </div>
     <div class="greeting">
@@ -185,7 +185,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </section>
 
 <!-- === TILBUD (loftet over kategorier) === -->
-<section class="section anim d2" id="offers-section">
+<section class="section anim d2" id="offers-section" style="scroll-margin-top:.75rem">
   <div class="kicker">Dine fordeler</div>
   <div id="offers-container"><div class="loader">Henter tilbud…</div></div>
 </section>
@@ -224,10 +224,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 3 5.5v15L9 18l6 3 6-2.5v-15L15 6 9 3z"/><path d="M9 3v15M15 6v15"/></svg>
     Heggedal
   </a>
-  <span class="nav-item" style="opacity:.45;cursor:default">
+  <a class="nav-item" href="#offers-section">
     <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 17.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9L12 3.5z"/></svg>
     Fordeler
-  </span>
+  </a>
   <a class="nav-item" id="logout-btn" href="#">
     <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
     Logg ut
@@ -310,7 +310,6 @@ if (!token || !user) {
   let first = user ? (user.name || '').split(' ')[0] : '';
   // Kapitaliser forste bokstav (cato -> Cato)
   if (first) first = first.charAt(0).toUpperCase() + first.slice(1);
-  document.getElementById('user-name').textContent = first || 'Medlem';
   document.getElementById('user-avatar').textContent = first ? first.charAt(0) : '·';
   const h = new Date().getHours();
   const prefix = h < 10 ? 'God morgen' : h < 18 ? 'Hei' : 'God kveld';
