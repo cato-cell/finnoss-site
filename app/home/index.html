@@ -20,22 +20,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .app-top{position:relative;overflow:hidden;background:linear-gradient(180deg,#0c2138 0%,#0a1a2c 100%)}
 /* Silhuetten ligger som et lavt band NEDERST, bak teksten - krasjer aldri */
 .app-top .silhouette{position:absolute;left:0;right:0;bottom:0;width:100%;height:60px;z-index:0;opacity:.7}
-.app-top-inner{position:relative;z-index:2;padding:1.1rem 1.25rem 2.4rem}
-.brandrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem}
+.app-top-inner{position:relative;z-index:2;padding:1.1rem 1.25rem 2rem}
+.brandrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
 .brand{display:flex;align-items:center;gap:.6rem}
-.brand img{height:52px;width:auto;display:block;cursor:pointer;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.brand img{height:46px;width:auto;display:block;cursor:pointer;filter:brightness(0) invert(1) drop-shadow(0 1px 3px rgba(0,0,0,.4))}
 .user-chip{display:flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.08);padding:.3rem .75rem .3rem .35rem;border-radius:30px;font-size:.82rem;color:var(--text);cursor:pointer}
 .user-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--navy)}
-.greeting .hi{font-size:.8rem;color:var(--muted);margin-bottom:.15rem}
-.greeting .place{font-size:1.45rem;font-weight:800;color:var(--text);letter-spacing:-.02em;line-height:1.1}
-.greeting .place b{color:var(--gold-light)}
+.greeting .hi{font-size:.82rem;color:var(--muted);margin-bottom:.2rem}
+.greeting .place{font-size:1.05rem;font-weight:600;color:var(--muted);letter-spacing:.01em;line-height:1.15}
+.greeting .place .big{display:block;font-size:1.9rem;font-weight:800;color:var(--gold-light);letter-spacing:-.02em;margin-top:.05rem}
 
 /* === Animasjon === */
 .anim{opacity:0;transform:translateY(14px);animation:rise .5s forwards}
 .anim.d1{animation-delay:.05s}.anim.d2{animation-delay:.15s}.anim.d3{animation-delay:.25s}.anim.d4{animation-delay:.35s}
 @keyframes rise{to{opacity:1;transform:translateY(0)}}
 
-.section{padding:1.1rem 1.25rem 0}
+.section{padding:.5rem 1.25rem 0}
 .kicker{font-size:.7rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:.6rem;font-weight:700}
 .eyebrow-row{display:flex;align-items:center;gap:.5rem;margin:.2rem 0 .7rem}
 .eyebrow-row .dot{width:6px;height:6px;border-radius:50%;background:var(--gold)}
@@ -153,12 +153,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <header class="app-top">
   <svg class="silhouette" viewBox="0 0 390 60" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
     <path d="M0 60 L0 42 L24 42 L24 30 L40 18 L56 30 L56 42 L96 42 L96 26 L112 26 L112 14 L124 6 L136 14 L136 26 L150 26 L150 42 L200 42 L200 28 L218 28 L218 16 L236 4 L254 16 L254 28 L270 28 L270 42 L320 42 L320 24 L336 24 L336 36 L356 36 L356 22 L372 22 L372 42 L390 42 L390 60 Z" fill="#081726"/>
-    <g fill="#e0ad52" opacity=".6">
-      <rect x="34" y="32" width="4" height="6"/><rect x="44" y="32" width="4" height="6"/>
-      <rect x="118" y="18" width="4" height="6"/><rect x="128" y="18" width="4" height="6"/>
-      <rect x="230" y="20" width="4" height="6"/><rect x="240" y="20" width="4" height="6"/>
-      <rect x="344" y="28" width="4" height="5"/>
-    </g>
   </svg>
   <div class="app-top-inner">
     <div class="brandrow">
@@ -171,8 +165,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
     </div>
     <div class="greeting">
-      <div class="hi" id="greeting-hi">Velkommen 👋</div>
-      <div class="place">Velkommen til <b>Heggedal</b></div>
+      <div class="hi" id="greeting-hi">Hei 👋</div>
+      <div class="place">Velkommen til<span class="big">Heggedal</span></div>
     </div>
   </div>
 </header>
@@ -190,9 +184,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </section>
 
+<!-- === TILBUD (loftet over kategorier) === -->
+<section class="section anim d2" id="offers-section">
+  <div class="kicker">Dine fordeler</div>
+  <div id="offers-container"><div class="loader">Henter tilbud…</div></div>
+</section>
+
 <!-- === KATEGORIER (rettferdig) === -->
 <section class="section">
-  <div class="eyebrow-row anim d2"><span class="dot"></span><span>Utforsk Heggedal</span></div>
+  <div class="eyebrow-row anim d3"><span class="dot"></span><span>Utforsk Heggedal</span></div>
   <div class="cat-grid anim d3">
     <a class="cat" href="https://finnoss.no/heggedal/#mat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2a2 2 0 0 0 2-2V2M5 2v20M11 2v20c3 0 5-2 5-6V8c0-4-2-6-5-6z"/></svg>Mat &amp; drikke</a>
     <a class="cat" href="https://finnoss.no/heggedal/#butikk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>Butikker</a>
@@ -202,12 +202,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <a class="see-all anim d3" href="https://finnoss.no/heggedal/#kategorier">Se alle 27 aktører
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
   </a>
-</section>
-
-<!-- === TILBUD === -->
-<section class="section anim d4" id="offers-section">
-  <div class="kicker">Dine fordeler</div>
-  <div id="offers-container"><div class="loader">Henter tilbud…</div></div>
 </section>
 
 <!-- === INSTALL === -->
@@ -259,7 +253,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- Installer-veiledning (plassert FØR script, så getElementById finner elementene) -->
+<!-- Installer-veiledning – plassert FØR scriptet så getElementById ikke returnerer null -->
 <div class="guide-overlay" id="guide-overlay">
   <button class="guide-close-x" id="guide-close-x">×</button>
   <h2>Legg FinnOss på hjemskjermen</h2>
@@ -311,9 +305,6 @@ if (!token || !user) {
   window.location.href = '/app/login/';
 }
 
-// === Konstanter ===
-const AKTOR_ANTALL = 27; // Ingen API for aktørtall – endres her ett sted
-
 // Vis brukernavn + initial + tidsriktig hilsen
 (function(){
   let first = user ? (user.name || '').split(' ')[0] : '';
@@ -322,8 +313,9 @@ const AKTOR_ANTALL = 27; // Ingen API for aktørtall – endres her ett sted
   document.getElementById('user-name').textContent = first || 'Medlem';
   document.getElementById('user-avatar').textContent = first ? first.charAt(0) : '·';
   const h = new Date().getHours();
-  const hi = h < 10 ? 'God morgen 👋' : h < 18 ? 'Hei der 👋' : 'God kveld 👋';
-  document.getElementById('greeting-hi').textContent = hi;
+  const prefix = h < 10 ? 'God morgen' : h < 18 ? 'Hei' : 'God kveld';
+  const navn = first || '';
+  document.getElementById('greeting-hi').textContent = (navn ? `${prefix}, ${navn} 👋` : `${prefix} 👋`);
 })();
 
 // === Medlemstall fra /api/teller ===
