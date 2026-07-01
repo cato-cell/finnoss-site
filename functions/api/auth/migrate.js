@@ -69,12 +69,72 @@ export async function onRequest(context) {
   await tryRun('login_attempts.idx', `CREATE INDEX IF NOT EXISTS idx_login_attempts_ip_ts ON login_attempts(ip, ts)`);
 
   // === push_subscriptions ===
+  // VIKTIG: En tidligere versjon av denne migreringen opprettet tabellen med
+  // én samlet `subscription`-kolonne (JSON-blob). Men `functions/api/push/subscribe.js`
+  // (INSERT) og `functions/api/admin/push.js` (SELECT/bruk) er begge skrevet mot
+  // tre separate kolonner: `endpoint`, `p256dh`, `auth`. Det gjorde at
+  // subscribe.js sin INSERT feilet ("no such column: endpoint") på enhver
+  // database som hadde kjørt den gamle migreringen. Vi retter skjemaet til det
+  // koden faktisk bruker, og bygger om en eventuell gammel tabell uten å miste
+  // data (leser ut endpoint/p256dh/auth fra den gamle JSON-blob-kolonnen via
+  // json_extract, samme ombyggingsmønster som for `redemptions` under).
   await tryRun('push_subscriptions', `CREATE TABLE IF NOT EXISTS push_subscriptions(
     id TEXT PRIMARY KEY,
     user_id TEXT,
-    subscription TEXT NOT NULL,
+    endpoint TEXT NOT NULL,
+    p256dh TEXT NOT NULL,
+    auth TEXT NOT NULL,
     created_at TEXT
   )`);
+
+  // Sjekk om en eldre tabell med feil skjema (kolonnen `subscription`, ingen
+  // `endpoint`-kolonne) finnes – hvis ja, bygg om uten å miste abonnement.
+  try {
+    const row = await env.DB.prepare(
+      `SELECT sql FROM sqlite_master WHERE type='table' AND name='push_subscriptions'`
+    ).first();
+    const ddl = (row && row.sql) ? row.sql.replace(/\s+/g, ' ') : '';
+    const hasOldSubscriptionColumn = /\bsubscription\b/i.test(ddl) && !/\bendpoint\b/i.test(ddl);
+
+    if (hasOldSubscriptionColumn) {
+      await env.DB.prepare(`CREATE TABLE IF NOT EXISTS push_subscriptions_new(
+        id TEXT PRIMARY KEY,
+        user_id TEXT,
+        endpoint TEXT NOT NULL,
+        p256dh TEXT NOT NULL,
+        auth TEXT NOT NULL,
+        created_at TEXT
+      )`).run();
+
+      const totalOld = await env.DB.prepare(`SELECT COUNT(*) AS n FROM push_subscriptions`).first();
+
+      // Les endpoint/p256dh/auth ut av den gamle JSON-blob-kolonnen. Rader der
+      // JSON-en mangler et av feltene hopper vi bevisst over (kan ikke sendes
+      // push til uansett) i stedet for å la hele migreringen feile.
+      const insertRes = await env.DB.prepare(
+        `INSERT OR IGNORE INTO push_subscriptions_new(id, user_id, endpoint, p256dh, auth, created_at)
+         SELECT id, user_id,
+                json_extract(subscription, '$.endpoint'),
+                json_extract(subscription, '$.keys.p256dh'),
+                json_extract(subscription, '$.keys.auth'),
+                created_at
+         FROM push_subscriptions
+         WHERE json_extract(subscription, '$.endpoint') IS NOT NULL
+           AND json_extract(subscription, '$.keys.p256dh') IS NOT NULL
+           AND json_extract(subscription, '$.keys.auth') IS NOT NULL`
+      ).run();
+
+      await env.DB.prepare(`DROP TABLE push_subscriptions`).run();
+      await env.DB.prepare(`ALTER TABLE push_subscriptions_new RENAME TO push_subscriptions`).run();
+
+      const migrated = insertRes && insertRes.meta ? insertRes.meta.changes : '?';
+      log.push(`OK: push_subscriptions bygget om (subscription-blob -> endpoint/p256dh/auth). ${totalOld?.n ?? 0} gamle rader funnet, ${migrated} migrert.`);
+    } else {
+      log.push('OK: push_subscriptions hadde allerede riktig struktur');
+    }
+  } catch (e) {
+    log.push('ADVARSEL push_subscriptions-ombygging: ' + e.message);
+  }
 
   // === redemptions ===
   // VIKTIG: Den gamle tabellen hadde UNIQUE(user_id, offer_id), som hindrer
