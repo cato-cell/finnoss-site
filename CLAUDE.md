@@ -101,5 +101,18 @@ Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages 
 - **SEO (live):** selvrefererende `<link rel="canonical">` på alle 38 offentlige sider (uten www). `sitemap.xml` oppdatert (38 URL-er). Fundament fra før: unike titler/meta, Open Graph, én H1/side. Ikke rørt (SEO-hold): JSON-LD mangler på 12 sider; forsiden `/`→`/heggedal/` er bevisst **302** (kan bli 301 – avklar først).
 - **Google Search Console:** siden er indeksert (~46 sider, ytelsesdata finnes). Verifisert eiendom er **`https://www.finnoss.no/` (med www)**; en uten-www-eiendom finnes men er ubekreftet. **Anbefalt opprydding:** ett **domeneområde** `finnoss.no` (dekker www + uten-www, matcher sitemap) – krever TXT-post hos Webhuset (Cato gjør det selv; rør ikke DNS). Sitemap sendes inn med stien `sitemap.xml`, ikke full URL.
 
+## Åpne funn (repo-audit 2026-07-01)
+- **Push-skjema ute av synk (bug):** `functions/api/auth/migrate.js` oppretter én
+  `subscription`-kolonne i push-tabellen, men `functions/api/push/subscribe.js` og
+  `functions/api/admin/push.js` forventer tre separate kolonner (`endpoint`,
+  `p256dh`, `auth`). Web Push feiler trolig på en fersk database. Rett skjemaet før
+  push tas i bruk.
+- **`vilkar/index.html` (linje 12+55):** én gjenværende wp-content-bildelenke på eget
+  domene – siste reelle WordPress-rest. Juridisk side → krever godkjenning før endring.
+- **Asker Golf Lounge mangler JSON-LD helt** (reelt hull, ikke bevisst unntak, i
+  motsetning til de andre aktørsidene). Legg til LocalBusiness med Marta's Café som
+  mal – koordiner med SEO-sporet.
+- **`Finnoss logo.jpg` i repo-rot** er ubrukt og ureferert – avklar sletting.
+
 ## Omfang
 - Jobb **kun** i dette repoet (`finnoss-site`). Ikke rør andre repoer eller filer utenfor prosjektet.
