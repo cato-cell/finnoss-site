@@ -14,14 +14,41 @@ export async function onRequestPost({ request, env }) {
     const normalizedPhone = normalizePhone(phone);
     await env.DB.prepare(`INSERT INTO users (id, name, email, phone, password_hash, consent, registered_at, source) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).bind(userId, name, email.toLowerCase(), normalizedPhone, passwordHash, consent ? 1 : 0, now, 'pwa').run();
     if (consent && env.BREVO_API_KEY) {
-      const nameParts = name.trim().split(' ');
-      await fetch('https://api.brevo.com/v3/contacts', { method: 'POST', headers: { 'Content-Type': 'application/json', 'api-key': env.BREVO_API_KEY }, body: JSON.stringify({ email, attributes: { FIRSTNAME: nameParts[0] || '', LASTNAME: nameParts.slice(1).join(' ') || '', SMS: normalizedPhone || '' }, listIds: [3], updateEnabled: true }) }).catch(console.error);
+      await syncToBrevo(env, name, email.toLowerCase(), normalizedPhone);
     }
     const token = await generateToken(userId);
     return json({ token, user: { id: userId, name, email: email.toLowerCase() } }, 201);
   } catch (err) {
     console.error('Register error:', err);
     return json({ error: 'Intern feil. Prøv igjen.' }, 500);
+  }
+}
+
+// Synk kontakt til Brevo (liste 3). Feiler ALDRI registreringen – logger kun.
+async function syncToBrevo(env, name, email, phone) {
+  try {
+    const parts = (name || '').trim().split(' ');
+    const attributes = {
+      FIRSTNAME: parts[0] || '',
+      LASTNAME: parts.slice(1).join(' ') || ''
+    };
+    // Kun send SMS hvis nummeret er gyldig E.164 (+47…). Et ugyldig SMS-felt
+    // får Brevo til å avvise HELE kontakten – da utelater vi det (e-post holder).
+    if (phone && /^\+\d{8,15}$/.test(phone)) attributes.SMS = phone;
+
+    const res = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'api-key': env.BREVO_API_KEY },
+      body: JSON.stringify({ email, attributes, listIds: [3], updateEnabled: true })
+    });
+    // 201 = opprettet, 204 = oppdatert (begge res.ok). Alt annet logges med detaljer.
+    if (!res.ok) {
+      let detail = '';
+      try { detail = await res.text(); } catch (e) {}
+      console.error('Brevo-synk feilet (' + res.status + ') for ' + email + ': ' + detail);
+    }
+  } catch (e) {
+    console.error('Brevo-synk unntak for ' + email + ':', e);
   }
 }
 
