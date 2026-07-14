@@ -108,6 +108,19 @@ input:focus,textarea:focus{border-color:#d8a64c}
 .consent-badge.yes{background:rgba(80,180,100,.15);color:#70c080}
 .consent-badge.no{background:rgba(100,100,100,.15);color:#8a9bb0}
 .user-card-date{font-size:.72rem;color:#8a9bb0}
+/* Rediger/slett per bruker */
+.user-card-actions{display:flex;gap:.5rem;margin-top:.75rem}
+.user-btn{flex:1;padding:.5rem;font-size:.8rem;font-weight:700;border-radius:8px;border:none;cursor:pointer}
+.user-btn.edit{background:rgba(216,166,76,.15);color:#d8a64c}
+.user-btn.delete{background:rgba(192,57,43,.15);color:#e07070}
+.user-btn.cancel{background:rgba(255,255,255,.08);color:#8a9bb0}
+.user-edit{display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(255,255,255,.08)}
+.user-edit.show{display:block}
+.user-edit label{display:block;font-size:.7rem;color:#8a9bb0;margin:.55rem 0 .25rem;text-transform:uppercase;letter-spacing:.05em}
+.user-edit input{width:100%;background:#06111d;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:.6rem .8rem;color:#f0ece4;font-size:.9rem;outline:none}
+.user-edit input:focus{border-color:#d8a64c}
+.user-edit-actions{display:flex;gap:.5rem;margin-top:.85rem}
+.user-edit-msg{font-size:.78rem;margin-top:.5rem;min-height:1rem}
 </style>
 </head>
 <body>
@@ -236,6 +249,8 @@ function capitalizeName(name){
   return (name || '').split(' ').map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : w).join(' ');
 }
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+// Attributt-trygg variant (escaper også doble anførselstegn).
+function escAttr(s){return esc(s).replace(/"/g,'&quot;');}
 
 // Login: valider nøkkelen mot serveren (et ekte API-kall), ikke en frontend-gate
 async function tryLogin(key, silent) {
@@ -438,18 +453,87 @@ async function loadUsers() {
    const d = await res.json();
    const users = d.users || [];
    if (!users.length) { list.innerHTML = '<div style="color:#8a9bb0;font-size:.85rem">Ingen brukere ennå.</div>'; return; }
-   list.innerHTML = users.map(u => `
-     <div class="user-card">
+   list.innerHTML = users.map(u => {
+     const visning = capitalizeName(u.name);
+     return `
+     <div class="user-card" data-id="${escAttr(u.id)}">
        <div class="user-card-top">
-         <span class="user-card-name">${esc(capitalizeName(u.name))}</span>
+         <span class="user-card-name">${esc(visning)}</span>
          <span class="consent-badge ${u.consent ? 'yes' : 'no'}">${u.consent ? 'Samtykke' : 'Nei'}</span>
        </div>
        <div class="user-card-email">${esc(u.email)}</div>
+       ${u.phone ? `<div class="user-card-email">${esc(u.phone)}</div>` : ''}
        <div class="user-card-meta">
          <span class="user-card-date">Registrert ${u.registered_at ? u.registered_at.slice(0,10) : '–'}</span>
        </div>
-     </div>`).join('');
+       <div class="user-card-actions">
+         <button class="user-btn edit" data-act="edit">Rediger</button>
+         <button class="user-btn delete" data-act="delete" data-name="${escAttr(visning)}" data-email="${escAttr(u.email)}">Slett</button>
+       </div>
+       <div class="user-edit">
+         <label>Navn</label>
+         <input type="text" data-field="name" value="${escAttr(u.name || '')}">
+         <label>E-post</label>
+         <input type="email" data-field="email" value="${escAttr(u.email || '')}">
+         <label>Telefon</label>
+         <input type="tel" data-field="phone" value="${escAttr(u.phone || '')}">
+         <div class="user-edit-actions">
+           <button class="user-btn edit" data-act="save">Lagre</button>
+           <button class="user-btn cancel" data-act="cancel">Avbryt</button>
+         </div>
+         <div class="user-edit-msg"></div>
+       </div>
+     </div>`;
+   }).join('');
  } catch { list.innerHTML = '<div style="color:#e07070;font-size:.85rem">Feil ved lasting.</div>'; }
+}
+
+// Delegering: én lytter på den stabile #user-list-beholderen (rendres på nytt hver last)
+document.getElementById('user-list').addEventListener('click', async (e) => {
+ const btn = e.target.closest('button'); if (!btn) return;
+ const card = btn.closest('.user-card'); if (!card) return;
+ const id = card.dataset.id;
+ const act = btn.dataset.act;
+ if (act === 'edit')        card.querySelector('.user-edit').classList.toggle('show');
+ else if (act === 'cancel') card.querySelector('.user-edit').classList.remove('show');
+ else if (act === 'save')   await saveUser(card, id, btn);
+ else if (act === 'delete') await deleteUser(id, btn.dataset.name, btn.dataset.email);
+});
+
+async function saveUser(card, id, btn) {
+ const name  = card.querySelector('input[data-field="name"]').value.trim();
+ const email = card.querySelector('input[data-field="email"]').value.trim();
+ const phone = card.querySelector('input[data-field="phone"]').value.trim();
+ const msg = card.querySelector('.user-edit-msg');
+ msg.style.color = '#8a9bb0'; msg.textContent = 'Lagrer…';
+ btn.disabled = true;
+ try {
+   const res = await fetch(`/api/admin/users/${id}`, {
+     method: 'PATCH',
+     headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
+     body: JSON.stringify({ name, email, phone })
+   });
+   const d = await res.json();
+   if (res.ok) { msg.style.color = '#70c080'; msg.textContent = 'Lagret ✔'; setTimeout(loadUsers, 500); }
+   else { msg.style.color = '#e07070'; msg.textContent = d.error || 'Kunne ikke lagre.'; btn.disabled = false; }
+ } catch { msg.style.color = '#e07070'; msg.textContent = 'Nettverksfeil.'; btn.disabled = false; }
+}
+
+async function deleteUser(id, name, email) {
+ const label = name || email;
+ if (!confirm(`Slette ${label}?\n\nDette kan ikke angres og fjerner brukeren fra Brevo også.`)) return;
+ try {
+   const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE', headers: { 'x-admin-key': adminKey } });
+   const d = await res.json();
+   if (res.ok) {
+     if (d.brevo && d.brevo.ok === false && !d.brevo.skipped) {
+       alert('Brukeren er slettet i FinnOss, MEN Brevo-oppryddingen feilet – fjern kontakten manuelt i Brevo.\n\n' + (d.brevo.warning || ''));
+     }
+     loadUsers();
+   } else {
+     alert(d.error || 'Kunne ikke slette brukeren.');
+   }
+ } catch { alert('Nettverksfeil ved sletting.'); }
 }
 </script>
 
