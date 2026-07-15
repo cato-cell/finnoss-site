@@ -156,6 +156,7 @@ input:focus,textarea:focus{border-color:#d8a64c}
      <label>Admin-nøkkel</label>
      <input type="password" id="admin-pw" placeholder="Lim inn admin-nøkkelen" autocomplete="off">
    </div>
+   <label class="once-check" style="margin:.25rem 0 1.1rem"><input type="checkbox" id="remember-me" checked><span>Husk meg på denne enheten</span></label>
    <button class="btn" id="admin-login-btn">Logg inn</button>
    <p class="msg error" id="admin-msg"></p>
  </div>
@@ -273,8 +274,10 @@ input:focus,textarea:focus{border-color:#d8a64c}
 
 <script>
 // Admin-nøkkelen ligger IKKE i koden. Den skrives inn ved innlogging og
-// valideres mot serveren (env.ADMIN_KEY). Lagres kun i sessionStorage.
-let adminKey = sessionStorage.getItem('fo_admin_key') || '';
+// valideres mot serveren (env.ADMIN_KEY). «Husk meg» -> localStorage (blir
+// liggende på enheten til du logger ut), ellers sessionStorage (glemmes når
+// fanen lukkes).
+let adminKey = localStorage.getItem('fo_admin_key') || sessionStorage.getItem('fo_admin_key') || '';
 
 // Hjelper: kapitaliser første bokstav i hvert navneledd (cato -> Cato)
 function capitalizeName(name){
@@ -292,7 +295,12 @@ async function tryLogin(key, silent) {
    const res = await fetch('/api/admin/stats', { headers: { 'x-admin-key': key } });
    if (res.ok) {
      adminKey = key;
-     sessionStorage.setItem('fo_admin_key', key);
+     if (!silent) {
+       // Lagre der brukeren valgte; fjern kopi fra det andre lageret.
+       const remember = document.getElementById('remember-me').checked;
+       (remember ? localStorage : sessionStorage).setItem('fo_admin_key', key);
+       (remember ? sessionStorage : localStorage).removeItem('fo_admin_key');
+     }
      document.getElementById('admin-msg').textContent = '';
      showAdmin();
      return true;
@@ -318,6 +326,7 @@ function showAdmin() {
 }
 
 document.getElementById('admin-logout').addEventListener('click', () => {
+ localStorage.removeItem('fo_admin_key');
  sessionStorage.removeItem('fo_admin_key');
  adminKey = '';
  location.reload();
