@@ -396,7 +396,7 @@
      Vil dere bruke et annet verktøy (Meta Pixel, Plausible, Matomo), bytt ut
      innholdet i loadAnalytics() – funksjonen kalles kun etter samtykke.
      ===================================================================== */
-  const ANALYTICS_ID = "";
+  const ANALYTICS_ID = "G-KJMH2Y0F7P";
 
   function getConsent() {
     try {
