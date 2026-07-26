@@ -10,6 +10,11 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+/* Respekter prefers-reduced-motion (a11y) – slår av animasjoner/transisjoner */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .anim{opacity:1!important;transform:none!important}
+}
 :root{
   --navy:#06121f;--navy2:#0c1f33;--navy3:#13304b;
   --gold:#e0ad52;--gold-light:#f6dca0;--gold-deep:#c08f3a;

@@ -1,3 +1,10 @@
+# Sikkerhetsheadere – gjelder alle ruter. (CSP holdes bevisst utenfor: den kan
+# brekke Google Analytics + inline-JS, og krever egen testrunde.)
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
 # Cloudflare Pages – cache-styring
 # CSS og JS skal alltid revalideres, så oppdateringer vises uten manuell cache-busting.
 /styles.css
