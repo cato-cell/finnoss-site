@@ -81,6 +81,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .guide-step-text b{color:var(--gold-light)}
 .guide-share-ic{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#0a84ff;border-radius:6px;color:#fff;font-size:.85rem;vertical-align:middle;margin:0 3px}
 .guide-done{background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:.85rem;font-size:.95rem;font-weight:700;cursor:pointer;width:100%;margin-top:.6rem}
+
+/* === Desktop (>=900px): sentrert innhold ~960px + fordeler i 3-kolonners rad. Mobil (<900px) helt uendret. === */
+@media (min-width:900px){
+  html{background:var(--navy)}
+  body{max-width:960px;margin-inline:auto}
+  .benefits{flex-direction:row}
+  .benefit{flex:1;flex-direction:column;align-items:center;text-align:center}
+}
 </style>
 </head>
 <body>

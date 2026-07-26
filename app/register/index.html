@@ -30,6 +30,29 @@ input:focus{border-color:#d8a64c}
 .terms{font-size:.78rem;color:#4a5a6a;text-align:center;margin-top:1rem;line-height:1.5}
 .link{display:block;text-align:center;margin-top:1.5rem;font-size:.9rem;color:#8a9bb0}
 .link a{color:#d8a64c;text-decoration:none}
+
+/* === Desktop (>=900px): to-kolonne – hero-bilde venstre, skjema høyre. Mobil (<900px) helt uendret. === */
+@media (min-width:900px){
+  body{
+    background:#06111d;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:2rem 2rem 2rem 50vw;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    top:0;left:0;bottom:0;
+    width:50vw;
+    background:linear-gradient(rgba(6,17,29,.45),rgba(6,17,29,.7)),url('/images/heggedal-hero.jpg');
+    background-size:cover;
+    background-position:center;
+    z-index:0;
+  }
+  .logo,.card{position:relative;z-index:1}
+  .card{max-width:480px}
+}
 </style>
 </head>
 <body>
