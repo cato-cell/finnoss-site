@@ -1,5 +1,6 @@
 // functions/api/auth/migrate.js
-// Kjøres ved å besøke /api/auth/migrate?secret=finnoss-setup-2026
+// Kjøres ved å besøke /api/auth/migrate?secret=<MIGRATE_SECRET>
+// Secret ligger som Cloudflare Pages-secret (env.MIGRATE_SECRET), ikke i koden.
 // Idempotent: trygt å kjøre flere ganger.
 
 export async function onRequest(context) {
@@ -7,8 +8,9 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   const secret = url.searchParams.get('secret');
 
-  if (secret !== 'finnoss-setup-2026') {
-    return new Response(JSON.stringify({ ok: false, error: 'Ugyldig secret' }), {
+  // Fail-closed: uten konfigurert MIGRATE_SECRET avvises alle kall.
+  if (!env.MIGRATE_SECRET || secret !== env.MIGRATE_SECRET) {
+    return new Response(JSON.stringify({ ok: false, error: 'Ugyldig eller ukonfigurert secret' }), {
       status: 403, headers: { 'Content-Type': 'application/json' }
     });
   }
