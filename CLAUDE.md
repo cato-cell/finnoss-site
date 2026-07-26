@@ -48,7 +48,7 @@ Vanilla JS, ingen rammeverk. Tre IIFE-er som init-er ved `DOMContentLoaded`:
 ## Filstruktur
 - `index.html` – forside (omdirigerer til `/heggedal/` via `_redirects`).
 - `heggedal/index.html` – hovedhub (hero, «Bli med gratis», kategorier, aktør- og blogg-karusell, kontakt).
-- `heggedal/<aktør>/` – 27 aktør-/tjeneste-/innholdsmapper (bl.a. `blogg/`). Noen har undersider: `bakkal-heggedal/gulars/`, `martas-cafe/vinterkos/`.
+- `heggedal/<aktør>/` – 28 aktør-/tjeneste-/innholdsmapper (bl.a. `blogg/`, `nextnova/`). Noen har undersider: `bakkal-heggedal/gulars/`, `martas-cafe/vinterkos/`.
 - `om-oss/`, `bli-medlem/`, `personvern/`, `vilkar/`, `posten/`, `asker-golf-lounge/` (+ `asker-golf-lounge/golfsimulator/`).
 - `styles.css` (all CSS for det offentlige nettstedet), `app.js` (all frontend-JS for nettstedet, se over).
 - `functions/api/registrer.js` – påmelding → Brevo.
@@ -67,7 +67,7 @@ Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages 
 - `admin/index.html` – admin-panel (oversikt, tilbud, push, brukere). **Innlogging: admin-nøkkelen skrives inn og valideres mot serveren** (ekte API-kall mot `/api/admin/stats`); nøkkelen lagres kun i `sessionStorage` (`fo_admin_key`). Ingen hemmelighet i klientkoden lenger.
 
 **Backend (Cloudflare Pages Functions, `functions/api/`):**
-- `auth/migrate.js` – oppretter D1-tabeller. Kjøres manuelt: `GET /api/auth/migrate?secret=…`. Idempotent.
+- `auth/migrate.js` – oppretter D1-tabeller. Kjøres manuelt: `GET /api/auth/migrate?secret=…` der secret valideres mot **`env.MIGRATE_SECRET`** (Cloudflare-secret, **ikke** hardkodet; fail-closed uten konfigurert verdi). Idempotent.
 - `auth/_hash.js` – **delt** passord-modul: **PBKDF2-HMAC-SHA-256** (per-bruker salt, 100k iterasjoner), format `pbkdf2$<iter>$<salt>$<hash>`. `verifyPassword()` godtar også gammelt SHA-256-format og flagger `needsUpgrade`. `_`-prefiks = ikke en rute. Importeres av login/register.
 - `auth/register.js`, `auth/login.js` – auth via `_hash.js`. **Login oppgraderer gamle passord til PBKDF2** transparent ved vellykket innlogging, og har **rate-limiting** (maks 10 feilforsøk per IP per 15 min via tabellen `login_attempts`; feiler «åpent» hvis tabellen mangler).
 - `offers.js` (offentlig GET, filtrerer brukte engangstilbud), `offers/redeem.js` (innløsning – **utleder bruker fra `Authorization: Bearer <token>` via `sessions`, ikke fra body**), `admin/offers.js`, `admin/offers/[id].js`, `admin/stats.js`, `admin/users.js` – admin beskyttes av header `x-admin-key` som valideres mot **`env.ADMIN_KEY`** (server-side secret).
@@ -80,6 +80,8 @@ Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages 
 - ✅ Passord-hashing byttet til PBKDF2 (per-bruker salt) med transparent oppgradering av gamle passord.
 - ✅ Rate-limiting på innlogging.
 - ✅ Eierskaps-sjekk på tilbud-innløsning (token-basert).
+- ✅ **Migreringssecret** flyttet fra hardkodet streng til Cloudflare-secret `env.MIGRATE_SECRET` (fail-closed). Ikke lenger synlig i kildekoden (2026-07-26).
+- ✅ **`ADMIN_KEY` og `VAPID_PRIVATE`** lagret som Cloudflare **Secrets** (kryptert), ikke Plaintext (2026-07-26).
 
 **Gjenstår / valgfritt:**
 - Cloudflare Access foran `/admin/*` som ekstra lås (API-et er allerede sikret) – valgfritt.
@@ -92,13 +94,14 @@ Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages 
 - **`/api/registrer`:** validerer e-post + norsk mobil (normaliseres til `+47…`/E.164), krever samtykke, har honeypot-felt (`company`). Kun `POST`.
 - **Cloudflare D1:** databasen må bindes som **`DB`** på Pages-prosjektet, ellers feiler alle `/api/auth/*` og `/api/admin/*`. Etter binding: kjør migreringen (over). Bindinger/env-vars slår inn **ved neste deploy**.
 - **Admin-API:** nøkkel som env-var **`ADMIN_KEY`** (secret) i Cloudflare. Brukes som `x-admin-key` mot `/api/admin/*` og som admin-innlogging. Slår inn ved neste deploy. **Aldri hardkod.**
-- **Web Push (VAPID):** env-vars **`VAPID_PUBLIC`**, **`VAPID_PRIVATE`**, **`VAPID_SUBJECT`** (`mailto:…`). Genereres med `npx web-push generate-vapid-keys`.
+- **Web Push (VAPID):** env-vars **`VAPID_PUBLIC`**, **`VAPID_PRIVATE`**, **`VAPID_SUBJECT`** (`mailto:…`). Genereres med `npx web-push generate-vapid-keys`. `VAPID_PRIVATE` skal være **Secret** (kryptert). NB: bytt aldri selve verdien uten å oppdatere `VAPID_PUBLIC` – det invaliderer eksisterende push-abonnenter.
 - **`_redirects`:** `/` → `/heggedal/` (302, midlertidig); `www.finnoss.no` → uten www (301, kanonisk).
 
 ## Status & utestående (per juni 2026)
-- **⚠️ Kjør D1-migreringen** for at rate-limiting-tabellen skal opprettes: `GET /api/auth/migrate?secret=…` (samme secret som ligger i `migrate.js`). Idempotent. Sjekk om dette er gjort.
+- **D1-migreringen er kjørt (verifisert live 2026-07-26):** alle tabeller finnes (`users`, `sessions`, `offers`, `redemptions`, `push_subscriptions` med riktig `endpoint`/`p256dh`/`auth`-skjema, `login_attempts`). Secret for endepunktet ligger nå i `env.MIGRATE_SECRET` (ikke i koden). Kjøres ved behov: `GET /api/auth/migrate?secret=…`. Idempotent.
 - **Juridisk (live):** `personvern/` dekker nå medlemsappen (konto, passord-hash, innløsninger, push, nyhetsbrev), navngir databehandlere (Cloudflare, Brevo), rettslig grunnlag, lagringstid, EØS/SCC. Kontakt-e-post overalt: **cato@askergolflounge.no**. Endring av juridisk tekst krever fortsatt godkjenning.
-- **SEO (live):** selvrefererende `<link rel="canonical">` på alle 38 offentlige sider (uten www). `sitemap.xml` oppdatert (38 URL-er). Fundament fra før: unike titler/meta, Open Graph, én H1/side. Ikke rørt (SEO-hold): JSON-LD mangler på 12 sider; forsiden `/`→`/heggedal/` er bevisst **302** (kan bli 301 – avklar først).
+- **Aktører (live):** **NextNova** (nettsider + praktisk AI-hjelp, `nextnova.no`) lagt til under kategorien **Tjenester**, adresse **Heggedal Torg 18**. Live på `/heggedal/nextnova/`, lenket i Tjenester-karusellen og i `sitemap.xml` (2026-07-26).
+- **SEO (live):** selvrefererende `<link rel="canonical">` på alle offentlige sider (uten www). `sitemap.xml` oppdatert. Fundament fra før: unike titler/meta, Open Graph, én H1/side. **JSON-LD (oppdatert 2026-07-26):** lagt til additivt på 4 tidligere manglende innholdssider (`heggedal/blogg/` → `Blog`; `asker-golf-lounge/golfsimulator/`, `heggedal/bakkal-heggedal/gulars/`, `heggedal/martas-cafe/vinterkos/` → `Article` med `about`-referanse til foreldre-bedriften). Dekning nå **33/40**; de resterende 7 er bevisste unntak (feilside, redirect-forside, hub, `om-oss/`, `bli-medlem/`, `personvern/`, `vilkar/`). Forsiden `/`→`/heggedal/` er bevisst **302** (kan bli 301 – avklar først).
 - **Google Search Console:** siden er indeksert (~46 sider, ytelsesdata finnes). Verifisert eiendom er **`https://www.finnoss.no/` (med www)**; en uten-www-eiendom finnes men er ubekreftet. **Anbefalt opprydding:** ett **domeneområde** `finnoss.no` (dekker www + uten-www, matcher sitemap) – krever TXT-post hos Webhuset (Cato gjør det selv; rør ikke DNS). Sitemap sendes inn med stien `sitemap.xml`, ikke full URL.
 
 ## Åpne funn (repo-audit 2026-07-01)
@@ -109,10 +112,9 @@ Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages 
   push tas i bruk.
 - **`vilkar/index.html` (linje 12+55):** én gjenværende wp-content-bildelenke på eget
   domene – siste reelle WordPress-rest. Juridisk side → krever godkjenning før endring.
-- **Asker Golf Lounge mangler JSON-LD helt** (reelt hull, ikke bevisst unntak, i
-  motsetning til de andre aktørsidene). Legg til LocalBusiness med Marta's Café som
-  mal – koordiner med SEO-sporet.
+- **Asker Golf Lounge JSON-LD (løst 2026-07-26):** hovedsiden har `SportsActivityLocation`-JSON-LD, og undersiden `golfsimulator/` har fått `Article`-JSON-LD. Ikke lenger et hull.
 - **`Finnoss logo.jpg` i repo-rot** er ubrukt og ureferert – avklar sletting.
+- **Git-hygiene:** branchene `admin-brukeradmin` og `aktor-nextnova` er **fullstendig merget til `main`**. Slett dem i GitHub-UI hvis de fortsatt vises i branch-listen (kan ikke slettes fra Claude Code-miljøet – 403 på ref-sletting).
 
 ## Omfang
 - Jobb **kun** i dette repoet (`finnoss-site`). Ikke rør andre repoer eller filer utenfor prosjektet.
