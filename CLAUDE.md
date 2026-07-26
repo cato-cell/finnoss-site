@@ -64,6 +64,7 @@ Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages 
 - `app/index.html` – install-/landingsside (PWA-prompt, iOS-instruks). `app/manifest.json`, `app/sw.js` (service worker: cache + push).
 - `app/login/`, `app/register/` – auth-skjemaer. Token + bruker lagres i `localStorage` (`fo_token`, `fo_user`).
 - `app/home/` – innlogget hjem: tilbud fra `/api/offers` (med hardkodet fallback), engangstilbud med innløsnings-overlay, push-banner.
+- **Desktop-layout (2026-07-26):** `app/index.html`, `app/home/` og `app/register/` har responsivt desktop-oppsett bak **`@media (min-width:900px)`** i sitt eget inline-`<style>` (bredere container 980/1080px via per-seksjon `max-width`, tilbud i 2-kol grid, register i to-kolonne bilde/skjema, subtil Heggedal-husrekke-silhuett i sidefeltene). **Mobil (<900px) er uendret.** PWA-brekkpunkt = **900px** – hold nye app-sider konsistente (NB: forskjellig fra det offentlige nettstedets 640px).
 - `admin/index.html` – admin-panel (oversikt, tilbud, push, brukere). **Innlogging: admin-nøkkelen skrives inn og valideres mot serveren** (ekte API-kall mot `/api/admin/stats`); nøkkelen lagres kun i `sessionStorage` (`fo_admin_key`). Ingen hemmelighet i klientkoden lenger.
 
 **Backend (Cloudflare Pages Functions, `functions/api/`):**
@@ -102,19 +103,15 @@ Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages 
 - **Juridisk (live):** `personvern/` dekker nå medlemsappen (konto, passord-hash, innløsninger, push, nyhetsbrev), navngir databehandlere (Cloudflare, Brevo), rettslig grunnlag, lagringstid, EØS/SCC. Kontakt-e-post overalt: **cato@askergolflounge.no**. Endring av juridisk tekst krever fortsatt godkjenning.
 - **Aktører (live):** **NextNova** (nettsider + praktisk AI-hjelp, `nextnova.no`) lagt til under kategorien **Tjenester**, adresse **Heggedal Torg 18**. Live på `/heggedal/nextnova/`, lenket i Tjenester-karusellen og i `sitemap.xml` (2026-07-26).
 - **SEO (live):** selvrefererende `<link rel="canonical">` på alle offentlige sider (uten www). `sitemap.xml` oppdatert. Fundament fra før: unike titler/meta, Open Graph, én H1/side. **JSON-LD (oppdatert 2026-07-26):** lagt til additivt på 4 tidligere manglende innholdssider (`heggedal/blogg/` → `Blog`; `asker-golf-lounge/golfsimulator/`, `heggedal/bakkal-heggedal/gulars/`, `heggedal/martas-cafe/vinterkos/` → `Article` med `about`-referanse til foreldre-bedriften). Dekning nå **33/40**; de resterende 7 er bevisste unntak (feilside, redirect-forside, hub, `om-oss/`, `bli-medlem/`, `personvern/`, `vilkar/`). Forsiden `/`→`/heggedal/` er bevisst **302** (kan bli 301 – avklar først).
+- **Nettsted-fikser (2026-07-26):** rettet 3 døde interne lenker (`golfsimulator/` «tilbake»-lenke → `/asker-golf-lounge/`; `personvern/` + `vilkar/` meny «Om FinnOss» → `/om-oss/`); la til `og:image` på hub-en (`heggedal/index.html`, `heggedal-hero.jpg`). **Bildeoptimalisering:** 13 tunge bilder rekomprimert in-place (JPEG q85 progressiv, maks langside 2400px, PNG lossless) → `images/` **15 MB → 8,9 MB**, samme filnavn/format (ingen referanse-endringer).
 - **Google Search Console:** siden er indeksert (~46 sider, ytelsesdata finnes). Verifisert eiendom er **`https://www.finnoss.no/` (med www)**; en uten-www-eiendom finnes men er ubekreftet. **Anbefalt opprydding:** ett **domeneområde** `finnoss.no` (dekker www + uten-www, matcher sitemap) – krever TXT-post hos Webhuset (Cato gjør det selv; rør ikke DNS). Sitemap sendes inn med stien `sitemap.xml`, ikke full URL.
 
 ## Åpne funn (repo-audit 2026-07-01)
-- **Push-skjema ute av synk (bug):** `functions/api/auth/migrate.js` oppretter én
-  `subscription`-kolonne i push-tabellen, men `functions/api/push/subscribe.js` og
-  `functions/api/admin/push.js` forventer tre separate kolonner (`endpoint`,
-  `p256dh`, `auth`). Web Push feiler trolig på en fersk database. Rett skjemaet før
-  push tas i bruk.
-- **`vilkar/index.html` (linje 12+55):** én gjenværende wp-content-bildelenke på eget
-  domene – siste reelle WordPress-rest. Juridisk side → krever godkjenning før endring.
+- **Push-skjema (løst 2026-07-26):** `functions/api/auth/migrate.js` bygger nå push-tabellen med de tre kolonnene `endpoint`/`p256dh`/`auth` (og bygger om en evt. gammel `subscription`-blob-tabell uten datatap). Verifisert live: skjemaet er riktig og tabellen har reelle abonnenter.
+- **`vilkar/index.html` wp-content (løst 2026-07-26):** hero-bildet (`og:image` + `<img>`) pekte på en død `www.finnoss.no/wp-content/…`-URL; byttet til lokal `/images/finnoss-vilkar-hero.jpg`. **Siste WordPress-rest er dermed borte** – ingen `wp-content` igjen i repoet.
 - **Asker Golf Lounge JSON-LD (løst 2026-07-26):** hovedsiden har `SportsActivityLocation`-JSON-LD, og undersiden `golfsimulator/` har fått `Article`-JSON-LD. Ikke lenger et hull.
-- **`Finnoss logo.jpg` i repo-rot** er ubrukt og ureferert – avklar sletting.
-- **Git-hygiene:** branchene `admin-brukeradmin` og `aktor-nextnova` er **fullstendig merget til `main`**. Slett dem i GitHub-UI hvis de fortsatt vises i branch-listen (kan ikke slettes fra Claude Code-miljøet – 403 på ref-sletting).
+- **`Finnoss logo.jpg` i repo-rot (ryddet):** ikke lenger til stede (ingen løse bildefiler i repo-rot per 2026-07-26).
+- **Git-hygiene:** branchene `admin-brukeradmin`, `aktor-nextnova` og `desktop-layout` er **fullstendig merget til `main`**. Slett dem i GitHub-UI hvis de fortsatt vises i branch-listen (kan ikke slettes fra Claude Code-miljøet – 403 på ref-sletting).
 
 ## Omfang
 - Jobb **kun** i dette repoet (`finnoss-site`). Ikke rør andre repoer eller filer utenfor prosjektet.
