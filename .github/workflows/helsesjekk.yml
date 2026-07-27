@@ -1,0 +1,71 @@
+name: Helsesjekk (FinnOss)
+
+# Overvåkingsagent: kjører deterministiske helsesjekker mot repoet på fast plan.
+# Ved avvik åpnes/oppdateres én GitHub-issue (label: helsesjekk). Når alt er grønt
+# igjen, lukkes saken automatisk. Bruker kun GITHUB_TOKEN – ingen hemmeligheter.
+
+on:
+  schedule:
+    - cron: '17 6 * * *'   # daglig kl. 06:17 UTC
+  workflow_dispatch: {}     # kan også kjøres manuelt fra Actions-fanen
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  helsesjekk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Kjør helsesjekk
+        id: sjekk
+        run: |
+          chmod +x scripts/helsesjekk.sh
+          if bash scripts/helsesjekk.sh; then
+            echo "status=ok" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=fail" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Åpne/oppdater issue ved avvik
+        if: steps.sjekk.outputs.status == 'fail'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('helsesjekk-rapport.md', 'utf8');
+            const title = '🩺 FinnOss helsesjekk – avvik funnet';
+            const { owner, repo } = context.repo;
+            const open = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open', labels: 'helsesjekk'
+            });
+            if (open.data.length) {
+              await github.rest.issues.update({
+                owner, repo, issue_number: open.data[0].number, body
+              });
+            } else {
+              await github.rest.issues.create({
+                owner, repo, title, body, labels: ['helsesjekk']
+              });
+            }
+
+      - name: Lukk issue når alt er grønt
+        if: steps.sjekk.outputs.status == 'ok'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const open = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open', labels: 'helsesjekk'
+            });
+            for (const it of open.data) {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: it.number,
+                body: '✅ Helsesjekk grønn igjen – lukker saken automatisk.'
+              });
+              await github.rest.issues.update({
+                owner, repo, issue_number: it.number, state: 'closed'
+              });
+            }
