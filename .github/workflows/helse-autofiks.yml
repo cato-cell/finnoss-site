@@ -1,0 +1,49 @@
+name: Helse-autofiks (FinnOss)
+
+# PR-basert reparatør-agent. Leser den åpne helsesjekk-issuen og åpner en PR med
+# TRYGGE fikser. Kjører ALDRI automatisk (kun manuelt) og MERGER ALDRI selv –
+# du godkjenner PR-en. Utfyller overvåkingsagenten (helsesjekk.yml).
+#
+# ── AKTIVERING (engangs, gjøres av deg) ──────────────────────────────────────
+# 1. Installer Claude GitHub-appen:  https://github.com/apps/claude
+# 2. Legg til repo-secret ANTHROPIC_API_KEY:
+#    Settings → Secrets and variables → Actions → New repository secret
+# 3. Kjør den manuelt: Actions-fanen → «Helse-autofiks (FinnOss)» → «Run workflow».
+# Uten steg 1–2 gjør denne workflowen ingenting (den starter aldri av seg selv).
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+
+jobs:
+  autofiks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: "--max-turns 10"
+          prompt: |
+            Du er FinnOss sin reparatør-agent. Følg repoets CLAUDE.md.
+
+            1. Finn den åpne GitHub-issuen med label "helsesjekk" i dette repoet.
+            2. Rett KUN opp trygge, entydige avvik:
+               - Døde interne lenker (feil sti → riktig eksisterende sti).
+               - Placeholder-/tomme lenker der riktig mål er åpenbart.
+               - Manglende canonical-tag på offentlige sider.
+               - Brutte lokale bilde-referanser (feil filnavn/sti).
+            3. IKKE rør (flagg heller i PR-beskrivelsen, ikke endre):
+               - Juridisk tekst, priser, samtykke-/personverntekst.
+               - JSON-LD / strukturert data / FAQ (vedlikeholdes fra annet hold).
+               - Telefonnumre eller URL-er du ikke kan utlede sikkert
+                 (f.eks. `tel:+00000000`, ukjente Instagram-lenker) – disse
+                 krever data fra eier; la dem stå og nevn dem i PR-teksten.
+            4. Opprett ÉN pull request mot `main` med endringene og en kort norsk
+               beskrivelse av hva som ble rettet og hva som ble flagget.
+            5. IKKE merge selv – la PR-en stå til manuell godkjenning.
