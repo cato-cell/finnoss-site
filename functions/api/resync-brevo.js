@@ -1,5 +1,6 @@
 // functions/api/resync-brevo.js
-// GET /api/resync-brevo?secret=finnoss-setup-2026
+// GET /api/resync-brevo?secret=<MIGRATE_SECRET>
+// Secret ligger som Cloudflare-secret env.MIGRATE_SECRET (ikke hardkodet).
 //
 // Sender alle samtykke-brukere (consent=1) fra D1 til Brevo (liste 3) via
 // bulk-import. Idempotent: updateExistingContacts=true, så eksisterende
@@ -16,8 +17,9 @@ export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
 
-  if (url.searchParams.get('secret') !== 'finnoss-setup-2026') {
-    return json({ ok: false, error: 'Ugyldig secret' }, 403);
+  // Fail-closed: uten konfigurert MIGRATE_SECRET avvises alle kall.
+  if (!env.MIGRATE_SECRET || url.searchParams.get('secret') !== env.MIGRATE_SECRET) {
+    return json({ ok: false, error: 'Ugyldig eller ukonfigurert secret' }, 403);
   }
   if (!env.BREVO_API_KEY) {
     return json({ ok: false, error: 'Mangler BREVO_API_KEY i miljøet' }, 500);
