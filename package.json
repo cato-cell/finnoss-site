@@ -1,0 +1,10 @@
+{
+  "name": "finnoss-site",
+  "version": "1.0.0",
+  "description": "FinnOss – statisk nettsted + medlemsapp (Cloudflare Pages). Ingen build-prosess for nettstedet; kun hjelpeskript.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:aktorer": "node scripts/build-aktorer.mjs"
+  }
+}

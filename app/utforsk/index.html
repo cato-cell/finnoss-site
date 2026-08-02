@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Utforsk Heggedal – FinnOss</title>
+<meta name="theme-color" content="#06121f">
+<link rel="manifest" href="/app/manifest.json">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --navy:#06121f;--navy2:#0c1f33;--navy3:#13304b;
+  --gold:#e0ad52;--gold-light:#f6dca0;--gold-deep:#c08f3a;
+  --text:#f2efe8;--muted:#8ea2b8;--green:#6fc28a;
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--navy);color:var(--text);min-height:100vh;padding-bottom:80px}
+
+/* Header */
+.app-top{position:relative;overflow:hidden;background:linear-gradient(180deg,#0c2138 0%,#0a1a2c 100%)}
+.app-top-inner{position:relative;z-index:2;padding:1.1rem 1.25rem 1.3rem}
+.brandrow{display:flex;align-items:center;justify-content:space-between}
+.brand img{height:40px;width:auto;display:block;filter:brightness(0) invert(1) drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+.brand{display:flex;align-items:center;text-decoration:none}
+.top-title{margin-top:.9rem}
+.top-title .kick{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.top-title h1{font-size:1.55rem;font-weight:800;color:var(--gold-light);letter-spacing:-.02em;margin-top:.15rem}
+
+/* Kontroller */
+.controls{padding:1rem 1.25rem .3rem}
+.search{position:relative;margin-bottom:.85rem}
+.search input{width:100%;background:var(--navy2);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:.8rem 1rem .8rem 2.5rem;color:var(--text);font-size:1rem;outline:none;transition:border-color .2s}
+.search input:focus{border-color:var(--gold)}
+.search svg{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+.chips{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.4rem;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;background:var(--navy2);border:1px solid rgba(255,255,255,.08);color:var(--muted);border-radius:999px;padding:.5rem .95rem;font-size:.82rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s}
+.chip.active{background:rgba(224,173,82,.15);color:var(--gold);border-color:var(--gold)}
+
+/* Liste */
+.liste{padding:.6rem 1.25rem 0;display:flex;flex-direction:column;gap:.7rem}
+.akt-card{background:var(--navy2);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1rem 1.1rem;cursor:pointer;transition:border-color .15s,transform .1s;text-align:left}
+.akt-card:active{transform:scale(.99)}
+.akt-card:hover{border-color:rgba(224,173,82,.35)}
+.akt-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem}
+.akt-navn{font-size:1rem;font-weight:800;color:var(--text);line-height:1.25}
+.akt-desc{font-size:.85rem;color:var(--muted);line-height:1.45;margin-top:.3rem}
+.akt-meta{display:flex;align-items:center;gap:.5rem;margin-top:.6rem;flex-wrap:wrap}
+.tag{font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:rgba(255,255,255,.06);color:var(--muted)}
+.badge-tilbud{display:inline-flex;align-items:center;gap:.3rem;font-size:.65rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:rgba(224,173,82,.16);color:var(--gold-light);border:1px solid rgba(224,173,82,.35)}
+.arrow{color:var(--gold);flex-shrink:0;font-size:1.1rem;line-height:1}
+
+/* Status (tom/feil/laster) */
+.status{padding:2.5rem 1.5rem;text-align:center;color:var(--muted);font-size:.95rem;line-height:1.5}
+.status strong{color:var(--text);display:block;margin-bottom:.3rem;font-size:1rem}
+
+/* Bottom sheet (detalj) */
+.sheet-overlay{position:fixed;inset:0;background:rgba(3,9,16,.6);z-index:90;display:none;opacity:0;transition:opacity .2s}
+.sheet-overlay.show{display:block;opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:91;background:var(--navy2);border-top:1px solid rgba(224,173,82,.25);border-radius:20px 20px 0 0;padding:1.4rem 1.35rem 2rem;transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);max-height:88vh;overflow-y:auto}
+.sheet.show{transform:translateY(0)}
+.sheet-grip{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:99px;margin:0 auto 1rem}
+.sheet h2{font-size:1.35rem;font-weight:800;color:var(--text)}
+.sheet .s-tag{margin-top:.4rem}
+.sheet .s-desc{font-size:.92rem;color:var(--muted);line-height:1.55;margin-top:.8rem}
+.s-row{display:flex;align-items:center;gap:.7rem;margin-top:.9rem;font-size:.92rem;color:var(--text);text-decoration:none}
+.s-row svg{width:19px;height:19px;color:var(--gold);flex-shrink:0}
+.s-row.link:active{opacity:.7}
+.s-offer{margin-top:1.25rem;background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid rgba(224,173,82,.3);border-radius:14px;padding:1.1rem}
+.s-offer .o-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .55rem;border-radius:20px;margin-bottom:.5rem}
+.s-offer .o-title{font-size:1rem;font-weight:800;color:var(--text);margin-bottom:.25rem}
+.s-offer .o-desc{font-size:.85rem;color:var(--muted);line-height:1.4}
+.s-offer .o-btn{display:inline-block;margin-top:.8rem;background:var(--gold);color:var(--navy);border:none;border-radius:9px;padding:.65rem 1.3rem;font-size:.9rem;font-weight:700;cursor:pointer}
+.s-full{display:block;text-align:center;margin-top:1.5rem;font-size:.82rem;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+/* Bunn-nav (samme som Hjem) */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,22,37,.95);backdrop-filter:blur(12px);border-top:1px solid rgba(224,173,82,.15);display:flex;z-index:50}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:.7rem .5rem;font-size:.62rem;color:var(--muted);text-decoration:none;gap:.15rem}
+.nav-item.active,.nav-item:hover{color:var(--gold)}
+.nav-svg{width:23px;height:23px;display:block;stroke-width:1.6}
+
+/* Innløsnings-overlay (portet fra Hjem) */
+.redeem-overlay{position:fixed;inset:0;background:rgba(6,18,31,.96);z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
+.redeem-overlay.show{display:flex}
+.redeem-confirm{background:var(--navy2);border:1px solid rgba(224,173,82,.25);border-radius:16px;padding:1.75rem;max-width:340px;width:100%}
+.redeem-confirm h2{font-size:1.3rem;font-weight:800;margin-bottom:.5rem}
+.redeem-confirm p{font-size:.88rem;color:var(--muted);line-height:1.5;margin-bottom:1.5rem}
+.redeem-confirm .warn{color:var(--gold-light);font-weight:600}
+.redeem-btn-row{display:flex;gap:.6rem}
+.redeem-btn{flex:1;border:none;border-radius:10px;padding:.85rem;font-size:.92rem;font-weight:700;cursor:pointer}
+.redeem-btn.cancel{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--muted)}
+.redeem-btn.confirm{background:var(--gold);color:var(--navy)}
+.redeem-success{display:none;flex-direction:column;align-items:center;animation:pop .4s}
+.redeem-success.show{display:flex}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.redeem-check{width:90px;height:90px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:1.25rem}
+.redeem-success h2{font-size:1.6rem;font-weight:800;margin-bottom:.5rem}
+.redeem-success .actor-name{color:var(--gold);font-size:1.1rem;font-weight:700;margin-bottom:.75rem}
+.redeem-success p{font-size:.95rem;color:var(--muted);line-height:1.5;max-width:280px}
+.redeem-success .show-staff{margin-top:1.5rem;background:rgba(224,173,82,.12);border:1px solid var(--gold);border-radius:12px;padding:.9rem 1.25rem;font-size:.9rem;color:var(--gold-light);font-weight:600}
+.redeem-close{margin-top:2rem;background:none;border:1px solid rgba(255,255,255,.2);color:var(--muted);border-radius:10px;padding:.7rem 2rem;font-size:.9rem;cursor:pointer}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-top">
+  <div class="app-top-inner">
+    <div class="brandrow">
+      <a class="brand" href="/app/home/" aria-label="Til FinnOss-hjem">
+        <img src="/images/finnoss-logo.png" alt="FinnOss">
+      </a>
+    </div>
+    <div class="top-title">
+      <div class="kick">Utforsk</div>
+      <h1>Aktører i Heggedal</h1>
+    </div>
+  </div>
+</header>
+
+<!-- KONTROLLER -->
+<div class="controls">
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="search" id="sok" placeholder="Søk etter aktør…" autocomplete="off" aria-label="Søk etter aktør">
+  </div>
+  <div class="chips" id="chips"></div>
+</div>
+
+<!-- LISTE -->
+<div id="liste" class="liste"></div>
+<div id="status" class="status" style="display:none"></div>
+
+<!-- BOTTOM SHEET (detalj) -->
+<div class="sheet-overlay" id="sheet-overlay"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Aktørdetaljer">
+  <div class="sheet-grip"></div>
+  <div id="sheet-body"></div>
+</div>
+
+<!-- INNLØSNINGS-OVERLAY (samme som Hjem) -->
+<div class="redeem-overlay" id="redeem-overlay">
+  <div class="redeem-confirm" id="redeem-confirm">
+    <h2 id="redeem-title">Bruk tilbud?</h2>
+    <p id="redeem-explain"></p>
+    <div class="redeem-btn-row">
+      <button class="redeem-btn cancel" id="redeem-cancel">Avbryt</button>
+      <button class="redeem-btn confirm" id="redeem-confirm-btn">Bruk nå</button>
+    </div>
+  </div>
+  <div class="redeem-success" id="redeem-success">
+    <div class="redeem-check">✓</div>
+    <h2>Tilbud brukt!</h2>
+    <div class="actor-name" id="redeem-success-actor"></div>
+    <p id="redeem-success-desc"></p>
+    <div class="show-staff">📲 Vis denne skjermen til betjeningen</div>
+    <button class="redeem-close" id="redeem-close">Ferdig</button>
+  </div>
+</div>
+
+<!-- BUNN-NAV -->
+<nav class="bottom-nav">
+  <a class="nav-item" href="/app/home/">
+    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/></svg>
+    Hjem
+  </a>
+  <a class="nav-item active" href="/app/utforsk/">
+    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    Utforsk
+  </a>
+  <a class="nav-item" href="/app/home/#offers-section">
+    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 17.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9L12 3.5z"/></svg>
+    Fordeler
+  </a>
+  <a class="nav-item" id="logout-btn" href="#">
+    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+    Logg ut
+  </a>
+</nav>
+
+<script>
+'use strict';
+
+// === Innlogging (samme mønster som Hjem) ===
+const token = localStorage.getItem('fo_token') || sessionStorage.getItem('fo_token');
+const user = JSON.parse(localStorage.getItem('fo_user') || sessionStorage.getItem('fo_user') || 'null');
+if (!token || !user) { window.location.href = '/app/login/'; }
+
+document.getElementById('logout-btn').addEventListener('click', e => {
+  e.preventDefault();
+  ['fo_token','fo_user'].forEach(k => { localStorage.removeItem(k); sessionStorage.removeItem(k); });
+  window.location.href = '/app/login/';
+});
+
+// === Tilstand ===
+let AKTORER = [];
+let KATEGORIER = {};
+let OFFERS = [];            // aktive tilbud fra /api/offers
+let offerByActor = {};      // normalisert aktørnavn -> tilbud
+let aktivKategori = 'alle';
+let sok = '';
+
+const $ = id => document.getElementById(id);
+const norm = s => (s || '').toLowerCase().replace(/\s+/g,' ').trim();
+const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// Match tilbud mot aktør på navn (ingen slug i tilbuds-API-et)
+function finnTilbud(navn){
+  const n = norm(navn);
+  if (offerByActor[n]) return offerByActor[n];
+  // mildt slingringsmonn: den ene inneholder den andre (unngår korte falske treff)
+  for (const key in offerByActor){
+    if (key.length > 3 && (n.includes(key) || key.includes(n))) return offerByActor[key];
+  }
+  return null;
+}
+
+// === Last data ===
+async function lastData(){
+  visStatus('Laster aktører…');
+  try {
+    const [aRes, oRes] = await Promise.allSettled([
+      fetch('/app/data/aktorer.json', { cache: 'no-cache' }).then(r => { if(!r.ok) throw new Error('http'); return r.json(); }),
+      fetch('/api/offers?userId=' + encodeURIComponent(user ? user.id : '')).then(r => r.json()).catch(() => ({ offers: [] }))
+    ]);
+    if (aRes.status !== 'fulfilled') throw new Error('aktorer');
+    AKTORER = aRes.value.aktorer || [];
+    KATEGORIER = aRes.value.kategorier || {};
+    OFFERS = (oRes.status === 'fulfilled' && oRes.value.offers) ? oRes.value.offers : [];
+    offerByActor = {};
+    OFFERS.forEach(o => { if (o.actor) offerByActor[norm(o.actor)] = o; });
+
+    initKategoriFraUrl();
+    byggChips();
+    render();
+  } catch (e) {
+    visStatus('Kunne ikke laste aktørlisten', 'Sjekk at du er på nett og prøv igjen. Trekk ned for å laste siden på nytt.');
+  }
+}
+
+function initKategoriFraUrl(){
+  const p = new URLSearchParams(location.search).get('kategori');
+  if (p && (p === 'alle' || KATEGORIER[p])) aktivKategori = p;
+}
+
+function byggChips(){
+  const chips = $('chips');
+  const alle = [['alle','Alle']].concat(Object.entries(KATEGORIER));
+  chips.innerHTML = alle.map(([slug,label]) =>
+    `<button class="chip${slug===aktivKategori?' active':''}" data-kat="${slug}">${esc(label)}</button>`
+  ).join('');
+  chips.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+    aktivKategori = c.dataset.kat;
+    const url = aktivKategori === 'alle' ? '/app/utforsk/' : '/app/utforsk/?kategori=' + aktivKategori;
+    history.replaceState(null, '', url);
+    byggChips(); render();
+  }));
+}
+
+function render(){
+  const liste = $('liste');
+  const q = norm(sok);
+  const vis = AKTORER.filter(a => {
+    if (aktivKategori !== 'alle' && a.kategori !== aktivKategori) return false;
+    if (q && !(norm(a.navn).includes(q) || norm(a.kortBeskrivelse).includes(q))) return false;
+    return true;
+  });
+
+  if (vis.length === 0){
+    liste.innerHTML = '';
+    visStatus('Ingen treff', q ? 'Prøv et annet søk eller en annen kategori.' : 'Ingen aktører i denne kategorien ennå.');
+    return;
+  }
+  skjulStatus();
+  liste.innerHTML = vis.map((a,i) => {
+    const harTilbud = !!finnTilbud(a.navn);
+    const katLabel = KATEGORIER[a.kategori] || 'Aktør';
+    return `<button class="akt-card" data-i="${AKTORER.indexOf(a)}">
+      <div class="akt-top">
+        <div>
+          <div class="akt-navn">${esc(a.navn)}</div>
+          ${a.kortBeskrivelse ? `<div class="akt-desc">${esc(a.kortBeskrivelse)}</div>` : ''}
+        </div>
+        <span class="arrow" aria-hidden="true">›</span>
+      </div>
+      <div class="akt-meta">
+        <span class="tag">${esc(katLabel)}</span>
+        ${harTilbud ? '<span class="badge-tilbud">★ Har medlemstilbud</span>' : ''}
+      </div>
+    </button>`;
+  }).join('');
+  liste.querySelectorAll('.akt-card').forEach(c => c.addEventListener('click', () => aapneDetalj(AKTORER[+c.dataset.i])));
+}
+
+function visStatus(tittel, tekst){
+  const s = $('status');
+  s.style.display = 'block';
+  s.innerHTML = `<strong>${esc(tittel)}</strong>${tekst ? esc(tekst) : ''}`;
+}
+function skjulStatus(){ $('status').style.display = 'none'; }
+
+// === Detalj (bottom sheet) ===
+function aapneDetalj(a){
+  const tilbud = finnTilbud(a.navn);
+  const katLabel = KATEGORIER[a.kategori] || 'Aktør';
+  const mapsUrl = a.adresse ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(a.adresse + ', Heggedal') : '';
+  let html = `<h2>${esc(a.navn)}</h2><div class="s-tag"><span class="tag">${esc(katLabel)}</span></div>`;
+  if (a.kortBeskrivelse) html += `<p class="s-desc">${esc(a.kortBeskrivelse)}</p>`;
+  if (a.adresse) html += `<a class="s-row link" href="${mapsUrl}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>${esc(a.adresse)}</span></a>`;
+  if (a.telefon) html += `<a class="s-row link" href="tel:${esc(a.telefon)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>${esc(a.telefon)}</span></a>`;
+  if (a.nettside) html += `<a class="s-row link" href="${esc(a.nettside)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg><span>Nettside</span></a>`;
+
+  if (tilbud){
+    const kreverInnl = tilbud.once || tilbud.multi;
+    html += `<div class="s-offer">
+      <span class="o-badge">${esc(tilbud.badge || 'Medlemstilbud')}</span>
+      <div class="o-title">${esc(tilbud.title)}</div>
+      ${tilbud.description ? `<div class="o-desc">${esc(tilbud.description)}</div>` : ''}
+      ${kreverInnl ? `<button class="o-btn" id="bruk-tilbud-btn">Bruk tilbud</button>` : ''}
+    </div>`;
+  }
+  html += `<a class="s-full" href="${esc(a.url)}">Se full profil på finnoss.no</a>`;
+
+  $('sheet-body').innerHTML = html;
+  if (tilbud && (tilbud.once || tilbud.multi)){
+    $('bruk-tilbud-btn').addEventListener('click', () => {
+      lukkDetalj();
+      openRedeem(tilbud.id, a.navn, tilbud.title, tilbud.usesLeft, tilbud.maxUses, tilbud.multi);
+    });
+  }
+  $('sheet-overlay').classList.add('show');
+  requestAnimationFrame(() => $('sheet').classList.add('show'));
+}
+function lukkDetalj(){
+  $('sheet').classList.remove('show');
+  $('sheet-overlay').classList.remove('show');
+}
+$('sheet-overlay').addEventListener('click', lukkDetalj);
+
+// === Innløsning (portet fra Hjem) ===
+let currentRedeem = null;
+function openRedeem(offerId, actor, title, usesLeft, maxUses, multi){
+  currentRedeem = { offerId, actor, title, usesLeft, maxUses, multi };
+  $('redeem-title').textContent = 'Bruk: ' + title;
+  $('redeem-explain').innerHTML = multi
+    ? `Du har <span class="warn">${usesLeft} av ${maxUses}</span> bruk igjen. Trykk «Bruk nå» når du står hos aktøren.`
+    : `Dette tilbudet kan kun brukes <span class="warn">én gang</span>. Trykk «Bruk nå» når du står hos aktøren.`;
+  $('redeem-confirm').style.display = 'block';
+  $('redeem-success').classList.remove('show');
+  $('redeem-overlay').classList.add('show');
+}
+$('redeem-cancel').addEventListener('click', () => $('redeem-overlay').classList.remove('show'));
+$('redeem-close').addEventListener('click', () => { $('redeem-overlay').classList.remove('show'); lastData(); });
+$('redeem-confirm-btn').addEventListener('click', async () => {
+  if (!currentRedeem) return;
+  try {
+    const res = await fetch('/api/offers/redeem', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ offerId: currentRedeem.offerId })
+    });
+    if (res.ok){
+      const d = await res.json();
+      $('redeem-confirm').style.display = 'none';
+      $('redeem-success-actor').textContent = currentRedeem.actor;
+      let desc = currentRedeem.title;
+      if (currentRedeem.multi && typeof d.usesLeft === 'number'){
+        desc += d.usesLeft > 0 ? ` — du har ${d.usesLeft} bruk igjen` : ' — dette var siste gang';
+      }
+      $('redeem-success-desc').textContent = desc;
+      $('redeem-success').classList.add('show');
+    } else {
+      const d = await res.json().catch(() => ({}));
+      alert(d.error || 'Noe gikk galt.');
+      $('redeem-overlay').classList.remove('show');
+    }
+  } catch { alert('Noe gikk galt. Prøv igjen.'); }
+});
+
+// === Søk ===
+$('sok').addEventListener('input', e => { sok = e.target.value; render(); });
+
+lastData();
+</script>
+
+</body>
+</html>

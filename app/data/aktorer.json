@@ -1,0 +1,310 @@
+{
+  "kategorier": {
+    "mat-drikke": "Mat & drikke",
+    "butikker": "Butikker",
+    "helse-velvaere": "Helse & velvære",
+    "tjenester": "Tjenester"
+  },
+  "aktorer": [
+    {
+      "slug": "ask-interior",
+      "navn": "ASK Interiør",
+      "kategori": "butikker",
+      "kortBeskrivelse": "Nordisk design, kvalitet og håndverk – med butikk i Heggedal og interiørveiledning ved behov.",
+      "adresse": "Heggedalsveien 307, 1389 Heggedal",
+      "telefon": "+4766797200",
+      "nettside": "https://www.askinterior.no/",
+      "url": "/heggedal/ask-interior/"
+    },
+    {
+      "slug": "asker-golf-lounge",
+      "navn": "Asker Golf Lounge",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "Opplev golf på et nytt nivå. En privat og eksklusiv lounge med markedets fremste simulatorteknologi – midt i Heggedal Torg.",
+      "adresse": "Heggedal Torg 18, 1389 Heggedal",
+      "telefon": "+4741240024",
+      "nettside": "",
+      "url": "/asker-golf-lounge/"
+    },
+    {
+      "slug": "bakkal-heggedal",
+      "navn": "Bakkal Heggedal",
+      "kategori": "butikker",
+      "kortBeskrivelse": "Bakkal i Heggedal er en fristende delikatessebutikk med kvalitetsprodukter, kaffe, oster, spekemat og smaker som løfter både hverdagsmiddagen og…",
+      "adresse": "1389 Heggedal",
+      "telefon": "",
+      "nettside": "https://bakkal.no",
+      "url": "/heggedal/bakkal-heggedal/"
+    },
+    {
+      "slug": "cut",
+      "navn": "CUT.",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "Frisør i Heggedal med dameklipp, herreklipp, farge, striper og enkel online booking.",
+      "adresse": "1389 Heggedal",
+      "telefon": "+4794792788",
+      "nettside": "https://www.cutfrisor.no/behandlinger",
+      "url": "/heggedal/cut/"
+    },
+    {
+      "slug": "feel24-heggedal",
+      "navn": "Feel24 Heggedal",
+      "kategori": "helse-velvaere",
+      "kortBeskrivelse": "Treningssenter med kampanjer og digital innmelding. Sjekk vilkår før du melder deg inn.",
+      "adresse": "1389 Heggedal",
+      "telefon": "",
+      "nettside": "https://blimedlem.feel24.no/heggedal/gratistilmars",
+      "url": "/heggedal/feel24-heggedal/"
+    },
+    {
+      "slug": "feelgood-heggedal",
+      "navn": "Feelgood Heggedal",
+      "kategori": "helse-velvaere",
+      "kortBeskrivelse": "Trening i et voksent miljø – lav terskel, trygg oppfølging og enkel struktur.",
+      "adresse": "Heggedalsveien 299, 1389 Heggedal",
+      "telefon": "+4799707773",
+      "nettside": "https://www.feelgoodsenter.no/senter/heggedal",
+      "url": "/heggedal/feelgood-heggedal/"
+    },
+    {
+      "slug": "galleri-heggeglede",
+      "navn": "Galleri Heggeglede",
+      "kategori": "butikker",
+      "kortBeskrivelse": "Et varmt, lokalt galleri med håndverk, kunst og unike små skatter – midt i Heggedal.",
+      "adresse": "Heggedalsveien 181, 1389 Heggedal",
+      "telefon": "",
+      "nettside": "https://www.cylex.no/heggedal/galleri%2Bheggeglede-12852803.html",
+      "url": "/heggedal/galleri-heggeglede/"
+    },
+    {
+      "slug": "heggedal-barbershop",
+      "navn": "Heggedal Barbershop",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "Barbershop i Heggedal med herreklipp, skjeggforming og enkel timebestilling.",
+      "adresse": "Heggedalsveien 302, 1389 Heggedal",
+      "telefon": "+4794455505",
+      "nettside": "https://timma.no/salong/heggedal-barbershop",
+      "url": "/heggedal/heggedal-barbershop/"
+    },
+    {
+      "slug": "heggedal-fysikalske",
+      "navn": "Heggedal Fysikalske",
+      "kategori": "helse-velvaere",
+      "kortBeskrivelse": "Fysioterapi i Heggedal – hjelp ved muskel- og skjelettplager, med en praktisk og trygg tilnærming.",
+      "adresse": "1389 Heggedal",
+      "telefon": "+4790028262",
+      "nettside": "https://heggedalfysikalske.no/",
+      "url": "/heggedal/heggedal-fysikalske/"
+    },
+    {
+      "slug": "heggedalhovedgaard",
+      "navn": "Heggedal Hovedgård",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "En historisk gård med rom for gode øyeblikk – fra møter og seminarer til feiringer, utstillinger og bryllup.",
+      "adresse": "1389 Heggedal",
+      "telefon": "",
+      "nettside": "https://www.heggedalhovedgaard.no/",
+      "url": "/heggedal/heggedalhovedgaard/"
+    },
+    {
+      "slug": "innbyggertorg",
+      "navn": "Heggedal innbyggertorg",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "Et varmt samlingspunkt midt i Heggedal. Her møtes tjenester, aktivitet og hverdagsliv – med bibliotek, kafé og lokal veiledning under samme tak.",
+      "adresse": "Heggedal torg 38, 1389 Heggedal",
+      "telefon": "+4747783054",
+      "nettside": "https://www.asker.kommune.no/kultur-idrett-og-fritid/innbyggertorg/heggedal-innbyggertorg/",
+      "url": "/heggedal/innbyggertorg/"
+    },
+    {
+      "slug": "heggedal-legesenter",
+      "navn": "Heggedal Legesenter",
+      "kategori": "helse-velvaere",
+      "kortBeskrivelse": "Fastlegetjenester i Heggedal. Bestill time via Helsenorge, eller bruk telefontime når det passer bedre.",
+      "adresse": "1389 Heggedal",
+      "telefon": "+4766907120",
+      "nettside": "https://maps.app.goo.gl/",
+      "url": "/heggedal/heggedal-legesenter/"
+    },
+    {
+      "slug": "iheggedal",
+      "navn": "Heggedal Nærmiljøsentral",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "Vi er her for å styrke lokalmiljøet og øke trivselen i Heggedal og omegn. ([iheggedal.no](https://www.iheggedal.no/))",
+      "adresse": "",
+      "telefon": "",
+      "nettside": "https://www.iheggedal.no/blog",
+      "url": "/heggedal/iheggedal/"
+    },
+    {
+      "slug": "heggedal-pizza-bar",
+      "navn": "Heggedal Pizza & Bar",
+      "kategori": "mat-drikke",
+      "kortBeskrivelse": "Heggedal Pizza & Bar i Heggedal sentrum – pan pizza, italiensk pizza, burgere, salater og barnemeny. Take away og bestilling på 93 93 09 30.",
+      "adresse": "Heggedal Torg 20, 1389 Heggedal",
+      "telefon": "+4793930930",
+      "nettside": "",
+      "url": "/heggedal/heggedal-pizza-bar/"
+    },
+    {
+      "slug": "heggedal-service",
+      "navn": "Heggedal Service",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "Praktisk hjelp når du trenger det. Lokale tjenester for hjem, hage og hverdag – med fokus på ryddighet, tempo og kvalitet.",
+      "adresse": "1389 Heggedal",
+      "telefon": "",
+      "nettside": "https://www.heggedalservice.no/",
+      "url": "/heggedal/heggedal-service/"
+    },
+    {
+      "slug": "kime",
+      "navn": "KIME",
+      "kategori": "mat-drikke",
+      "kortBeskrivelse": "Smaken av fellesskap. Profesjonell catering til selskaper og en levende kafé i hjertet av Heggedal Innbyggertorg.",
+      "adresse": "1389 Heggedal",
+      "telefon": "+4741265063",
+      "nettside": "https://kimecateringogkafe.no/",
+      "url": "/heggedal/kime/"
+    },
+    {
+      "slug": "kiwi",
+      "navn": "KIWI Heggedal",
+      "kategori": "butikker",
+      "kortBeskrivelse": "En trygg og nær dagligvare i Heggedal – med gode priser og alt du trenger i hverdagen, rett i nabolaget.",
+      "adresse": "1389 Heggedal",
+      "telefon": "",
+      "nettside": "https://kiwi.no/finn-butikk/kiwi-310-heggedal",
+      "url": "/heggedal/kiwi/"
+    },
+    {
+      "slug": "lille-haveli",
+      "navn": "Lille Haveli Heggedal | Indisk restaurant",
+      "kategori": "mat-drikke",
+      "kortBeskrivelse": "Besøk Lille Haveli i Heggedal for indisk mat, take away og hyggelig servering lokalt. Se kontaktinformasjon, åpningstider og tilbud på FinnOss.",
+      "adresse": "1389 Heggedal",
+      "telefon": "",
+      "nettside": "https://lillehaveli.no",
+      "url": "/heggedal/lille-haveli/"
+    },
+    {
+      "slug": "martas-cafe",
+      "navn": "Marta's Café",
+      "kategori": "mat-drikke",
+      "kortBeskrivelse": "Kafé i Heggedal med fersk bakst, god kaffe, lunsj og hyggelig atmosfære midt i sentrum.",
+      "adresse": "Heggedalsveien 302, 1389 Heggedal",
+      "telefon": "+4748402220",
+      "nettside": "",
+      "url": "/heggedal/martas-cafe/"
+    },
+    {
+      "slug": "mathea",
+      "navn": "Mathea",
+      "kategori": "butikker",
+      "kortBeskrivelse": "Dameklær i Heggedal med nyheter, sesongplagg og oppdateringer fra en lokal klesbutikk som mange i området følger med på.",
+      "adresse": "1389 Heggedal",
+      "telefon": "",
+      "nettside": "",
+      "url": "/heggedal/mathea/"
+    },
+    {
+      "slug": "nextnova",
+      "navn": "NextNova",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "NextNova bygger moderne, mobilvennlige nettsider for lokale bedrifter i Heggedal og omegn – og hjelper med lokal SEO og praktisk bruk av AI i hverdagen.",
+      "adresse": "Heggedal Torg 18, 1389 Heggedal",
+      "telefon": "",
+      "nettside": "https://nextnova.no",
+      "url": "/heggedal/nextnova/"
+    },
+    {
+      "slug": "niftyhr",
+      "navn": "NiftyHR",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "HR-system for små bedrifter som gir oversikt over ferie, fravær, varsling og intern kommunikasjon i én enkel plattform.",
+      "adresse": "",
+      "telefon": "+4741240024",
+      "nettside": "https://www.niftyhr.io/",
+      "url": "/heggedal/niftyhr/"
+    },
+    {
+      "slug": "posten",
+      "navn": "Posten i Heggedal",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "Hent og send pakker lokalt i Heggedal. En enkel og tilgjengelig posttjeneste i nærmiljøet.",
+      "adresse": "Heggedalsbakken 6, 1389 Heggedal",
+      "telefon": "+4722030000",
+      "nettside": "",
+      "url": "/posten/"
+    },
+    {
+      "slug": "siam-sushi",
+      "navn": "Siam Sushi",
+      "kategori": "mat-drikke",
+      "kortBeskrivelse": "Sushi i Heggedal med ferske råvarer, asiatiske smaker og takeaway for deg som vil ha noe godt, raskt og enkelt.",
+      "adresse": "Heggedalsveien 304, 1389 Heggedal",
+      "telefon": "+4766796600",
+      "nettside": "https://www.siamsushi.no/menu",
+      "url": "/heggedal/siam-sushi/"
+    },
+    {
+      "slug": "skin-medispa",
+      "navn": "Skin Medispa",
+      "kategori": "helse-velvaere",
+      "kortBeskrivelse": "Hudbehandlinger og klinikk i Heggedal – bookinger etter avtale, med tydelig kontaktinfo.",
+      "adresse": "1389 Heggedal",
+      "telefon": "+4791327603",
+      "nettside": "https://www.skinmedispa.no/",
+      "url": "/heggedal/skin-medispa/"
+    },
+    {
+      "slug": "sparkling-spa",
+      "navn": "Sparkling Spa",
+      "kategori": "helse-velvaere",
+      "kortBeskrivelse": "Spa i Heggedal med hudbehandlinger, massasje og velvære i rolige omgivelser – med enkel booking på nett.",
+      "adresse": "Heggedalsveien 297, 1389 Heggedal",
+      "telefon": "+4792288907",
+      "nettside": "https://www.sparklingspa.no/",
+      "url": "/heggedal/sparkling-spa/"
+    },
+    {
+      "slug": "tannlegene-heggedalsenteret",
+      "navn": "Tannlegene Heggedalsenteret",
+      "kategori": "helse-velvaere",
+      "kortBeskrivelse": "Tannlege i Heggedal med fokus på trygg behandling og god oppfølging — på dine premisser.",
+      "adresse": "Heggedalsveien 301, 1389 Heggedal",
+      "telefon": "+4791576940",
+      "nettside": "https://www.tannlegeneheggedalsenteret.net/bestilltime",
+      "url": "/heggedal/tannlegene-heggedalsenteret/"
+    },
+    {
+      "slug": "utvendigdrift",
+      "navn": "Utvendig Drift",
+      "kategori": "tjenester",
+      "kortBeskrivelse": "Vaktmestertjenester i Heggedal – utvendig renhold, vinduspuss og praktisk drift av uteområder for borettslag, næring og private.",
+      "adresse": "1389 Heggedal",
+      "telefon": "",
+      "nettside": "https://utvendigdrift.no/",
+      "url": "/heggedal/utvendigdrift/"
+    },
+    {
+      "slug": "vitos-heggedal",
+      "navn": "Vitos Heggedal",
+      "kategori": "mat-drikke",
+      "kortBeskrivelse": "Ekte italiensk gelato i hjertet av Heggedal – laget med kjærlighet, gode råvarer og en lidenskap for håndverk og smak.",
+      "adresse": "Heggedal torg 24, 1389 Heggedal",
+      "telefon": "",
+      "nettside": "",
+      "url": "/heggedal/vitos-heggedal/"
+    },
+    {
+      "slug": "vitusapotek-heggedal",
+      "navn": "Vitusapotek Heggedal",
+      "kategori": "helse-velvaere",
+      "kortBeskrivelse": "Apotek i Heggedal for resept, egenomsorg og veiledning — med faste åpningstider gjennom uken.",
+      "adresse": "Heggedalsveien 304, 1389 Heggedal",
+      "telefon": "+4766696369",
+      "nettside": "https://www.vitusapotek.no/apotek/NO/Akershus/Heggedal/Vitusapotek%20Heggedal",
+      "url": "/heggedal/vitusapotek-heggedal/"
+    }
+  ]
+}
