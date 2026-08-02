@@ -247,5 +247,13 @@ document.getElementById('open-guide-btn').addEventListener('click', async (ev)=>
 })();
 </script>
 
+<script>
+/* Registrer service worker – aktiverer offline-buffer + push (app/sw.js) */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/app/sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

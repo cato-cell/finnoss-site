@@ -64,5 +64,13 @@ else{msg.className='msg error';msg.textContent=data.error||'Feil e-post eller pa
 document.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('btn').click();});
 (function(){var c=document.getElementById('remember');if(c){c.style.background=c.checked?'#d8a64c':'#06111d';}})();
 </script>
+<script>
+/* Registrer service worker – aktiverer offline-buffer + push (app/sw.js) */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/app/sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>
