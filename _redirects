@@ -8,3 +8,48 @@ https://www.finnoss.no/*    https://finnoss.no/:splat    301
 # 302 = midlertidig, så den ikke caches permanent og er lett å fjerne senere.
 # Gjelder KUN forsiden "/" – alle andre sider er upåvirket.
 /    /heggedal/    302
+
+
+# ─── Gamle WordPress-adresser (301, permanent) ────────────────────────
+# Kilde: Search Console, «Ikke funnet (404)» – 58 URL-er per 05.08.2026.
+# Aktørsidene lå tidligere under /heggedal/aktorer/<slug>/.
+# NB: første treff vinner, så spesifikke regler MÅ stå før wildcard-regelen.
+
+# 1) Slug-er som har endret navn siden WordPress.
+/heggedal/aktorer/cut-frisor/                     /heggedal/cut/                    301
+/heggedal/aktorer/kime-catering-og-kafe/          /heggedal/kime/                   301
+/heggedal/aktorer/utvendig-drift/                 /heggedal/utvendigdrift/          301
+/heggedal/aktorer/pizza/                          /heggedal/heggedal-pizza-bar/     301
+/heggedal/pizza/                                  /heggedal/heggedal-pizza-bar/     301
+/heggedal/aktorer/alegria-bistro__trashed/pizza/  /heggedal/heggedal-pizza-bar/     301
+
+# 2) Aktør som ligger i repo-roten, ikke under /heggedal/.
+/heggedal/aktorer/posten/                         /posten/                          301
+
+# 3) Undersider som aldri ble portet – send til nærmeste relevante side.
+/heggedal/aktorer/martas-cafe/blogg/*             /heggedal/martas-cafe/            301
+/heggedal/aktorer/martas-cafe/innlegg__trashed/*  /heggedal/martas-cafe/            301
+/heggedal/aktor/martas-cafe/blogg/*               /heggedal/martas-cafe/            301
+/heggedal/aktorer/sparkling-spa/vinterbehandling/ /heggedal/sparkling-spa/          301
+/heggedal/aktorer/heggedal-service/vinterservice/ /heggedal/heggedal-service/       301
+
+# 4) Aktører som ikke lenger finnes på nettstedet – til Heggedal-huben.
+/heggedal/aktorer/alegria-bistro/                 /heggedal/                        301
+/heggedal/aktorer/handover-copenhagen-asker/*     /heggedal/                        301
+/heggedal/aktorer/558-2/                          /heggedal/                        301
+
+# 5) Generell regel: alt annet under /heggedal/aktorer/ mister mellomleddet.
+#    Dekker de 26 aktørene som har beholdt slug-en sin, samt undersidene
+#    /bakkal-heggedal/gulars/ og /martas-cafe/vinterkos/.
+/heggedal/aktorer/*                               /heggedal/:splat                  301
+
+# 6) Løse rot-adresser fra WordPress.
+/uncategorized/*                                  /heggedal/:splat                  301
+/gulars/                                          /heggedal/bakkal-heggedal/gulars/ 301
+/om-finnoss/                                      /om-oss/                          301
+/booking-asker-golf-lounge/                       /asker-golf-lounge/               301
+
+# Bevisst IKKE omdirigert (skal forbli 404): /demo/, /demo2/, /demo3/,
+# /webinar/, /login/, /category/uncategorized/, /wp-content/*.
+# Disse har ingen relevant mottakerside; en 301 til forsiden ville blitt
+# tolket som «soft 404» av Google og er verre enn en ærlig 404.
