@@ -14,7 +14,45 @@
       "adresse": "Heggedalsveien 307, 1389 Heggedal",
       "telefon": "+4766797200",
       "nettside": "https://www.askinterior.no/",
-      "apningstider": null,
+      "apningstider": {
+        "man": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "tir": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "ons": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "tor": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "fre": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "lor": [
+          [
+            "10:00",
+            "16:00"
+          ]
+        ],
+        "son": []
+      },
       "url": "/heggedal/ask-interior/"
     },
     {
@@ -79,7 +117,50 @@
       "adresse": "1389 Heggedal",
       "telefon": "",
       "nettside": "https://bakkal.no",
-      "apningstider": null,
+      "apningstider": {
+        "man": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "tir": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "ons": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "tor": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "fre": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "lor": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "son": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ]
+      },
       "url": "/heggedal/bakkal-heggedal/"
     },
     {
@@ -90,7 +171,45 @@
       "adresse": "1389 Heggedal",
       "telefon": "+4794792788",
       "nettside": "https://www.cutfrisor.no/behandlinger",
-      "apningstider": null,
+      "apningstider": {
+        "man": [
+          [
+            "09:00",
+            "18:00"
+          ]
+        ],
+        "tir": [
+          [
+            "09:00",
+            "20:00"
+          ]
+        ],
+        "ons": [
+          [
+            "09:00",
+            "18:00"
+          ]
+        ],
+        "tor": [
+          [
+            "09:00",
+            "20:00"
+          ]
+        ],
+        "fre": [
+          [
+            "09:00",
+            "18:00"
+          ]
+        ],
+        "lor": [
+          [
+            "09:00",
+            "15:00"
+          ]
+        ],
+        "son": []
+      },
       "url": "/heggedal/cut/"
     },
     {
@@ -506,7 +625,40 @@
       "adresse": "1389 Heggedal",
       "telefon": "+4741265063",
       "nettside": "https://kimecateringogkafe.no/",
-      "apningstider": null,
+      "apningstider": {
+        "man": [
+          [
+            "09:00",
+            "15:30"
+          ]
+        ],
+        "tir": [
+          [
+            "09:00",
+            "15:30"
+          ]
+        ],
+        "ons": [
+          [
+            "09:00",
+            "15:30"
+          ]
+        ],
+        "tor": [
+          [
+            "09:00",
+            "17:30"
+          ]
+        ],
+        "fre": [
+          [
+            "09:00",
+            "15:30"
+          ]
+        ],
+        "lor": [],
+        "son": []
+      },
       "url": "/heggedal/kime/"
     },
     {
@@ -566,7 +718,40 @@
       "adresse": "1389 Heggedal",
       "telefon": "",
       "nettside": "https://lillehaveli.no",
-      "apningstider": null,
+      "apningstider": {
+        "man": [],
+        "tir": [],
+        "ons": [
+          [
+            "15:00",
+            "22:00"
+          ]
+        ],
+        "tor": [
+          [
+            "15:00",
+            "22:00"
+          ]
+        ],
+        "fre": [
+          [
+            "15:00",
+            "22:00"
+          ]
+        ],
+        "lor": [
+          [
+            "15:00",
+            "22:00"
+          ]
+        ],
+        "son": [
+          [
+            "15:00",
+            "22:00"
+          ]
+        ]
+      },
       "url": "/heggedal/lille-haveli/"
     },
     {
@@ -820,7 +1005,40 @@
       "adresse": "1389 Heggedal",
       "telefon": "+4791327603",
       "nettside": "https://www.skinmedispa.no/",
-      "apningstider": null,
+      "apningstider": {
+        "man": [
+          [
+            "11:00",
+            "17:00"
+          ]
+        ],
+        "tir": [
+          [
+            "11:00",
+            "18:00"
+          ]
+        ],
+        "ons": [
+          [
+            "11:00",
+            "18:00"
+          ]
+        ],
+        "tor": [
+          [
+            "11:00",
+            "18:00"
+          ]
+        ],
+        "fre": [
+          [
+            "11:00",
+            "17:00"
+          ]
+        ],
+        "lor": [],
+        "son": []
+      },
       "url": "/heggedal/skin-medispa/"
     },
     {
