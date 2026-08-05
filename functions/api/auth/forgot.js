@@ -40,7 +40,11 @@ export async function onRequestPost({ request, env }) {
       .bind(email).first();
 
     // Ukjent e-post: svar som om alt gikk bra, men gjør ingenting.
-    if (!user) return ok();
+    // Logges (kun server-side) så feilsøking er mulig – klienten får aldri vite det.
+    if (!user) {
+      console.log('Glemt passord: ingen bruker med e-post ' + email + ' – ingen e-post sendt.');
+      return ok();
+    }
 
     // Lag token (vises kun i e-posten) og lagre hashen.
     const token = randomToken();
@@ -53,9 +57,30 @@ export async function onRequestPost({ request, env }) {
         .bind(user.id).run();
     } catch (e) { /* tabellen kan mangle – migreringen oppretter den */ }
 
-    await env.DB.prepare(
+    // Lagre tokenet. Hvis tabellen ikke finnes ennå (migreringen ikke kjørt),
+    // opprettes den her og innsettingen forsøkes på nytt – ellers ville hele
+    // flyten stoppet stille og brukeren fått «lenke sendt» uten e-post.
+    const lagreToken = () => env.DB.prepare(
       'INSERT INTO password_resets (id, user_id, token_hash, expires_at, used, created_at) VALUES (?, ?, ?, ?, 0, ?)'
     ).bind(crypto.randomUUID(), user.id, tokenHash, expiresAt, new Date(nowMs).toISOString()).run();
+
+    try {
+      await lagreToken();
+    } catch (e) {
+      console.error('INSERT i password_resets feilet – prøver å opprette tabellen:', e);
+      await env.DB.prepare(`CREATE TABLE IF NOT EXISTS password_resets(
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        token_hash TEXT NOT NULL,
+        expires_at TEXT NOT NULL,
+        used INTEGER DEFAULT 0,
+        created_at TEXT
+      )`).run();
+      await env.DB.prepare(
+        'CREATE INDEX IF NOT EXISTS idx_password_resets_token ON password_resets(token_hash)'
+      ).run();
+      await lagreToken();
+    }
 
     const origin = new URL(request.url).origin;
     const lenke = `${origin}/app/nytt-passord/?token=${encodeURIComponent(token)}`;
@@ -116,7 +141,9 @@ async function sendResetEmail(env, user, lenke) {
     });
     if (!res.ok) {
       let detail = ''; try { detail = await res.text(); } catch (e) {}
-      console.error('Brevo e-post feilet (' + res.status + '): ' + detail);
+      console.error('Brevo e-post feilet (' + res.status + ') avsender=' + sender + ': ' + detail);
+    } else {
+      console.log('Glemt passord: e-post sendt til ' + user.email + ' fra ' + sender);
     }
   } catch (e) {
     console.error('Brevo e-post unntak:', e);
