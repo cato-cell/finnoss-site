@@ -15,7 +15,7 @@ h2{font-size:1.4rem;font-weight:800;margin-bottom:.3rem}
 .sub{font-size:.85rem;color:#8a9bb0;margin-bottom:1.5rem}
 .field{margin-bottom:1rem}
 label{display:block;font-size:.75rem;color:#8a9bb0;margin-bottom:.35rem;letter-spacing:.05em;text-transform:uppercase}
-input[type=password],input[type=text],input[type=email],input[type=number],textarea{width:100%;background:#06111d;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.8rem 1rem;color:#f0ece4;font-size:.95rem;outline:none;transition:border-color .2s;resize:vertical}
+input[type=password],input[type=text],input[type=email],input[type=number],input[type=search],textarea{width:100%;background:#06111d;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.8rem 1rem;color:#f0ece4;font-size:.95rem;outline:none;transition:border-color .2s;resize:vertical}
 input:focus,textarea:focus{border-color:#d8a64c}
 .btn{width:100%;background:#d8a64c;color:#06111d;border:none;border-radius:10px;padding:.9rem;font-size:.95rem;font-weight:700;cursor:pointer;transition:background .2s}
 .btn:hover{background:#f6e1b0}
@@ -316,6 +316,10 @@ input:focus,textarea:focus{border-color:#d8a64c}
        <div class="kicker">Medlemmer</div>
        <h3>Brukerliste</h3>
      </div>
+     <div class="field" style="margin-bottom:.6rem">
+       <input type="search" id="user-search" placeholder="Søk på navn, e-post eller telefon…" autocomplete="off" aria-label="Søk i medlemmer">
+     </div>
+     <div id="user-count" style="color:#8a9bb0;font-size:.8rem;margin-bottom:.9rem"></div>
      <div id="user-list"><div style="color:#8a9bb0;font-size:.85rem">Laster…</div></div>
    </div>
 
@@ -633,13 +637,46 @@ document.getElementById('diag-btn').addEventListener('click', async () => {
 });
 
 // Brukere – kortbasert, ikke avkuttet tabell
+// Alle medlemmer holdes i minnet, så søket filtrerer uten nytt API-kall.
+let ALLE_BRUKERE = [];
+
 async function loadUsers() {
  const list = document.getElementById('user-list');
  try {
    const res = await fetch('/api/admin/users', { headers: { 'x-admin-key': adminKey } });
    const d = await res.json();
-   const users = d.users || [];
-   if (!users.length) { list.innerHTML = '<div style="color:#8a9bb0;font-size:.85rem">Ingen brukere ennå.</div>'; return; }
+   ALLE_BRUKERE = d.users || [];
+   renderUsers();
+ } catch { list.innerHTML = '<div style="color:#e07070;font-size:.85rem">Feil ved lasting.</div>'; }
+}
+
+function renderUsers() {
+ const list = document.getElementById('user-list');
+ const teller = document.getElementById('user-count');
+ const sok = (document.getElementById('user-search')?.value || '').toLowerCase().trim();
+
+ if (!ALLE_BRUKERE.length) {
+   list.innerHTML = '<div style="color:#8a9bb0;font-size:.85rem">Ingen brukere ennå.</div>';
+   teller.textContent = ''; return;
+ }
+
+ const users = sok
+   ? ALLE_BRUKERE.filter(u =>
+       (u.name || '').toLowerCase().includes(sok) ||
+       (u.email || '').toLowerCase().includes(sok) ||
+       (u.phone || '').toLowerCase().includes(sok))
+   : ALLE_BRUKERE;
+
+ teller.textContent = sok
+   ? `Viser ${users.length} av ${ALLE_BRUKERE.length} medlemmer`
+   : `${ALLE_BRUKERE.length} medlemmer`;
+
+ if (!users.length) {
+   list.innerHTML = '<div style="color:#8a9bb0;font-size:.85rem">Ingen treff. Prøv et annet søk.</div>';
+   return;
+ }
+
+ {
    list.innerHTML = users.map(u => {
      const visning = capitalizeName(u.name);
      return `
@@ -672,8 +709,11 @@ async function loadUsers() {
        </div>
      </div>`;
    }).join('');
- } catch { list.innerHTML = '<div style="color:#e07070;font-size:.85rem">Feil ved lasting.</div>'; }
+ }
 }
+
+// Søk i medlemslista – filtrerer det som allerede er lastet (ingen nye API-kall)
+document.getElementById('user-search').addEventListener('input', renderUsers);
 
 // Delegering: én lytter på den stabile #user-list-beholderen (rendres på nytt hver last)
 document.getElementById('user-list').addEventListener('click', async (e) => {
