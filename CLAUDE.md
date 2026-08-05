@@ -5,8 +5,7 @@ Retningslinjer for Claude Code i dette repoet. Les dette før du gjør endringer
 ## 👉 START HER – gjenstående oppgaver (per 2026-08-02)
 Alt annet i dette dokumentet beskriver hva som **er gjort**. Dette er hva som **gjenstår**:
 
-**Blokkerer lansering (krever data fra Cato):**
-- ⚠️ **Org.nr mangler på alle sider.** Eneste blokkerende punkt i sjekklisten. Trenger selskapsnavn + org.nr FinnOss driftes under. Legges i footer / `om-oss/` / `vilkar/`.
+**Blokkerer lansering:** ✅ **Ingen.** Org.nr-punktet ble lukket 2026-08-05 – se «Selskap bak FinnOss» under.
 
 **Venter på Cato (ikke blokkerende):**
 - **Trafikkfane i admin** – ønsket, men utsatt. Krever et Cloudflare **«Analytics: Read»**-token. Plan: `functions/api/admin/analytics.js` mot Cloudflares GraphQL Analytics API + fane i admin.
@@ -18,6 +17,16 @@ Alt annet i dette dokumentet beskriver hva som **er gjort**. Dette er hva som **
 - Pizza-bilde på `heggedal-pizza-bar/` – ønsket byttet til stock-foto, men **egress er blokkert** i Claude Code-miljøet (403 mot Unsplash/Pexels). Krever at Cato laster opp bildet selv.
 
 **Nyttig å vite:** kjør `npm run build:aktorer` etter endringer på aktørsider. Helse-agenten kjører daglig og åpner GitHub-issue ved nye avvik.
+
+## Selskap bak FinnOss
+**Asd Media & Production AS**, org.nr **916 585 993**, Heggedal torg 18, 1389 Heggedal. Samme selskap står bak NextNova og NiftyHR. Kontakt: `cato@askergolflounge.no`.
+
+Lagt inn 2026-08-05 på alle steder som trenger det – **ikke legg det inn på nytt andre steder uten grunn**:
+- **Bunntekst, alle 41 sider:** `© FinnOss · Asd Media & Production AS · Org.nr 916 585 993`. Fire ulike copyright-varianter ble samtidig normalisert til denne ene, og årstallet fjernet (var hardkodet «2026» på 18 sider).
+- **`personvern/` § 1:** foretaksnavn + org.nr + adresse som behandlingsansvarlig (sto tidligere bare «FinnOss.no», som ikke er et rettssubjekt).
+- **`vilkar/` § 1:** hvem som leverer tjenesten.
+- **`om-oss/`:** avsnittet «Hvem står bak».
+- **`Organization`-JSON-LD** på `heggedal/index.html` og `om-oss/index.html`, `@id: https://finnoss.no/#organisasjon`, med `legalName`, `taxID`, `identifier`, `logo` og `address`. Logoen peker bevisst på **PNG**, ikke WebP (crawler-kompatibilitet, samme regel som `og:image`).
 
 ## Om prosjektet
 - **FinnOss (finnoss.no):** lokal hub for butikker, tjenester og opplevelser. Hovedområde: **Heggedal**.
