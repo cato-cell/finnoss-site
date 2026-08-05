@@ -232,6 +232,19 @@ input:focus,textarea:focus{border-color:#d8a64c}
        <div class="stat-card clickable" data-goto="offers"><div class="stat-num" id="stat-offers">–</div><div class="stat-label">Aktive tilbud</div></div>
        <div class="stat-card clickable" data-goto="push"><div class="stat-num" id="stat-push">–</div><div class="stat-label">Push-abonnenter</div></div>
      </div>
+
+     <div class="form-card" style="margin-top:1.5rem">
+       <h4>Test e-postoppsett</h4>
+       <p style="font-size:.85rem;color:#8a9bb0;line-height:1.5;margin-bottom:.9rem">
+         Sjekker hvorfor «glemt passord» eventuelt ikke sender e-post: om avsenderen er
+         godkjent i Brevo, og om adressen har en brukerkonto i appen.
+         <strong style="color:#f0ece4">Sender kun én nøytral test-e-post til adressen du skriver inn – ingen push, ingen utsending til medlemmer.</strong>
+       </p>
+       <div class="field"><label>E-post å teste</label><input type="email" id="diag-email" placeholder="deg@epost.no"></div>
+       <button class="btn" id="diag-btn">Kjør diagnose</button>
+       <p class="msg" id="diag-msg"></p>
+       <pre id="diag-out" style="display:none;white-space:pre-wrap;word-break:break-word;background:#06111d;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.9rem;font-size:.78rem;color:#8a9bb0;margin-top:.8rem;max-height:320px;overflow:auto"></pre>
+     </div>
    </div>
 
    <!-- NYTT TILBUD -->
@@ -295,17 +308,6 @@ input:focus,textarea:focus{border-color:#d8a64c}
        <p class="msg" id="push-msg"></p>
      </div>
 
-     <div class="form-card" style="margin-top:1.25rem">
-       <h4>Test e-postoppsett</h4>
-       <p style="font-size:.85rem;color:#8a9bb0;line-height:1.5;margin-bottom:.9rem">
-         Sjekker om «glemt passord»-e-post faktisk kan sendes: om avsenderen er godkjent
-         i Brevo, og om adressen har en brukerkonto. Sender en nøytral testmelding.
-       </p>
-       <div class="field"><label>E-post å teste</label><input type="email" id="diag-email" placeholder="deg@epost.no"></div>
-       <button class="btn" id="diag-btn">Kjør diagnose</button>
-       <p class="msg" id="diag-msg"></p>
-       <pre id="diag-out" style="display:none;white-space:pre-wrap;word-break:break-word;background:#06111d;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.9rem;font-size:.78rem;color:#8a9bb0;margin-top:.8rem;max-height:320px;overflow:auto"></pre>
-     </div>
    </div>
 
    <!-- BRUKERE -->
