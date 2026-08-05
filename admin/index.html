@@ -294,6 +294,18 @@ input:focus,textarea:focus{border-color:#d8a64c}
        <button class="btn" id="send-push-btn">Send til alle abonnenter</button>
        <p class="msg" id="push-msg"></p>
      </div>
+
+     <div class="form-card" style="margin-top:1.25rem">
+       <h4>Test e-postoppsett</h4>
+       <p style="font-size:.85rem;color:#8a9bb0;line-height:1.5;margin-bottom:.9rem">
+         Sjekker om «glemt passord»-e-post faktisk kan sendes: om avsenderen er godkjent
+         i Brevo, og om adressen har en brukerkonto. Sender en nøytral testmelding.
+       </p>
+       <div class="field"><label>E-post å teste</label><input type="email" id="diag-email" placeholder="deg@epost.no"></div>
+       <button class="btn" id="diag-btn">Kjør diagnose</button>
+       <p class="msg" id="diag-msg"></p>
+       <pre id="diag-out" style="display:none;white-space:pre-wrap;word-break:break-word;background:#06111d;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.9rem;font-size:.78rem;color:#8a9bb0;margin-top:.8rem;max-height:320px;overflow:auto"></pre>
+     </div>
    </div>
 
    <!-- BRUKERE -->
@@ -590,6 +602,31 @@ document.getElementById('send-push-btn').addEventListener('click', async () => {
    const d = await res.json();
    if (res.ok) { msg.className = 'msg success'; msg.textContent = `✓ Sendt til ${d.sent} abonnenter!`; }
    else { msg.className = 'msg error'; msg.textContent = d.error || 'Noe gikk galt.'; }
+ } catch { msg.className = 'msg error'; msg.textContent = 'Noe gikk galt.'; }
+});
+
+// Diagnose av e-postoppsett (brukes når «glemt passord» ikke gir e-post)
+document.getElementById('diag-btn').addEventListener('click', async () => {
+ const email = document.getElementById('diag-email').value.trim();
+ const msg = document.getElementById('diag-msg');
+ const out = document.getElementById('diag-out');
+ if (!email) { msg.className = 'msg error'; msg.textContent = 'Skriv inn en e-postadresse.'; return; }
+ msg.className = 'msg'; msg.textContent = 'Kjører diagnose…'; out.style.display = 'none';
+ try {
+   const res = await fetch('/api/admin/epost-diagnose', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
+     body: JSON.stringify({ email })
+   });
+   const d = await res.json();
+   out.style.display = 'block';
+   out.textContent = JSON.stringify(d, null, 2);
+   if (d.konklusjon) {
+     msg.className = 'msg ' + (d.testsending && d.testsending.ok ? 'success' : 'error');
+     msg.textContent = d.konklusjon;
+   } else {
+     msg.className = 'msg error'; msg.textContent = d.error || 'Diagnosen feilet.';
+   }
  } catch { msg.className = 'msg error'; msg.textContent = 'Noe gikk galt.'; }
 });
 
