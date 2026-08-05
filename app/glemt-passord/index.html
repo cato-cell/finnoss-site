@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Glemt passord – FinnOss</title>
+<meta name="theme-color" content="#06111d">
+<link rel="manifest" href="/app/manifest.json">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#06111d;color:#f0ece4;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.5rem;background-image:linear-gradient(rgba(6,17,29,.82),rgba(6,17,29,.94)),url('/images/heggedal-hero.jpg');background-size:cover;background-position:center;background-attachment:fixed}
+.logo{font-size:.9rem;font-weight:700;letter-spacing:.15em;color:#d8a64c;text-transform:uppercase;margin-bottom:2rem;text-decoration:none}
+.card{background:#0d1f30;border:1px solid rgba(216,166,76,.15);border-radius:16px;padding:2rem 1.75rem;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(4px)}
+h1{font-size:1.6rem;font-weight:800;margin-bottom:.4rem}
+.sub{font-size:.9rem;color:#8a9bb0;margin-bottom:1.75rem;line-height:1.5}
+.field{margin-bottom:1rem}
+label{display:block;font-size:.8rem;color:#8a9bb0;margin-bottom:.4rem;letter-spacing:.05em;text-transform:uppercase}
+input{width:100%;background:#06111d;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.85rem 1rem;color:#f0ece4;font-size:1rem;outline:none;transition:border-color .2s}
+input:focus{border-color:#d8a64c}
+.btn{width:100%;background:#d8a64c;color:#06111d;border:none;border-radius:10px;padding:.95rem;font-size:1rem;font-weight:700;cursor:pointer;margin-top:.5rem;transition:background .2s}
+.btn:hover{background:#f6e1b0}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.msg{margin-top:1rem;font-size:.9rem;text-align:center;min-height:1.2rem;line-height:1.5}
+.msg.error{color:#e07070}
+.msg.success{color:#70c070}
+.link{display:block;text-align:center;margin-top:1.5rem;font-size:.9rem;color:#8a9bb0}
+.link a{color:#d8a64c;text-decoration:none}
+</style>
+</head>
+<body>
+<a class="logo" href="/app/">FinnOss</a>
+<div class="card">
+<h1>Glemt passord?</h1>
+<p class="sub">Skriv inn e-postadressen din, så sender vi deg en lenke for å velge et nytt passord.</p>
+<div class="field"><label for="email">E-post</label><input type="email" id="email" placeholder="deg@epost.no" autocomplete="email"></div>
+<button class="btn" id="btn">Send lenke</button>
+<p class="msg" id="msg"></p>
+<p class="link">Husker du passordet? <a href="/app/login/">Logg inn →</a></p>
+</div>
+<script>
+const btn = document.getElementById('btn');
+const msg = document.getElementById('msg');
+
+btn.addEventListener('click', async () => {
+  const email = document.getElementById('email').value.trim();
+  if (!email || !email.includes('@')) {
+    msg.className = 'msg error'; msg.textContent = 'Skriv inn en gyldig e-postadresse.'; return;
+  }
+  btn.disabled = true; msg.className = 'msg'; msg.textContent = 'Sender…';
+  try {
+    const res = await fetch('/api/auth/forgot', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      msg.className = 'msg success';
+      msg.textContent = data.message || 'Sjekk e-posten din for videre instruksjoner.';
+      // La knappen være deaktivert – unngår gjentatte utsendelser.
+      btn.textContent = 'Lenke sendt';
+    } else {
+      msg.className = 'msg error';
+      msg.textContent = data.error || 'Noe gikk galt. Prøv igjen.';
+      btn.disabled = false;
+    }
+  } catch {
+    msg.className = 'msg error'; msg.textContent = 'Noe gikk galt. Prøv igjen.'; btn.disabled = false;
+  }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Enter') btn.click(); });
+</script>
+<script>
+/* Registrer service worker – aktiverer offline-buffer + push (app/sw.js) */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/app/sw.js').catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

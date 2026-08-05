@@ -70,6 +70,20 @@ export async function onRequest(context) {
   )`);
   await tryRun('login_attempts.idx', `CREATE INDEX IF NOT EXISTS idx_login_attempts_ip_ts ON login_attempts(ip, ts)`);
 
+  // === password_resets (glemt passord) ===
+  // Vi lagrer KUN hashen av tokenet, aldri tokenet selv – en lekket database
+  // gir da ingen mulighet til å tilbakestille passord. Tokenet er engangs
+  // (used=1 etter bruk) og har kort levetid (expires_at).
+  await tryRun('password_resets', `CREATE TABLE IF NOT EXISTS password_resets(
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    token_hash TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    used INTEGER DEFAULT 0,
+    created_at TEXT
+  )`);
+  await tryRun('password_resets.idx', `CREATE INDEX IF NOT EXISTS idx_password_resets_token ON password_resets(token_hash)`);
+
   // === push_subscriptions ===
   // VIKTIG: En tidligere versjon av denne migreringen opprettet tabellen med
   // én samlet `subscription`-kolonne (JSON-blob). Men `functions/api/push/subscribe.js`
