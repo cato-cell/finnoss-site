@@ -1,0 +1,16 @@
+# Kjente, aksepterte funn – helse-agenten skal IKKE varsle om disse.
+#
+# Én regel per linje. Blanke linjer og linjer som starter med # ignoreres.
+# Hver linje matches mot funn-linja (fil:linjenr:treff) som fast tekst.
+#
+# Fjern en linje herfra for å begynne å varsle om punktet igjen.
+
+# KIWI Heggedal har ikke oppgitt telefonnummer. Bevisst nedprioritert
+# (avklart 2026-08-02) – knappen står med placeholder til nummeret finnes.
+heggedal/kiwi/index.html:92:href="tel:+00000000"
+heggedal/kiwi/index.html:163:href="tel:+00000000"
+
+# «Følg på Instagram»-knapper uten kjent URL. Bevisst nedprioritert
+# (avklart 2026-08-02) – aktørene har ikke oppgitt Instagram-adresse.
+heggedal/lille-haveli/index.html:174:href="#"
+heggedal/heggedal-service/index.html:169:href="#"

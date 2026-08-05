@@ -10,6 +10,17 @@ REPORT="${REPORT:-helsesjekk-rapport.md}"
 issues=()
 add(){ issues+=("$1"); }
 
+# Kjente, aksepterte funn (se scripts/helsesjekk-unntak.txt). Filtrerer bort
+# linjer som matcher et unntak, slik at agenten kun varsler om NYE problemer.
+UNNTAK_FIL="scripts/helsesjekk-unntak.txt"
+filtrer_unntak(){
+  if [ -s "$UNNTAK_FIL" ]; then
+    grep -vFf <(grep -vE '^\s*#|^\s*$' "$UNNTAK_FIL") || true
+  else
+    cat
+  fi
+}
+
 # Offentlige HTML-filer (app/ og admin/ er bevisst noindex og holdes utenfor)
 mapfile -t PUB < <(find . -name '*.html' -not -path './app/*' -not -path './admin/*' -not -path './node_modules/*' | sort)
 
@@ -33,7 +44,7 @@ sec=$(grep -rniE "(api[_-]?key|secret|password|bearer)[\"' ]*[:=][\"' ]*[A-Za-z0
 [ -n "$sec" ] && add "**Mulige hardkodede hemmeligheter:**"$'\n'"$(echo "$sec" | sed 's/^/  - /' | head -20)"
 
 # 4) Placeholder-/tomme lenker (tel:+0000..., href="#") – ødelagte CTA-er
-ph=$(grep -rnoE 'href="tel:\+?0{4,}"|href="#"' --include=*.html . | grep -vE '^\./app/|^\./admin/' || true)
+ph=$(grep -rnoE 'href="tel:\+?0{4,}"|href="#"' --include=*.html . | sed 's|^\./||' | grep -vE '^app/|^admin/' | filtrer_unntak || true)
 [ -n "$ph" ] && add "**Placeholder-/tomme lenker (ødelagte CTA-er):**"$'\n'"$(echo "$ph" | sed 's/^/  - /')"
 
 # 5) noindex som lekker inn i offentlige sider (404 er OK)
