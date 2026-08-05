@@ -1,7 +1,7 @@
 // FinnOss Service Worker v1.1
 // NB: bump CACHE_NAME ved endringer i app-sidene – `activate` sletter alle
 // cacher med annet navn, så gammelt innhold tømmes og oppdateringer slår gjennom.
-const CACHE_NAME = 'finnoss-v3';
+const CACHE_NAME = 'finnoss-v4';
 const OFFLINE_URL = '/app/';
 
 // Installer og cache grunnleggende ressurser
