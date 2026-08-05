@@ -12,5 +12,5 @@ heggedal/kiwi/index.html:163:href="tel:+00000000"
 
 # «Følg på Instagram»-knapper uten kjent URL. Bevisst nedprioritert
 # (avklart 2026-08-02) – aktørene har ikke oppgitt Instagram-adresse.
-heggedal/lille-haveli/index.html:174:href="#"
+heggedal/lille-haveli/index.html:182:href="#"
 heggedal/heggedal-service/index.html:169:href="#"
