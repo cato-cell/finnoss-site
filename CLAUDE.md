@@ -2,6 +2,23 @@
 
 Retningslinjer for Claude Code i dette repoet. Les dette før du gjør endringer.
 
+## 👉 START HER – gjenstående oppgaver (per 2026-08-02)
+Alt annet i dette dokumentet beskriver hva som **er gjort**. Dette er hva som **gjenstår**:
+
+**Blokkerer lansering (krever data fra Cato):**
+- ⚠️ **Org.nr mangler på alle sider.** Eneste blokkerende punkt i sjekklisten. Trenger selskapsnavn + org.nr FinnOss driftes under. Legges i footer / `om-oss/` / `vilkar/`.
+
+**Venter på Cato (ikke blokkerende):**
+- **Trafikkfane i admin** – ønsket, men utsatt. Krever et Cloudflare **«Analytics: Read»**-token. Plan: `functions/api/admin/analytics.js` mot Cloudflares GraphQL Analytics API + fane i admin.
+- **Slette merga grener i GitHub-UI** (Claude Code får 403 på ref-sletting). Per 2026-08-02 kan **alle** grener unntatt `main` slettes – også `claude/claude-md-docs-2i56cv` og `claude/elegant-goodall-p5h3xn`, som er verifisert utdatert (frakoblet historikk, main ligger foran på alt).
+- **Åpningstider for 13 aktører** – se «Åpningstider» under. Trenger faktiske tider; **ikke gjett**.
+
+**Bevisst nedprioritert (ikke ta opp igjen uoppfordret):**
+- KIWIs placeholder-telefon og to «Følg på Instagram»-lenker. Ligger i `scripts/helsesjekk-unntak.txt` så helse-agenten ikke maser.
+- Pizza-bilde på `heggedal-pizza-bar/` – ønsket byttet til stock-foto, men **egress er blokkert** i Claude Code-miljøet (403 mot Unsplash/Pexels). Krever at Cato laster opp bildet selv.
+
+**Nyttig å vite:** kjør `npm run build:aktorer` etter endringer på aktørsider. Helse-agenten kjører daglig og åpner GitHub-issue ved nye avvik.
+
 ## Om prosjektet
 - **FinnOss (finnoss.no):** lokal hub for butikker, tjenester og opplevelser. Hovedområde: **Heggedal**.
 - **Statisk nettsted** (portert fra WordPress). Ren HTML/CSS/JS, ingen build-prosess.
@@ -64,13 +81,15 @@ Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages 
 
 **Frontend (`app/`):**
 - `app/index.html` – install-/landingsside (PWA-prompt, iOS-instruks). `app/manifest.json`, `app/sw.js` (service worker: cache + push).
-- **Service worker (2026-08-02):** `sw.js` **registreres nå fra alle app-sider** (`navigator.serviceWorker.register('/app/sw.js')` rett før `</body>`) – tidligere lå fila der uten å bli aktivert, så offline-buffer og push virket kun i installert PWA. Strategi: **network-first** med runtime-cache som reserve. **Bump `CACHE_NAME` i `sw.js` ved app-endringer** (nå `finnoss-v2`) – `activate` sletter alle cacher med annet navn, så gammelt innhold tømmes og oppdateringer slår gjennom.
+- **Service worker (2026-08-02):** `sw.js` **registreres nå fra alle app-sider** (`navigator.serviceWorker.register('/app/sw.js')` rett før `</body>`) – tidligere lå fila der uten å bli aktivert, så offline-buffer og push virket kun i installert PWA. Strategi: **network-first** med runtime-cache som reserve. **Bump `CACHE_NAME` i `sw.js` ved app-endringer** (nå `finnoss-v4`) – `activate` sletter alle cacher med annet navn, så gammelt innhold tømmes og oppdateringer slår gjennom.
 - `app/login/`, `app/register/` – auth-skjemaer. Token + bruker lagres i `localStorage` (`fo_token`, `fo_user`).
 - `app/home/` – innlogget hjem: tilbud fra `/api/offers` (med hardkodet fallback), engangstilbud med innløsnings-overlay, push-banner.
 - `app/utforsk/` **(2026-08-02):** in-app aktørutforsker. Kategorifilter-chips (styrt av `?kategori=mat-drikke|butikker|helse-velvaere|tjenester`), klientside-søk på navn/beskrivelse, aktørkort med «Har medlemstilbud»-badge (matcher `/api/offers` sitt `actor`-navn), og bottom-sheet-detalj med maps-/tel-lenke, «Bruk tilbud» (samme innløsning som Hjem) og dempet lenke til full profil på `/heggedal/<slug>/`. Home-paletten (`--navy:#06121f`/`--gold:#e0ad52`), egne app-klasser (ikke `fo-`). Kategoriknappene på `app/home/` peker nå hit. Offline-tolerant via samme network-first-SW som resten av appen (ingen SW-endring).
 - **Datakilde `app/data/aktorer.json`** genereres av **`scripts/build-aktorer.mjs`** (`npm run build:aktorer`, se `package.json`). Skriptet leser aktørsidene (JSON-LD + fallback til `<title>`/`<h1>`/meta), henter kategori fra hub-karusellene i `heggedal/index.html` (+ overstyringer `niftyhr`/`posten`/`asker-golf-lounge` → tjenester), ekskluderer undersider, sorterer alfabetisk og logger manglende strukturert data / ukategoriserte. **Åpningstider** hentes fra `openingHoursSpecification` og normaliseres til `apningstider: { man:[["09:00","17:00"]], … , son:[] }` – flere intervaller per dag støttes (f.eks. Posten 08–10 + 15–18), tom liste = stengt, `null` = **ikke oppgitt** (≠ stengt). Appen regner ut «Åpent nå / Stengt · åpner …» klientside. **16 av 30 aktører har tider i JSON-LD** per 2026-08-02; resten vises som «ikke oppgitt» til tidene legges inn på aktørsiden. **Kjør skriptet på nytt når aktører legges til/endres.**
 - **Desktop-layout (2026-07-26):** `app/index.html`, `app/home/` og `app/register/` har responsivt desktop-oppsett bak **`@media (min-width:900px)`** i sitt eget inline-`<style>` (bredere container 980/1080px via per-seksjon `max-width`, tilbud i 2-kol grid, register i to-kolonne bilde/skjema, subtil Heggedal-husrekke-silhuett i sidefeltene). **Mobil (<900px) er uendret.** PWA-brekkpunkt = **900px** – hold nye app-sider konsistente (NB: forskjellig fra det offentlige nettstedets 640px).
-- `admin/index.html` – admin-panel (oversikt, tilbud, push, brukere). **Innlogging: admin-nøkkelen skrives inn og valideres mot serveren** (ekte API-kall mot `/api/admin/stats`); nøkkelen lagres kun i `sessionStorage` (`fo_admin_key`). Ingen hemmelighet i klientkoden lenger.
+- `admin/index.html` – admin-panel (oversikt, tilbud, push, medlemmer). **Innlogging: admin-nøkkelen skrives inn og valideres mot serveren** (ekte API-kall mot `/api/admin/stats`); nøkkelen lagres kun i `sessionStorage`/`localStorage` (`fo_admin_key`). Ingen hemmelighet i klientkoden lenger.
+  - **Medlemssøk (2026-08-02):** søkefelt øverst i Medlemmer-fanen filtrerer på navn/e-post/telefon **klientside** (`ALLE_BRUKERE` holdes i minnet, `renderUsers()` filtrerer). Viser «Viser X av Y medlemmer». Søket overlever redigering/sletting fordi `renderUsers()` leser søkefeltet på nytt ved hver visning.
+  - **E-postdiagnose (2026-08-02):** boks nederst i **Oversikt**-fanen → `POST /api/admin/epost-diagnose`. Rapporterer om `BREVO_API_KEY` er satt, hvilken avsender som brukes, om brukerkontoen finnes, om `password_resets` finnes, og Brevos eksakte svar på en testsending – med kort tolkning på norsk. Bygget fordi «glemt passord» alltid svarer likt utad (anti-opplisting), så feil ellers blir usynlige. Sender **kun** én test-e-post til oppgitt adresse.
 
 **Backend (Cloudflare Pages Functions, `functions/api/`):**
 - `auth/migrate.js` – oppretter D1-tabeller. Kjøres manuelt: `GET /api/auth/migrate?secret=…` der secret valideres mot **`env.MIGRATE_SECRET`** (Cloudflare-secret, **ikke** hardkodet; fail-closed uten konfigurert verdi). Idempotent.
@@ -104,7 +123,7 @@ Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages 
 - **Web Push (VAPID):** env-vars **`VAPID_PUBLIC`**, **`VAPID_PRIVATE`**, **`VAPID_SUBJECT`** (`mailto:…`). Genereres med `npx web-push generate-vapid-keys`. `VAPID_PRIVATE` skal være **Secret** (kryptert). NB: bytt aldri selve verdien uten å oppdatere `VAPID_PUBLIC` – det invaliderer eksisterende push-abonnenter.
 - **`_redirects`:** `/` → `/heggedal/` (302, midlertidig); `www.finnoss.no` → uten www (301, kanonisk).
 
-## Status & utestående (per juni 2026)
+## Status & utestående (oppdatert 2026-08-02)
 - **D1-migreringen er kjørt (verifisert live 2026-07-26):** alle tabeller finnes (`users`, `sessions`, `offers`, `redemptions`, `push_subscriptions` med riktig `endpoint`/`p256dh`/`auth`-skjema, `login_attempts`). Secret for endepunktet ligger nå i `env.MIGRATE_SECRET` (ikke i koden). Kjøres ved behov: `GET /api/auth/migrate?secret=…`. Idempotent.
 - **Juridisk (live):** `personvern/` dekker nå medlemsappen (konto, passord-hash, innløsninger, push, nyhetsbrev), navngir databehandlere (Cloudflare, Brevo), rettslig grunnlag, lagringstid, EØS/SCC. Kontakt-e-post overalt: **cato@askergolflounge.no**. Endring av juridisk tekst krever fortsatt godkjenning.
 - **Aktører (live):** **NextNova** (nettsider + praktisk AI-hjelp, `nextnova.no`) lagt til under kategorien **Tjenester**, adresse **Heggedal Torg 18**. Live på `/heggedal/nextnova/`, lenket i Tjenester-karusellen og i `sitemap.xml` (2026-07-26). **Heggedal Pizza & Bar** (Heggedal Torg 20, tlf. 93 93 09 30) lagt til under **Mat & drikke** (2026-08-02): `Restaurant`-JSON-LD med `openingHoursSpecification` (alle dager 14:00–22:00), `hasMenu`, `servesCuisine`; full meny på siden i kategorifiltrert priskort-grid (`id="meny"`, egne `fo-meny-*`-klasser i sidens `<style>`).
@@ -115,12 +134,13 @@ Egen progressiv web-app for innloggede medlemmer, bygget oppå Cloudflare Pages 
 - **Åpne avvik (fra helse-agenten / audit):** **org.nr mangler på alle sider** (blokkerende punkt i sjekklisten – krever selskapsinfo fra Cato) · KIWI har `tel:+00000000` (placeholder, 2 steder) · «Følg på Instagram» er `href="#"` på `lille-haveli/` og `heggedal-service/` · bilder er ikke konvertert til WebP/AVIF.
 - **Google Search Console:** siden er indeksert (~46 sider, ytelsesdata finnes). Verifisert eiendom er **`https://www.finnoss.no/` (med www)**; en uten-www-eiendom finnes men er ubekreftet. **Anbefalt opprydding:** ett **domeneområde** `finnoss.no` (dekker www + uten-www, matcher sitemap) – krever TXT-post hos Webhuset (Cato gjør det selv; rør ikke DNS). Sitemap sendes inn med stien `sitemap.xml`, ikke full URL.
 
-## Åpne funn (repo-audit 2026-07-01)
+## Løste funn (historikk – alle punktene under er FERDIG)
 - **Push-skjema (løst 2026-07-26):** `functions/api/auth/migrate.js` bygger nå push-tabellen med de tre kolonnene `endpoint`/`p256dh`/`auth` (og bygger om en evt. gammel `subscription`-blob-tabell uten datatap). Verifisert live: skjemaet er riktig og tabellen har reelle abonnenter.
 - **`vilkar/index.html` wp-content (løst 2026-07-26):** hero-bildet (`og:image` + `<img>`) pekte på en død `www.finnoss.no/wp-content/…`-URL; byttet til lokal `/images/finnoss-vilkar-hero.jpg`. **Siste WordPress-rest er dermed borte** – ingen `wp-content` igjen i repoet.
 - **Asker Golf Lounge JSON-LD (løst 2026-07-26):** hovedsiden har `SportsActivityLocation`-JSON-LD, og undersiden `golfsimulator/` har fått `Article`-JSON-LD. Ikke lenger et hull.
 - **`Finnoss logo.jpg` i repo-rot (ryddet):** ikke lenger til stede (ingen løse bildefiler i repo-rot per 2026-07-26).
-- **Git-hygiene:** branchene `admin-brukeradmin`, `aktor-nextnova` og `desktop-layout` er **fullstendig merget til `main`**. Slett dem i GitHub-UI hvis de fortsatt vises i branch-listen (kan ikke slettes fra Claude Code-miljøet – 403 på ref-sletting).
+- **Git-hygiene (verifisert 2026-08-02):** alle grener utenom `main` kan slettes. De 8 arbeidsgrenene er fullstendig merget. `claude/claude-md-docs-2i56cv` (48 commits) og `claude/elegant-goodall-p5h3xn` (38 commits) har **frakoblet historikk** (egne rot-commits fra en eldre repo-versjon) og er verifisert utdatert: main har 77 filer de mangler, 17 vs 14 sider med åpningstider, lik FAQ-dekning. Ingen tapt verdi. Sletting må gjøres i GitHub-UI (403 fra Claude Code).
+- **Glemt passord (løst 2026-08-02):** verifisert live av Cato. Årsaken til at det først «ikke virket» var at test-e-posten ikke hadde brukerkonto i `users` – flyten svarte korrekt (generisk svar, ingen e-post). Brevo-avsender `cato@askergolflounge.no` er **verifisert med DKIM + DMARC**. `forgot.js` oppretter `password_resets` ved behov, så manuell migrering er ikke påkrevd.
 
 ## Omfang
 - Jobb **kun** i dette repoet (`finnoss-site`). Ikke rør andre repoer eller filer utenfor prosjektet.
