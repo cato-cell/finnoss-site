@@ -79,6 +79,49 @@ function buildAddress(a) {
   const line2 = [a.postalCode, a.addressLocality].filter(Boolean).join(' ').trim();
   return [a.streetAddress, line2].filter(Boolean).join(', ').trim();
 }
+// --- Åpningstider ---
+// Normaliserer schema.org openingHoursSpecification til fast ukestruktur:
+//   { man: [["09:00","17:00"]], ..., son: [] }
+// Tom liste = stengt den dagen. Flere intervaller per dag støttes (f.eks. Posten
+// 08:00–10:00 + 15:00–18:00). Returnerer null hvis aktøren ikke har oppgitt tider
+// i det hele tatt – da skal appen si «ikke oppgitt», ikke «stengt».
+const DAGER = ['man', 'tir', 'ons', 'tor', 'fre', 'lor', 'son'];
+const DAG_FRA_EN = {
+  monday: 'man', tuesday: 'tir', wednesday: 'ons', thursday: 'tor',
+  friday: 'fre', saturday: 'lor', sunday: 'son',
+};
+
+function parseOpeningHours(ld) {
+  const spec = ld && ld.openingHoursSpecification;
+  if (!spec) return null;
+  const items = Array.isArray(spec) ? spec : [spec];
+  const uke = {};
+  for (const d of DAGER) uke[d] = [];
+  let traff = false;
+
+  for (const it of items) {
+    if (!it || typeof it !== 'object') continue;
+    const opens = typeof it.opens === 'string' ? it.opens.slice(0, 5) : '';
+    const closes = typeof it.closes === 'string' ? it.closes.slice(0, 5) : '';
+    if (!opens || !closes) continue;
+
+    const raw = it.dayOfWeek;
+    const dager = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+    for (const d of dager) {
+      if (typeof d !== 'string') continue;
+      // Godtar både "Monday" og "https://schema.org/Monday"
+      const key = DAG_FRA_EN[d.split('/').pop().toLowerCase()];
+      if (!key) continue;
+      uke[key].push([opens, closes]);
+      traff = true;
+    }
+  }
+  if (!traff) return null;
+  // Sorter intervaller kronologisk innenfor hver dag
+  for (const d of DAGER) uke[d].sort((a, b) => a[0].localeCompare(b[0]));
+  return uke;
+}
+
 function pickWebsite(ld) {
   if (!ld) return '';
   // ekstern url (ikke intern finnoss.no)
@@ -136,6 +179,7 @@ for (const a of aktorMapper()) {
     adresse: ld ? buildAddress(ld.address) : '',
     telefon: (ld && ld.telephone) ? String(ld.telephone) : '',
     nettside: pickWebsite(ld),
+    apningstider: parseOpeningHours(ld),        // null = ikke oppgitt (ikke det samme som stengt)
     url: a.url,                                 // intern sti (fra mappenavn, ikke JSON-LD.url)
   });
 }
@@ -154,3 +198,6 @@ console.log('  Per kategori:');
 for (const [k, label] of Object.entries(KATEGORIER)) console.log(`    ${label.padEnd(16)} ${perKat[k]}`);
 console.log(`  Ukategorisert (tom kategori i JSON): ${ukategorisert.length ? ukategorisert.join(', ') : 'ingen'}`);
 console.log(`  Mangler strukturert data (JSON-LD):  ${mangler.length ? mangler.join(', ') : 'ingen'}`);
+const utenTider = aktorer.filter(a => !a.apningstider).map(a => a.slug);
+console.log(`  Åpningstider: ${aktorer.length - utenTider.length}/${aktorer.length} har tider i JSON-LD`);
+console.log(`  Mangler åpningstider (vises som «ikke oppgitt»): ${utenTider.length ? utenTider.join(', ') : 'ingen'}`);

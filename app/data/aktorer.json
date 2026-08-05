@@ -14,6 +14,7 @@
       "adresse": "Heggedalsveien 307, 1389 Heggedal",
       "telefon": "+4766797200",
       "nettside": "https://www.askinterior.no/",
+      "apningstider": null,
       "url": "/heggedal/ask-interior/"
     },
     {
@@ -24,6 +25,7 @@
       "adresse": "Heggedal Torg 18, 1389 Heggedal",
       "telefon": "+4741240024",
       "nettside": "",
+      "apningstider": null,
       "url": "/asker-golf-lounge/"
     },
     {
@@ -34,6 +36,7 @@
       "adresse": "1389 Heggedal",
       "telefon": "",
       "nettside": "https://bakkal.no",
+      "apningstider": null,
       "url": "/heggedal/bakkal-heggedal/"
     },
     {
@@ -44,6 +47,7 @@
       "adresse": "1389 Heggedal",
       "telefon": "+4794792788",
       "nettside": "https://www.cutfrisor.no/behandlinger",
+      "apningstider": null,
       "url": "/heggedal/cut/"
     },
     {
@@ -54,6 +58,50 @@
       "adresse": "1389 Heggedal",
       "telefon": "",
       "nettside": "https://blimedlem.feel24.no/heggedal/gratistilmars",
+      "apningstider": {
+        "man": [
+          [
+            "05:00",
+            "23:59"
+          ]
+        ],
+        "tir": [
+          [
+            "05:00",
+            "23:59"
+          ]
+        ],
+        "ons": [
+          [
+            "05:00",
+            "23:59"
+          ]
+        ],
+        "tor": [
+          [
+            "05:00",
+            "23:59"
+          ]
+        ],
+        "fre": [
+          [
+            "05:00",
+            "23:59"
+          ]
+        ],
+        "lor": [
+          [
+            "05:00",
+            "23:59"
+          ]
+        ],
+        "son": [
+          [
+            "05:00",
+            "23:59"
+          ]
+        ]
+      },
       "url": "/heggedal/feel24-heggedal/"
     },
     {
@@ -64,6 +112,50 @@
       "adresse": "Heggedalsveien 299, 1389 Heggedal",
       "telefon": "+4799707773",
       "nettside": "https://www.feelgoodsenter.no/senter/heggedal",
+      "apningstider": {
+        "man": [
+          [
+            "06:00",
+            "23:00"
+          ]
+        ],
+        "tir": [
+          [
+            "06:00",
+            "23:00"
+          ]
+        ],
+        "ons": [
+          [
+            "06:00",
+            "23:00"
+          ]
+        ],
+        "tor": [
+          [
+            "06:00",
+            "23:00"
+          ]
+        ],
+        "fre": [
+          [
+            "06:00",
+            "23:00"
+          ]
+        ],
+        "lor": [
+          [
+            "06:00",
+            "23:00"
+          ]
+        ],
+        "son": [
+          [
+            "06:00",
+            "23:00"
+          ]
+        ]
+      },
       "url": "/heggedal/feelgood-heggedal/"
     },
     {
@@ -74,6 +166,25 @@
       "adresse": "Heggedalsveien 181, 1389 Heggedal",
       "telefon": "",
       "nettside": "https://www.cylex.no/heggedal/galleri%2Bheggeglede-12852803.html",
+      "apningstider": {
+        "man": [],
+        "tir": [],
+        "ons": [
+          [
+            "12:00",
+            "18:00"
+          ]
+        ],
+        "tor": [],
+        "fre": [],
+        "lor": [
+          [
+            "10:00",
+            "16:00"
+          ]
+        ],
+        "son": []
+      },
       "url": "/heggedal/galleri-heggeglede/"
     },
     {
@@ -84,6 +195,45 @@
       "adresse": "Heggedalsveien 302, 1389 Heggedal",
       "telefon": "+4794455505",
       "nettside": "https://timma.no/salong/heggedal-barbershop",
+      "apningstider": {
+        "man": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "tir": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "ons": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "tor": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "fre": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "lor": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "son": []
+      },
       "url": "/heggedal/heggedal-barbershop/"
     },
     {
@@ -94,6 +244,40 @@
       "adresse": "1389 Heggedal",
       "telefon": "+4790028262",
       "nettside": "https://heggedalfysikalske.no/",
+      "apningstider": {
+        "man": [
+          [
+            "08:00",
+            "15:30"
+          ]
+        ],
+        "tir": [
+          [
+            "08:00",
+            "15:30"
+          ]
+        ],
+        "ons": [
+          [
+            "08:00",
+            "15:30"
+          ]
+        ],
+        "tor": [
+          [
+            "08:00",
+            "15:30"
+          ]
+        ],
+        "fre": [
+          [
+            "08:00",
+            "14:00"
+          ]
+        ],
+        "lor": [],
+        "son": []
+      },
       "url": "/heggedal/heggedal-fysikalske/"
     },
     {
@@ -104,6 +288,7 @@
       "adresse": "1389 Heggedal",
       "telefon": "",
       "nettside": "https://www.heggedalhovedgaard.no/",
+      "apningstider": null,
       "url": "/heggedal/heggedalhovedgaard/"
     },
     {
@@ -114,6 +299,40 @@
       "adresse": "Heggedal torg 38, 1389 Heggedal",
       "telefon": "+4747783054",
       "nettside": "https://www.asker.kommune.no/kultur-idrett-og-fritid/innbyggertorg/heggedal-innbyggertorg/",
+      "apningstider": {
+        "man": [
+          [
+            "08:00",
+            "16:00"
+          ]
+        ],
+        "tir": [
+          [
+            "08:00",
+            "16:00"
+          ]
+        ],
+        "ons": [
+          [
+            "08:00",
+            "16:00"
+          ]
+        ],
+        "tor": [
+          [
+            "08:00",
+            "18:00"
+          ]
+        ],
+        "fre": [
+          [
+            "08:00",
+            "16:00"
+          ]
+        ],
+        "lor": [],
+        "son": []
+      },
       "url": "/heggedal/innbyggertorg/"
     },
     {
@@ -124,6 +343,40 @@
       "adresse": "1389 Heggedal",
       "telefon": "+4766907120",
       "nettside": "https://maps.app.goo.gl/",
+      "apningstider": {
+        "man": [
+          [
+            "08:30",
+            "15:15"
+          ]
+        ],
+        "tir": [
+          [
+            "08:30",
+            "15:15"
+          ]
+        ],
+        "ons": [
+          [
+            "08:30",
+            "15:15"
+          ]
+        ],
+        "tor": [
+          [
+            "08:30",
+            "15:15"
+          ]
+        ],
+        "fre": [
+          [
+            "08:30",
+            "15:00"
+          ]
+        ],
+        "lor": [],
+        "son": []
+      },
       "url": "/heggedal/heggedal-legesenter/"
     },
     {
@@ -134,6 +387,7 @@
       "adresse": "",
       "telefon": "",
       "nettside": "https://www.iheggedal.no/blog",
+      "apningstider": null,
       "url": "/heggedal/iheggedal/"
     },
     {
@@ -144,6 +398,50 @@
       "adresse": "Heggedal Torg 20, 1389 Heggedal",
       "telefon": "+4793930930",
       "nettside": "",
+      "apningstider": {
+        "man": [
+          [
+            "14:00",
+            "22:00"
+          ]
+        ],
+        "tir": [
+          [
+            "14:00",
+            "22:00"
+          ]
+        ],
+        "ons": [
+          [
+            "14:00",
+            "22:00"
+          ]
+        ],
+        "tor": [
+          [
+            "14:00",
+            "22:00"
+          ]
+        ],
+        "fre": [
+          [
+            "14:00",
+            "22:00"
+          ]
+        ],
+        "lor": [
+          [
+            "14:00",
+            "22:00"
+          ]
+        ],
+        "son": [
+          [
+            "14:00",
+            "22:00"
+          ]
+        ]
+      },
       "url": "/heggedal/heggedal-pizza-bar/"
     },
     {
@@ -154,6 +452,7 @@
       "adresse": "1389 Heggedal",
       "telefon": "",
       "nettside": "https://www.heggedalservice.no/",
+      "apningstider": null,
       "url": "/heggedal/heggedal-service/"
     },
     {
@@ -164,6 +463,7 @@
       "adresse": "1389 Heggedal",
       "telefon": "+4741265063",
       "nettside": "https://kimecateringogkafe.no/",
+      "apningstider": null,
       "url": "/heggedal/kime/"
     },
     {
@@ -174,6 +474,45 @@
       "adresse": "1389 Heggedal",
       "telefon": "",
       "nettside": "https://kiwi.no/finn-butikk/kiwi-310-heggedal",
+      "apningstider": {
+        "man": [
+          [
+            "07:00",
+            "23:00"
+          ]
+        ],
+        "tir": [
+          [
+            "07:00",
+            "23:00"
+          ]
+        ],
+        "ons": [
+          [
+            "07:00",
+            "23:00"
+          ]
+        ],
+        "tor": [
+          [
+            "07:00",
+            "23:00"
+          ]
+        ],
+        "fre": [
+          [
+            "07:00",
+            "23:00"
+          ]
+        ],
+        "lor": [
+          [
+            "07:00",
+            "23:00"
+          ]
+        ],
+        "son": []
+      },
       "url": "/heggedal/kiwi/"
     },
     {
@@ -184,6 +523,7 @@
       "adresse": "1389 Heggedal",
       "telefon": "",
       "nettside": "https://lillehaveli.no",
+      "apningstider": null,
       "url": "/heggedal/lille-haveli/"
     },
     {
@@ -194,6 +534,45 @@
       "adresse": "Heggedalsveien 302, 1389 Heggedal",
       "telefon": "+4748402220",
       "nettside": "",
+      "apningstider": {
+        "man": [],
+        "tir": [
+          [
+            "10:00",
+            "17:00"
+          ]
+        ],
+        "ons": [
+          [
+            "10:00",
+            "17:00"
+          ]
+        ],
+        "tor": [
+          [
+            "10:00",
+            "17:00"
+          ]
+        ],
+        "fre": [
+          [
+            "10:00",
+            "17:00"
+          ]
+        ],
+        "lor": [
+          [
+            "10:00",
+            "17:00"
+          ]
+        ],
+        "son": [
+          [
+            "10:00",
+            "16:00"
+          ]
+        ]
+      },
       "url": "/heggedal/martas-cafe/"
     },
     {
@@ -204,6 +583,45 @@
       "adresse": "1389 Heggedal",
       "telefon": "",
       "nettside": "",
+      "apningstider": {
+        "man": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "tir": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "ons": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "tor": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "fre": [
+          [
+            "10:00",
+            "18:00"
+          ]
+        ],
+        "lor": [
+          [
+            "10:00",
+            "16:00"
+          ]
+        ],
+        "son": []
+      },
       "url": "/heggedal/mathea/"
     },
     {
@@ -214,6 +632,7 @@
       "adresse": "Heggedal Torg 18, 1389 Heggedal",
       "telefon": "",
       "nettside": "https://nextnova.no",
+      "apningstider": null,
       "url": "/heggedal/nextnova/"
     },
     {
@@ -224,6 +643,7 @@
       "adresse": "",
       "telefon": "+4741240024",
       "nettside": "https://www.niftyhr.io/",
+      "apningstider": null,
       "url": "/heggedal/niftyhr/"
     },
     {
@@ -234,6 +654,65 @@
       "adresse": "Heggedalsbakken 6, 1389 Heggedal",
       "telefon": "+4722030000",
       "nettside": "",
+      "apningstider": {
+        "man": [
+          [
+            "08:00",
+            "10:00"
+          ],
+          [
+            "15:00",
+            "18:00"
+          ]
+        ],
+        "tir": [
+          [
+            "08:00",
+            "10:00"
+          ],
+          [
+            "15:00",
+            "18:00"
+          ]
+        ],
+        "ons": [
+          [
+            "08:00",
+            "10:00"
+          ],
+          [
+            "15:00",
+            "18:00"
+          ]
+        ],
+        "tor": [
+          [
+            "08:00",
+            "10:00"
+          ],
+          [
+            "15:00",
+            "18:00"
+          ]
+        ],
+        "fre": [
+          [
+            "08:00",
+            "10:00"
+          ],
+          [
+            "15:00",
+            "18:00"
+          ]
+        ],
+        "lor": [
+          [
+            "09:00",
+            "12:00"
+          ]
+        ],
+        "son": []
+      },
       "url": "/posten/"
     },
     {
@@ -244,6 +723,50 @@
       "adresse": "Heggedalsveien 304, 1389 Heggedal",
       "telefon": "+4766796600",
       "nettside": "https://www.siamsushi.no/menu",
+      "apningstider": {
+        "man": [
+          [
+            "14:00",
+            "21:00"
+          ]
+        ],
+        "tir": [
+          [
+            "14:00",
+            "21:00"
+          ]
+        ],
+        "ons": [
+          [
+            "14:00",
+            "21:00"
+          ]
+        ],
+        "tor": [
+          [
+            "14:00",
+            "21:00"
+          ]
+        ],
+        "fre": [
+          [
+            "14:00",
+            "21:00"
+          ]
+        ],
+        "lor": [
+          [
+            "14:00",
+            "21:00"
+          ]
+        ],
+        "son": [
+          [
+            "14:00",
+            "21:00"
+          ]
+        ]
+      },
       "url": "/heggedal/siam-sushi/"
     },
     {
@@ -254,6 +777,7 @@
       "adresse": "1389 Heggedal",
       "telefon": "+4791327603",
       "nettside": "https://www.skinmedispa.no/",
+      "apningstider": null,
       "url": "/heggedal/skin-medispa/"
     },
     {
@@ -264,6 +788,7 @@
       "adresse": "Heggedalsveien 297, 1389 Heggedal",
       "telefon": "+4792288907",
       "nettside": "https://www.sparklingspa.no/",
+      "apningstider": null,
       "url": "/heggedal/sparkling-spa/"
     },
     {
@@ -274,6 +799,40 @@
       "adresse": "Heggedalsveien 301, 1389 Heggedal",
       "telefon": "+4791576940",
       "nettside": "https://www.tannlegeneheggedalsenteret.net/bestilltime",
+      "apningstider": {
+        "man": [
+          [
+            "08:00",
+            "16:00"
+          ]
+        ],
+        "tir": [
+          [
+            "08:00",
+            "20:00"
+          ]
+        ],
+        "ons": [
+          [
+            "08:00",
+            "16:00"
+          ]
+        ],
+        "tor": [
+          [
+            "08:00",
+            "16:00"
+          ]
+        ],
+        "fre": [
+          [
+            "08:00",
+            "16:00"
+          ]
+        ],
+        "lor": [],
+        "son": []
+      },
       "url": "/heggedal/tannlegene-heggedalsenteret/"
     },
     {
@@ -284,6 +843,7 @@
       "adresse": "1389 Heggedal",
       "telefon": "",
       "nettside": "https://utvendigdrift.no/",
+      "apningstider": null,
       "url": "/heggedal/utvendigdrift/"
     },
     {
@@ -294,6 +854,45 @@
       "adresse": "Heggedal torg 24, 1389 Heggedal",
       "telefon": "",
       "nettside": "",
+      "apningstider": {
+        "man": [],
+        "tir": [
+          [
+            "12:00",
+            "18:00"
+          ]
+        ],
+        "ons": [
+          [
+            "12:00",
+            "18:00"
+          ]
+        ],
+        "tor": [
+          [
+            "12:00",
+            "18:00"
+          ]
+        ],
+        "fre": [
+          [
+            "12:00",
+            "18:00"
+          ]
+        ],
+        "lor": [
+          [
+            "12:00",
+            "19:00"
+          ]
+        ],
+        "son": [
+          [
+            "12:00",
+            "19:00"
+          ]
+        ]
+      },
       "url": "/heggedal/vitos-heggedal/"
     },
     {
@@ -304,6 +903,45 @@
       "adresse": "Heggedalsveien 304, 1389 Heggedal",
       "telefon": "+4766696369",
       "nettside": "https://www.vitusapotek.no/apotek/NO/Akershus/Heggedal/Vitusapotek%20Heggedal",
+      "apningstider": {
+        "man": [
+          [
+            "09:00",
+            "17:00"
+          ]
+        ],
+        "tir": [
+          [
+            "09:00",
+            "17:00"
+          ]
+        ],
+        "ons": [
+          [
+            "09:00",
+            "17:00"
+          ]
+        ],
+        "tor": [
+          [
+            "09:00",
+            "17:00"
+          ]
+        ],
+        "fre": [
+          [
+            "09:00",
+            "17:00"
+          ]
+        ],
+        "lor": [
+          [
+            "10:00",
+            "15:00"
+          ]
+        ],
+        "son": []
+      },
       "url": "/heggedal/vitusapotek-heggedal/"
     }
   ]

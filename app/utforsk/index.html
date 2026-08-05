@@ -52,6 +52,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .akt-meta{display:flex;align-items:center;gap:.5rem;margin-top:.6rem;flex-wrap:wrap}
 .tag{font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:rgba(255,255,255,.06);color:var(--muted)}
 .badge-tilbud{display:inline-flex;align-items:center;gap:.3rem;font-size:.65rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:rgba(224,173,82,.16);color:var(--gold-light);border:1px solid rgba(224,173,82,.35)}
+/* Åpningstid-status */
+.status-pill{display:inline-flex;align-items:center;gap:.35rem;font-size:.7rem;font-weight:700;padding:.2rem .55rem;border-radius:999px;background:rgba(255,255,255,.06);color:var(--muted)}
+.status-pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.status-pill.apen{background:rgba(111,194,138,.15);color:var(--green)}
+/* Ukeliste i detaljvisning */
+.uke-liste{margin-top:.9rem;border-top:1px solid rgba(255,255,255,.08);padding-top:.7rem}
+.uke-rad{display:flex;justify-content:space-between;gap:1rem;font-size:.88rem;color:var(--muted);padding:.28rem 0}
+.uke-rad.idag{color:var(--text);font-weight:700}
+.uke-rad .d{text-transform:capitalize}
 .arrow{color:var(--gold);flex-shrink:0;font-size:1.1rem;line-height:1}
 
 /* Status (tom/feil/laster) */
@@ -208,6 +217,49 @@ const $ = id => document.getElementById(id);
 const norm = s => (s || '').toLowerCase().replace(/\s+/g,' ').trim();
 const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
+// === Åpningstider ===
+// apningstider = { man:[["09:00","17:00"]], ... , son:[] } | null (ikke oppgitt)
+const UKE = ['man','tir','ons','tor','fre','lor','son'];
+const DAG_FRA_GETDAY = ['son','man','tir','ons','tor','fre','lor']; // getDay(): 0=søndag
+const DAG_NAVN = { man:'Mandag', tir:'Tirsdag', ons:'Onsdag', tor:'Torsdag', fre:'Fredag', lor:'Lørdag', son:'Søndag' };
+const min = hhmm => { const [h,m] = hhmm.split(':').map(Number); return h*60 + m; };
+
+function apenStatus(ap){
+  if (!ap) return { tilstand:'ukjent', tekst:'Åpningstider ikke oppgitt' };
+  const na = new Date();
+  const naMin = na.getHours()*60 + na.getMinutes();
+  const idag = DAG_FRA_GETDAY[na.getDay()];
+  const iDag = ap[idag] || [];
+
+  for (const [o,c] of iDag){
+    if (naMin >= min(o) && naMin < min(c)) return { tilstand:'apen', tekst:'Åpent nå · til ' + c };
+  }
+  const senere = iDag.filter(([o]) => min(o) > naMin);
+  if (senere.length) return { tilstand:'stengt', tekst:'Stengt · åpner ' + senere[0][0] };
+
+  const start = UKE.indexOf(idag);
+  for (let i = 1; i <= 7; i++){
+    const key = UKE[(start + i) % 7];
+    const iv = ap[key] || [];
+    if (iv.length){
+      const nar = i === 1 ? 'i morgen' : DAG_NAVN[key].toLowerCase();
+      return { tilstand:'stengt', tekst:`Stengt · åpner ${nar} ${iv[0][0]}` };
+    }
+  }
+  return { tilstand:'stengt', tekst:'Stengt' };
+}
+
+function ukeListeHtml(ap){
+  if (!ap) return '';
+  const idag = DAG_FRA_GETDAY[new Date().getDay()];
+  const rader = UKE.map(d => {
+    const iv = ap[d] || [];
+    const tid = iv.length ? iv.map(([o,c]) => `${o}–${c}`).join(', ') : 'Stengt';
+    return `<div class="uke-rad${d === idag ? ' idag' : ''}"><span class="d">${DAG_NAVN[d]}</span><span>${tid}</span></div>`;
+  }).join('');
+  return `<div class="uke-liste">${rader}</div>`;
+}
+
 // Match tilbud mot aktør på navn (ingen slug i tilbuds-API-et)
 function finnTilbud(navn){
   const n = norm(navn);
@@ -279,6 +331,9 @@ function render(){
   liste.innerHTML = vis.map((a,i) => {
     const harTilbud = !!finnTilbud(a.navn);
     const katLabel = KATEGORIER[a.kategori] || 'Aktør';
+    const st = apenStatus(a.apningstider);
+    const statusHtml = st.tilstand === 'ukjent' ? ''
+      : `<span class="status-pill${st.tilstand === 'apen' ? ' apen' : ''}"><span class="dot"></span>${esc(st.tekst)}</span>`;
     return `<button class="akt-card" data-i="${AKTORER.indexOf(a)}">
       <div class="akt-top">
         <div>
@@ -288,6 +343,7 @@ function render(){
         <span class="arrow" aria-hidden="true">›</span>
       </div>
       <div class="akt-meta">
+        ${statusHtml}
         <span class="tag">${esc(katLabel)}</span>
         ${harTilbud ? '<span class="badge-tilbud">★ Har medlemstilbud</span>' : ''}
       </div>
@@ -308,8 +364,14 @@ function aapneDetalj(a){
   const tilbud = finnTilbud(a.navn);
   const katLabel = KATEGORIER[a.kategori] || 'Aktør';
   const mapsUrl = a.adresse ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(a.adresse + ', Heggedal') : '';
-  let html = `<h2>${esc(a.navn)}</h2><div class="s-tag"><span class="tag">${esc(katLabel)}</span></div>`;
+  const st = apenStatus(a.apningstider);
+  const statusHtml = st.tilstand === 'ukjent' ? ''
+    : `<span class="status-pill${st.tilstand === 'apen' ? ' apen' : ''}"><span class="dot"></span>${esc(st.tekst)}</span>`;
+  let html = `<h2>${esc(a.navn)}</h2><div class="s-tag">${statusHtml} <span class="tag">${esc(katLabel)}</span></div>`;
   if (a.kortBeskrivelse) html += `<p class="s-desc">${esc(a.kortBeskrivelse)}</p>`;
+  html += a.apningstider
+    ? ukeListeHtml(a.apningstider)
+    : `<div class="uke-liste"><div class="uke-rad"><span>Åpningstider er ikke oppgitt</span></div></div>`;
   if (a.adresse) html += `<a class="s-row link" href="${mapsUrl}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>${esc(a.adresse)}</span></a>`;
   if (a.telefon) html += `<a class="s-row link" href="tel:${esc(a.telefon)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>${esc(a.telefon)}</span></a>`;
   if (a.nettside) html += `<a class="s-row link" href="${esc(a.nettside)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg><span>Nettside</span></a>`;
